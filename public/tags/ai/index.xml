@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>AI on Building an AI/ML Workstation</title>
+    <link>http://localhost:1313/tags/ai/</link>
+    <description>Recent content in AI on Building an AI/ML Workstation</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building the Ultimate AI Workstation</title>
+      <link>http://localhost:1313/posts/building-the-ultimate-ai-workstation/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/building-the-ultimate-ai-workstation/</guid>
+      <description>&lt;h1 id=&#34;building-my-ai-workstation-kicking-off-the-project&#34;&gt;Building My AI Workstation: Kicking Off the Project&lt;/h1&gt;
+&lt;p&gt;Over the past few years, I&amp;rsquo;ve watched the evolution of AI move from research labs into the everyday workflows of business, productivity, and creativity. Models that once required massive clusters are now accessible to individuals, and the frontier is shifting toward &lt;strong&gt;Specialized Language Models (SLMs)&lt;/strong&gt; — models tuned for specific domains, tasks, and contexts.&lt;/p&gt;
+&lt;p&gt;To push my own understanding forward, I&amp;rsquo;ve decided to build a &lt;strong&gt;personal AI workstation&lt;/strong&gt;: a high-performance rig that will let me fine-tune, benchmark, and experiment with large models in a hands-on way. This is not just about performance numbers — it&amp;rsquo;s about exploring how to &lt;strong&gt;apply AI practically&lt;/strong&gt; and learning what it really takes to train and deploy models tailored for business value.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

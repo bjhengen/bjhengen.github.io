@@ -1,0 +1,34 @@
+baseURL = 'https://bjhengen.github.io/'
+languageCode = 'en-us'
+title = 'Building an AI/ML Workstation'
+theme = 'PaperMod'
+
+[params]
+  author = "Brian Hengen"
+  description = "Documenting my RTX 5090 AI/ML build"
+  ShowReadingTime = true
+  ShowCodeCopyButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowShareButtons = true
+  
+  [params.profileMode]
+    enabled = true
+    title = "Personal AI Workstation Build"
+    subtitle = "Training SLMs on RTX 5090 | Real-World AI Applications"
+    
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/bjhengen"
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 10
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 20

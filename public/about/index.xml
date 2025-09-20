@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Abouts on Building an AI/ML Workstation</title>
+    <link>http://localhost:1313/about/</link>
+    <description>Recent content in Abouts on Building an AI/ML Workstation</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/about/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/about/about/</guid>
+      <description>&lt;h2 id=&#34;about-this-blog&#34;&gt;About This Blog&lt;/h2&gt;
+&lt;p&gt;This blog documents my journey building and running a &lt;strong&gt;personal AI workstation&lt;/strong&gt; from the ground up.&lt;/p&gt;
+&lt;p&gt;The focus is on &lt;strong&gt;Specialized Language Models (SLMs)&lt;/strong&gt; — training, fine-tuning, and experimenting with how domain-specific AI can solve real-world problems.&lt;/p&gt;
+&lt;p&gt;Along the way, I&amp;rsquo;ll share:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Daily build updates (with photos),&lt;/li&gt;
+&lt;li&gt;Lessons learned on hardware, software, and workflows,&lt;/li&gt;
+&lt;li&gt;Reflections on how AI can be applied in business and everyday productivity.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you&amp;rsquo;re curious about what it takes to get hands-on with cutting-edge AI — from raw components to working models — you&amp;rsquo;re in the right place.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
