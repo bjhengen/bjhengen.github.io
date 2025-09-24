@@ -11,6 +11,12 @@ theme = 'PaperMod'
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowShareButtons = true
+
+  # Custom CSS
+  assets.disableHLJS = false
+
+  [[params.assets.css]]
+    src = "/css/custom.css"
   
   [params.profileMode]
     enabled = true
