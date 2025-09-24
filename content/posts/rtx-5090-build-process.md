@@ -96,9 +96,9 @@ Starting with all components laid out and ready to go.
 
 Before committing to the final case assembly, I wanted to test the RTX 5090 to ensure it was working properly. Here's the moment of truth - the first time powering up the card:
 
-<video width="100%" controls>
+<video width="100%" controls preload="metadata" poster="/images/20250920_124750_optimized.jpg">
   <source src="/images/20250920_124755.mp4" type="video/mp4">
-  Your browser does not support the video tag.
+  <p>Your browser does not support HTML5 video. <a href="/images/20250920_124755.mp4">Download the video</a> to view the RTX 5090 first boot test.</p>
 </video>
 *RTX 5090 first boot test - verifying the card works before final assembly*
 
