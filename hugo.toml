@@ -1,4 +1,4 @@
-baseURL = 'https://bjhengen.github.io/'
+baseURL = 'https://brianhengen.us/'
 languageCode = 'en-us'
 title = 'Building an AI/ML Workstation'
 theme = 'PaperMod'
