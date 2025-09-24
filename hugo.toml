@@ -13,10 +13,11 @@ theme = 'PaperMod'
   ShowShareButtons = true
 
   # Custom CSS
-  assets.disableHLJS = false
+  [params.assets]
+    disableHLJS = false
 
   [[params.assets.css]]
-    src = "/css/custom.css"
+    href = "/css/custom.css"
   
   [params.profileMode]
     enabled = true
