@@ -3,6 +3,8 @@ languageCode = 'en-us'
 title = 'Building an AI/ML Workstation'
 theme = 'PaperMod'
 
+# RSS and email notifications configured
+
 [params]
   author = "Brian Hengen"
   description = "Documenting my RTX 5090 AI/ML build"
