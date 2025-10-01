@@ -28,6 +28,10 @@ theme = 'PaperMod'
     name = "github"
     url = "https://github.com/bjhengen"
 
+  [[params.socialIcons]]
+    name = "rss"
+    url = "/index.xml"
+
 [menu]
   [[menu.main]]
     identifier = "posts"
