@@ -3,7 +3,7 @@ languageCode = 'en-us'
 title = 'Building an AI/ML Workstation'
 theme = 'PaperMod'
 
-# RSS and email notifications configured
+# RSS and email notifications configured - testing automation
 
 [params]
   author = "Brian Hengen"
