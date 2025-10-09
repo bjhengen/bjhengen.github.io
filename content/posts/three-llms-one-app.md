@@ -1,6 +1,6 @@
 ---
 title: "Three LLMs, One App: Testing Fine-Tuned Models in Production"
-date: 2025-10-10
+date: 2025-10-09
 draft: false
 tags: ["AI", "LLM", "Performance", "Architecture", "Node.js", "Flutter", "Fine-tuning", "Deployment", "Oracle Database 23ai"]
 categories: ["AI Infrastructure"]
