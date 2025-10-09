@@ -1,20 +1,17 @@
 baseURL = 'https://brianhengen.us/'
 languageCode = 'en-us'
-title = 'Building an AI/ML Workstation'
+title = "Brian Hengen's AI Experiments"
 theme = 'PaperMod'
-
-# RSS and email notifications configured - testing automation
 
 [params]
   author = "Brian Hengen"
-  description = "Documenting my RTX 5090 AI/ML build"
+  description = "Exploring AI, Oracle Database 23ai, and RTX 5090 for real-world applications"
   ShowReadingTime = true
   ShowCodeCopyButtons = true
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowShareButtons = true
 
-  # Custom CSS
   [params.assets]
     disableHLJS = false
 
@@ -23,12 +20,17 @@ theme = 'PaperMod'
   
   [params.profileMode]
     enabled = true
-    title = "Personal AI Workstation Build"
-    subtitle = "Training SLMs on RTX 5090 | Real-World AI Applications"
-    
+    title = "AI Experiments with Oracle and RTX 5090"
+    subtitle = "Fine-Tuning LLMs and Building Apps with Oracle Database 23ai"
+    intro = "Follow my journey building AI apps with Oracle Database 23ai and fine-tuning LLMs on an RTX 5090. From cooking assistants to management tools, discover practical AI solutions. Subscribe for updates on new posts!"
+
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/bjhengen"
+
+  [[params.socialIcons]]
+    name = "x"
+    url = "https://x.com/yourhandle"  # Replace with your X handle
 
   [[params.socialIcons]]
     name = "rss"

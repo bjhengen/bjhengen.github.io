@@ -1,28 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Building an AI/ML Workstation</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content on Building an AI/ML Workstation</description>
-    <generator>Hugo -- 0.150.0</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Building the Ultimate AI Workstation</title>
-      <link>http://localhost:1313/posts/building-the-ultimate-ai-workstation/</link>
-      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/building-the-ultimate-ai-workstation/</guid>
-      <description>&lt;h1 id=&#34;building-my-ai-workstation-kicking-off-the-project&#34;&gt;Building My AI Workstation: Kicking Off the Project&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Brian Hengen's AI Experiments</title><link>https://brianhengen.us/</link><description>Recent content on Brian Hengen's AI Experiments</description><generator>Hugo -- 0.150.0</generator><language>en-us</language><lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://brianhengen.us/index.xml" rel="self" type="application/rss+xml"/><item><title>Fine-Tuning a Personal Executive Assistant: Lessons from My Management Notes</title><link>https://brianhengen.us/posts/fine-tuning-management-ai/</link><pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/fine-tuning-management-ai/</guid><description>How I fine-tuned IBM Granite 4.0 H Micro on 5+ years of management notes to create a personalized AI assistant—after three failures, the key was data quality.</description></item><item><title>Fine-Tuning Qwen Models: From Theory to Practice</title><link>https://brianhengen.us/posts/fine-tuning-qwen-models/</link><pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/fine-tuning-qwen-models/</guid><description>Fine-tuning Qwen 32B and 14B models to create ChefBot—a cooking AI that outperforms general-purpose LLMs in the kitchen.</description></item><item><title>Building the RTX 5090 AI Workstation - Step by Step</title><link>https://brianhengen.us/posts/rtx-5090-build-process/</link><pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/rtx-5090-build-process/</guid><description>A detailed walkthrough of assembling my RTX 5090-powered AI workstation with photos from the entire build process</description></item><item><title>Building the Ultimate AI Workstation</title><link>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</link><pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</guid><description>&lt;h1 id="building-my-ai-workstation-kicking-off-the-project"&gt;Building My AI Workstation: Kicking Off the Project&lt;/h1&gt;
 &lt;p&gt;Over the past few years, I&amp;rsquo;ve watched the evolution of AI move from research labs into the everyday workflows of business, productivity, and creativity. Models that once required massive clusters are now accessible to individuals, and the frontier is shifting toward &lt;strong&gt;Specialized Language Models (SLMs)&lt;/strong&gt; — models tuned for specific domains, tasks, and contexts.&lt;/p&gt;
-&lt;p&gt;To push my own understanding forward, I&amp;rsquo;ve decided to build a &lt;strong&gt;personal AI workstation&lt;/strong&gt;: a high-performance rig that will let me fine-tune, benchmark, and experiment with large models in a hands-on way. This is not just about performance numbers — it&amp;rsquo;s about exploring how to &lt;strong&gt;apply AI practically&lt;/strong&gt; and learning what it really takes to train and deploy models tailored for business value.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>About</title>
-      <link>http://localhost:1313/about/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/about/</guid>
-      <description>&lt;h2 id=&#34;about-this-blog&#34;&gt;About This Blog&lt;/h2&gt;
+&lt;p&gt;To push my own understanding forward, I&amp;rsquo;ve decided to build a &lt;strong&gt;personal AI workstation&lt;/strong&gt;: a high-performance rig that will let me fine-tune, benchmark, and experiment with large models in a hands-on way. This is not just about performance numbers — it&amp;rsquo;s about exploring how to &lt;strong&gt;apply AI practically&lt;/strong&gt; and learning what it really takes to train and deploy models tailored for business value.&lt;/p&gt;</description></item><item><title>About</title><link>https://brianhengen.us/about/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://brianhengen.us/about/about/</guid><description>&lt;h2 id="about-this-blog"&gt;About This Blog&lt;/h2&gt;
 &lt;p&gt;This blog documents my journey building and running a &lt;strong&gt;personal AI workstation&lt;/strong&gt; from the ground up.&lt;/p&gt;
 &lt;p&gt;The focus is on &lt;strong&gt;Specialized Language Models (SLMs)&lt;/strong&gt; — training, fine-tuning, and experimenting with how domain-specific AI can solve real-world problems.&lt;/p&gt;
 &lt;p&gt;Along the way, I&amp;rsquo;ll share:&lt;/p&gt;
@@ -31,7 +9,4 @@
 &lt;li&gt;Lessons learned on hardware, software, and workflows,&lt;/li&gt;
 &lt;li&gt;Reflections on how AI can be applied in business and everyday productivity.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you&amp;rsquo;re curious about what it takes to get hands-on with cutting-edge AI — from raw components to working models — you&amp;rsquo;re in the right place.&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+&lt;p&gt;If you&amp;rsquo;re curious about what it takes to get hands-on with cutting-edge AI — from raw components to working models — you&amp;rsquo;re in the right place.&lt;/p&gt;</description></item></channel></rss>
