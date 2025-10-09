@@ -44,42 +44,6 @@ No single LLM deployment could deliver everything. So I built a system to switch
 
 Here's how the three performed on a typical query ("Summarize last week's customer meetings and identify risks"):
 
-```chartjs
-{
-  "type": "bar",
-  "data": {
-    "labels": ["OCI GenAI", "M2 Mac (Granite)", "RTX 5090 (Granite)"],
-    "datasets": [
-      {
-        "label": "Total Response (s)",
-        "data": [3.5, 60, 2],
-        "backgroundColor": "#4e79a7"
-      },
-      {
-        "label": "Tokens/sec",
-        "data": [50, 3, 40],
-        "backgroundColor": "#f28e2b"
-      }
-    ]
-  },
-  "options": {
-    "scales": {
-      "y": {
-        "beginAtZero": true
-      }
-    },
-    "plugins": {
-      "legend": {
-        "position": "top"
-      },
-      "title": {
-        "display": true,
-        "text": "LLM Performance Comparison"
-      }
-    }
-  }
-}
-```
 
 | Metric | OCI GenAI | M2 Mac (Granite) | RTX 5090 (Granite) |
 |--------|-----------|------------------|-------------------|
