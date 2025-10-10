@@ -234,7 +234,13 @@ To build something similar:
 
 Have you integrated LLMs with Oracle Database 23ai? What trade-offs have you faced? Comment or reach out on GitHub! See my [ChefBot post](https://brianhengen.us/posts/fine-tuning-qwen-models) for more on specialized models.
 
+---
 
+## About the Author
+
+**Brian Hengen** is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.
+
+Connect: [@bhengen](https://x.com/bhengen) | [LinkedIn](https://www.linkedin.com/in/brian-hengen/)
 
 ---
 
