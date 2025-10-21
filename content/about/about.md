@@ -19,11 +19,15 @@ If you're curious about what it takes to get hands-on with cutting-edge AI — f
 
 ## About Me
 
-Hi, I'm Brian — a technology executive, DBA, and developer who is passionate about AI, data, and innovation.  
+Hi, I'm **Brian Hengen**, Vice President at **Oracle**, where I lead technical sales engineering teams.
 
-By day, I lead technical sales engineering teams. By night (and often early mornings), I tinker with code, experiment with new ideas, and explore how **Specialized Language Models (SLMs)** and AI can be applied to real-world challenges.  
+I'm also a DBA and developer who is passionate about AI, data, and innovation. By night (and often early mornings), I tinker with code, experiment with new ideas, and explore how **Specialized Language Models (SLMs)** and AI can be applied to real-world challenges.
 
 This blog is my personal project to document the journey of building a high-performance AI workstation and using it as a testbed for fine-tuning and experimenting with SLMs. My aim is to share insights that are practical, approachable, and hopefully useful to others walking a similar path.
+
+**Connect with me:**
+- X: [@bhengen](https://x.com/bhengen)
+- LinkedIn: [linkedin.com/in/brian-hengen](https://www.linkedin.com/in/brian-hengen/)
 
 ---
 
