@@ -1,6 +1,6 @@
 ---
 title: "Three LLMs, One App: Balancing Speed, Privacy, and Power"
-date: 2025-10-21
+date: 2025-10-28
 draft: false
 tags: ["AI", "LLM", "Performance", "Architecture", "Node.js", "Flutter", "Fine-tuning", "Deployment", "Oracle Database 23ai", "Vector Search"]
 categories: ["AI Infrastructure"]
@@ -233,3 +233,7 @@ To build something similar:
 
 
 Have you integrated LLMs with Oracle Database 23ai? What trade-offs have you faced? Comment or reach out! See my other posts (https://brianhengen.us/posts/) for more on specialized models.
+
+    
+## About the Author
+Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.
