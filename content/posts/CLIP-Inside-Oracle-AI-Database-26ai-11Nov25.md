@@ -1,6 +1,6 @@
 ---
 title: "CLIP Inside Oracle AI Database 26ai: Fast, Multimodal RAG"
-date: 2025-10-28
+date: 2024-11-11
 draft: false
 tags: ["AI", "Oracle Database 26ai", "CLIP", "Embeddings", "Cost Optimization", "ONNX", "Vector Search", "Multimodal AI"]
 categories: ["AI Infrastructure"]

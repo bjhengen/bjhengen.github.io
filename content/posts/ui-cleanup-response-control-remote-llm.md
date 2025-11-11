@@ -1,7 +1,7 @@
 ---
 title: "UI Refinement, Response Control, and Remote GPU Integration"
 date: 2025-11-05
-draft: false
+draft: true
 tags: ["flutter", "ui-ux", "llm", "ollama", "ssh-tunnel", "gpu", "knowledge-management"]
 categories: ["Development", "Flutter", "AI Integration"]
 ---
