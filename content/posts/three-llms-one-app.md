@@ -129,6 +129,7 @@ class LLMProviderManager {
 // providers/ociProvider.js
 class OCIProvider {
   async generate({ prompt, maxTokens }) {
+    const token = this.getOCIToken();
     const response = await axios.post(
       'https://genai.us-chicago-1.oci.oraclecloud.com/v1/chat',
       {
@@ -138,7 +139,7 @@ class OCIProvider {
       },
       {
         headers: {
-          'Authorization': `Bearer ${this.getOCIToken()}`,
+          'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         }
       }
