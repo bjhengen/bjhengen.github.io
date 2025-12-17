@@ -4,8 +4,11 @@ date: 2024-11-11
 draft: false
 tags: ["AI", "Oracle Database 26ai", "CLIP", "Embeddings", "Cost Optimization", "ONNX", "Vector Search", "Multimodal AI"]
 categories: ["AI Infrastructure"]
+series: ["Building a Knowledge Management App with Oracle AI Database 26ai"]
 description: "How we got 10x faster by loading CLIP models directly into Oracle AI Database 26ai. Spoiler: In-database AI is production-ready."
 ---
+
+{{< series-nav series="Building a Knowledge Management App with Oracle AI Database 26ai" part="2" total="3" >}}
 
 After the [3-way LLM toggle](https://brianhengen.us/posts/three-llms-one-app/) went live, I turned my attention to **embeddings** - the invisible glue that powers search and RAG.
 

@@ -4,8 +4,11 @@ date: 2025-10-28
 draft: false
 tags: ["AI", "LLM", "Performance", "Architecture", "Node.js", "Flutter", "Fine-tuning", "Deployment", "Oracle Database 23ai", "Vector Search"]
 categories: ["AI Infrastructure"]
+series: ["Building a Knowledge Management App with Oracle AI Database 26ai"]
 description: "Testing LLMs in an Oracle Database 23ai app: cloud (OCI), laptop (M2 Mac), and GPU server (RTX 5090). Spoiler: My laptop needs a bigger GPU!"
 ---
+
+{{< series-nav series="Building a Knowledge Management App with Oracle AI Database 26ai" part="1" total="3" >}}
 
 I spent a weekend fine-tuning a model for my knowledge management app, designed to handle notes, PDFs, and presentations with Oracle Database 23ai's vector search (see my [management AI post](https://brianhengen.us/posts/fine-tuning-management-ai)). It aced testing on my RTX 5090 server, but on my M2 MacBook Pro? Barely usable. A query like "Summarize last week's customer meetings and identify risks" took over a minute, leaving me staring at a spinning wheel while my coffee got cold.
 

@@ -4,6 +4,7 @@ date: 2025-09-29
 draft: false
 tags: ["AI", "SLM", "Fine-tuning", "Qwen", "ChefBot", "RecipeNLG", "Machine Learning"]
 categories: ["AI Training"]
+series: ["SLM Research"]
 description: "Fine-tuning Qwen 32B and 14B models to create ChefBot—a cooking AI that outperforms general-purpose LLMs in the kitchen."
 ---
 

@@ -4,6 +4,7 @@ date: 2025-10-05
 draft: false
 tags: ["AI", "SLM", "Fine-tuning", "Granite", "Management AI", "Executive Assistant"]
 categories: ["AI Training"]
+series: ["SLM Research"]
 description: "How I fine-tuned IBM Granite 4.0 H Micro on 5+ years of management notes to create a personalized AI assistant—after three failures, the key was data quality."
 ---
 
@@ -142,7 +143,7 @@ I examined the training data more closely:
 ```json
 {
   "question": "What is the main insight?",
-  "answer": "{\"summary\":\"FY21 - Leadership Team.pdf\",\"bullets\":[]}"
+  "answer": "{\"summary\":\"Leadership.pdf\",\"bullets\":[]}"
 }
 ```
 
@@ -183,7 +184,7 @@ I went back to the source: **96 PDF files of real management notes**:
 ```json
 {
   "question": "What is the main insight?",
-  "answer": "{\"summary\":\"FY21 - Leadership Team.pdf\",\"bullets\":[]}"
+  "answer": "{\"summary\":\"Leadership.pdf\",\"bullets\":[]}"
 }
 ```
 

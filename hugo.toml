@@ -3,6 +3,12 @@ languageCode = 'en-us'
 title = "Brian Hengen's AI Experiments"
 theme = 'PaperMod'
 
+# Enable taxonomies for series
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  series = "series"
+
 [params]
   author = "Brian Hengen"
   description = "Exploring AI, Oracle Database 23ai, and RTX 5090 for real-world applications"
@@ -11,39 +17,136 @@ theme = 'PaperMod'
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowShareButtons = true
+  ShowToc = true
+  TocOpen = false
+  ShowWordCount = false
+  
+  # Improved SEO
+  keywords = ["AI", "Machine Learning", "LLM", "SLM", "Oracle Database", "RTX 5090", "Fine-tuning"]
+  
+  # Show full content in list pages (optional - set to false for excerpts)
+  # ShowFullTextinRSS = true
 
   [params.assets]
     disableHLJS = false
+    # favicon = "/favicon.ico"  # Add if you have one
 
   [[params.assets.css]]
     href = "/css/custom.css"
   
+  # Profile mode for homepage
   [params.profileMode]
     enabled = true
     title = "AI Experiments with Oracle and RTX 5090"
-    subtitle = "Fine-Tuning LLMs and Building Apps with Oracle Database 23ai"
-    intro = "Follow my journey building AI apps with Oracle Database 23ai and fine-tuning LLMs on an RTX 5090. From cooking assistants to management tools, discover practical AI solutions. Subscribe for updates on new posts!"
+    subtitle = "Fine-Tuning LLMs • Building with Oracle Database 23ai • Testing the SLM Thesis"
+    imageUrl = "/images/profile.jpg"
+    imageWidth = 140
+    imageHeight = 140
+    imageTitle = "Brian Hengen"
+    
+    [[params.profileMode.buttons]]
+      name = "📚 Read Posts"
+      url = "/posts/"
 
+    [[params.profileMode.buttons]]
+      name = "🔬 SLM Research"
+      url = "/series/slm-research/"
+
+    [[params.profileMode.buttons]]
+      name = "🗄️ Oracle AI Database"
+      url = "/series/building-a-knowledge-management-app-with-oracle-ai-database-26ai/"
+
+    [[params.profileMode.buttons]]
+      name = "🖥️ SLM Powerhouse"
+      url = "/series/building-an-slm-powerhouse/"
+
+    [[params.profileMode.buttons]]
+      name = "👤 About Me"
+      url = "/about/"
+
+  # Home info (alternative to profile mode - currently disabled)
+  [params.homeInfoParams]
+    Title = "AI Experiments with Oracle and RTX 5090"
+    Content = "Follow my journey building AI apps with Oracle Database 23ai and fine-tuning LLMs on an RTX 5090."
+
+  # Social icons
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/bjhengen"
 
   [[params.socialIcons]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/brian-hengen/"
+
+  [[params.socialIcons]]
     name = "x"
-    url = "https://x.com/yourhandle"  # Replace with your X handle
+    url = "https://x.com/bhengen"
 
   [[params.socialIcons]]
     name = "rss"
     url = "/index.xml"
 
+  # Cover image defaults
+  [params.cover]
+    hidden = false
+    hiddenInList = false
+    hiddenInSingle = false
+
+  # Edit post link (optional - for open source blogs)
+  # [params.editPost]
+  #   URL = "https://github.com/bjhengen/bjhengen.github.io/tree/main/content"
+  #   Text = "Suggest Changes"
+  #   appendFilePath = true
+
+  # Search (if you want to enable it later)
+  # [params.fuseOpts]
+  #   isCaseSensitive = false
+  #   shouldSort = true
+  #   location = 0
+  #   distance = 1000
+  #   threshold = 0.4
+  #   minMatchCharLength = 0
+  #   keys = ["title", "permalink", "summary", "content"]
+
+# Menu
 [menu]
   [[menu.main]]
     identifier = "posts"
     name = "Posts"
     url = "/posts/"
     weight = 10
+  
+  [[menu.main]]
+    identifier = "series"
+    name = "Series"
+    url = "/series/"
+    weight = 15
+  
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 20
+  
   [[menu.main]]
     identifier = "about"
     name = "About"
     url = "/about/"
-    weight = 20
+    weight = 30
+
+# Markup settings
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = false
+    noClasses = false
+    style = "dracula"
+  
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+# Output formats
+[outputs]
+  home = ["HTML", "RSS", "JSON"]

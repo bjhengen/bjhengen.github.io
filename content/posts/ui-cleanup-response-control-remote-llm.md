@@ -4,6 +4,7 @@ date: 2025-11-05
 draft: true
 tags: ["flutter", "ui-ux", "llm", "ollama", "ssh-tunnel", "gpu", "knowledge-management"]
 categories: ["Development", "Flutter", "AI Integration"]
+series: ["SLM Research"]
 ---
 
 ## Overview

@@ -1,9 +1,12 @@
 ---
 date: "2025-09-20"
 draft: false
-title: "Building the Ultimate AI Workstation"
+title: "Building the Ultimate AI Workstation | Part 1"
 tags: ["hardware", "AI", "ML", "RTX 5090", "build"]
+series: ["Building an SLM Powerhouse"]
 ---
+
+{{< series-nav series="Building an SLM Powerhouse" part="1" total="2" >}}
 
 # Building My AI Workstation: Kicking Off the Project
 

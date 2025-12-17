@@ -1,0 +1,18 @@
+<!-- Series Navigation Shortcode -->
+{{ $series := .Get "series" }}
+{{ $part := .Get "part" }}
+{{ $total := .Get "total" }}
+{{ $progress := div (mul (int $part) 100) (int $total) }}
+<div class="series-nav-box">
+    <div class="series-nav-header">
+        <span class="series-nav-badge">📚 Series</span>
+        <span class="series-nav-title">{{ $series }}</span>
+    </div>
+    <div class="series-nav-progress">
+        <div class="series-nav-bar">
+            <div class="series-nav-fill" style="width: {{ $progress }}%"></div>
+        </div>
+        <div class="series-nav-text">Part {{ $part }} of {{ $total }}</div>
+    </div>
+    <a href="/series/{{ $series | urlize }}/" class="series-nav-link">View all posts in this series →</a>
+</div>

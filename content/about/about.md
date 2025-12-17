@@ -1,38 +1,54 @@
 ---
 title: "About"
+description: "Brian Hengen - VP at Oracle, AI researcher, and builder of specialized language models"
 ---
 
-## About This Blog
+## The Mission
 
-This blog documents my journey building and running a **personal AI workstation** from the ground up.  
+This blog documents my hands-on exploration of **Specialized Language Models (SLMs)**—the hypothesis that smaller, domain-focused AI models can outperform general-purpose giants on specific tasks.
 
-The focus is on **Specialized Language Models (SLMs)** — training, fine-tuning, and experimenting with how domain-specific AI can solve real-world problems.  
+Since September 2025, I've been building, fine-tuning, and testing this thesis with real applications:
 
-Along the way, I'll share:
-- Daily build updates (with photos),
-- Lessons learned on hardware, software, and workflows,
-- Reflections on how AI can be applied in business and everyday productivity.
+| Project | What I Learned |
+|---------|---------------|
+| **ChefBot** | A cooking AI that coordinates multi-dish meal prep—specialists excel at domain knowledge |
+| **Executive Assistant** | An AI trained on 5+ years of my management notes—data quality trumps model size |
+| **3-LLM Toggle** | Balancing cloud, local, and GPU inference—flexibility beats optimization |
+| **Multi-Model Collaboration** | Two AIs pair programming—specialists need generalists, and vice versa |
 
-If you're curious about what it takes to get hands-on with cutting-edge AI — from raw components to working models — you're in the right place.
+Every experiment runs on my RTX 5090 workstation, with findings documented here for others walking a similar path.
 
 ---
 
 ## About Me
 
-Hi, I'm **Brian Hengen**, Vice President at **Oracle**, where I lead technical sales engineering teams.
+I'm **Brian Hengen**, Vice President at **Oracle**, where I lead technical sales engineering teams focused on AI and database technologies.
 
-I'm also a DBA and developer who is passionate about AI, data, and innovation. By night (and often early mornings), I tinker with code, experiment with new ideas, and explore how **Specialized Language Models (SLMs)** and AI can be applied to real-world challenges.
+By day, I help enterprises adopt AI-powered data solutions. By night (and early mornings), I build things—fine-tuning models, writing code, and testing ideas that might not work.
 
-This blog is my personal project to document the journey of building a high-performance AI workstation and using it as a testbed for fine-tuning and experimenting with SLMs. My aim is to share insights that are practical, approachable, and hopefully useful to others walking a similar path.
+**What drives me:**
+- The belief that AI should be practical, not theoretical
+- A conviction that smaller, specialized models have an outsized role to play
+- The joy of building something that actually runs
 
-**Connect with me:**
-- X: [@bhengen](https://x.com/bhengen)
-- LinkedIn: [linkedin.com/in/brian-hengen](https://www.linkedin.com/in/brian-hengen/)
+**Background:**
+- 20+ years in technology leadership
+- Self-taught programmer since age 7
+- Former Oracle DBA who learned by being thrown into the deep end
+- No college degree—just relentless curiosity
 
 ---
 
-### Disclaimer
+## Connect
 
-The views and opinions expressed here are **my own** and do not necessarily reflect those of my employer or any other organization.  
+- **GitHub:** [github.com/bjhengen](https://github.com/bjhengen)
+- **LinkedIn:** [linkedin.com/in/brian-hengen](https://www.linkedin.com/in/brian-hengen/)
+- **X/Twitter:** [@bhengen](https://x.com/bhengen)
 
-I take care not to disclose my employer's confidential or proprietary information, nor use their trademarks, logos, or branding in this blog. This is strictly a personal space for learning, experimenting, and sharing ideas about AI and technology.
+Questions about the experiments? Found a bug in my code? Want to collaborate? Reach out.
+
+---
+
+## Disclaimer
+
+The views expressed here are **my own** and do not represent my employer. I don't disclose confidential information or use corporate branding. This is a personal space for learning and sharing.

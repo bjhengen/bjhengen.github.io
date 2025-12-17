@@ -1,0 +1,8 @@
+<!-- Metric/Stat Callout Shortcode -->
+{{ $value := .Get "value" }}
+{{ $label := .Get "label" }}
+{{ $color := .Get "color" | default "cyan" }}
+<div class="metric-callout metric-{{ $color }}">
+    <div class="metric-value">{{ $value }}</div>
+    <div class="metric-label">{{ $label }}</div>
+</div>

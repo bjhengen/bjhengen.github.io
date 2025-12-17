@@ -1,11 +1,14 @@
 ---
-title: "Building the RTX 5090 AI Workstation - Step by Step"
+title: "Building the RTX 5090 AI Workstation - Step by Step | Part 2"
 date: 2025-09-24
 draft: false
 tags: ["AI", "RTX 5090", "Hardware", "Build Process"]
 categories: ["Hardware"]
+series: ["Building an SLM Powerhouse"]
 description: "A detailed walkthrough of assembling my RTX 5090-powered AI workstation with photos from the entire build process"
 ---
+
+{{< series-nav series="Building an SLM Powerhouse" part="2" total="2" >}}
 
 🚀 **The Build Day Has Arrived!** After months of anticipation and planning, the RTX 5090 finally launched and it was time to bring my AI/ML powerhouse to life.
 

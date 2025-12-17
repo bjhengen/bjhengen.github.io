@@ -4,8 +4,11 @@ date: 2025-11-22
 draft: false
 tags: ["AI", "Oracle Database 26ai", "Grok-4", "Vision AI", "RAG", "Microservices", "Python", "ONNX", "OracleAIDatabase"]
 categories: ["AI Infrastructure"]
+series: ["Building a Knowledge Management App with Oracle AI Database 26ai"]
 description: "After CLIP made multimodal search instant, I hit a wall: the LLM could find images but couldn't see them. Here's how an Oracle engineer's tip and 300 lines of Python broke through."
 ---
+
+{{< series-nav series="Building a Knowledge Management App with Oracle AI Database 26ai" part="3" total="3" >}}
 
 *This is Part 3* — the final chapter in turning a text-only knowledge base into a fully vision-aware RAG system
 
