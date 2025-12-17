@@ -4,6 +4,7 @@ draft: false
 title: "Building the Ultimate AI Workstation | Part 1"
 tags: ["hardware", "AI", "ML", "RTX 5090", "build"]
 series: ["Building an SLM Powerhouse"]
+description: "Planning an RTX 5090 AI workstation for fine-tuning specialized language models. Part 1 covers goals, component selection, and the SLM thesis."
 ---
 
 {{< series-nav series="Building an SLM Powerhouse" part="1" total="2" >}}

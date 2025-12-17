@@ -4,6 +4,7 @@ date: 2025-11-04
 draft: true
 tags: ["flutter", "quill", "onenote", "clipboard", "rag", "image-processing"]
 categories: ["Development", "Flutter", "Knowledge Management"]
+description: "Adding clipboard image paste and OneNote integration to a Flutter knowledge management app using Quill rich text editor."
 ---
 
 ## Overview

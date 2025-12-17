@@ -5,6 +5,7 @@ draft: true
 tags: ["flutter", "ui-ux", "llm", "ollama", "ssh-tunnel", "gpu", "knowledge-management"]
 categories: ["Development", "Flutter", "AI Integration"]
 series: ["SLM Research"]
+description: "Streamlining the UI, adding LLM response length controls, and connecting to a remote RTX 5090 GPU via SSH tunnel for faster inference."
 ---
 
 ## Overview

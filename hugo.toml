@@ -20,12 +20,21 @@ theme = 'PaperMod'
   ShowToc = true
   TocOpen = false
   ShowWordCount = false
-  
+  env = "production"
+
   # Improved SEO
   keywords = ["AI", "Machine Learning", "LLM", "SLM", "Oracle Database", "RTX 5090", "Fine-tuning"]
-  
-  # Show full content in list pages (optional - set to false for excerpts)
-  # ShowFullTextinRSS = true
+
+  # Full content in RSS feeds for better syndication
+  ShowFullTextinRSS = true
+
+  # Schema.org - use Person for personal blog
+  [params.schema]
+    publisherType = "Person"
+
+  # Google Search Console verification
+  [params.analytics.google]
+    SiteVerificationTag = "grXLP2Gd9iDmkCopwjjMzZkg9TIdRXUIVgPjlDX0gvs"
 
   [params.assets]
     disableHLJS = false
