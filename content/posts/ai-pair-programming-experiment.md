@@ -8,6 +8,8 @@ series: ["SLM Research"]
 description: "What happens when you let two local LLMs have unsupervised conversations? Cosmic harmony engines, fictional PhD consultants, and a surprisingly deep discussion about why chickens cross roads."
 ---
 
+![Two AIs collaborating](/images/CollabAI.png)
+
 {{< tldr >}}
 - Two AIs asked to "help me get rich" spiraled into inventing the **Infinite Radiance Cosmic Leitmotif Convergence Harmonizer**
 - Two AIs writing a story introduced themselves as "Codex Alpha" and "Lyric Weaver" (adorable)
