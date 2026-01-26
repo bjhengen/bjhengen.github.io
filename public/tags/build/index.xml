@@ -1,3 +1,69 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Build on Brian Hengen's AI Experiments</title><link>https://brianhengen.us/tags/build/</link><description>Recent content in Build on Brian Hengen's AI Experiments</description><generator>Hugo -- 0.150.0</generator><language>en-us</language><lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://brianhengen.us/tags/build/index.xml" rel="self" type="application/rss+xml"/><item><title>Building the Ultimate AI Workstation</title><link>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</link><pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</guid><description>&lt;h1 id="building-my-ai-workstation-kicking-off-the-project"&gt;Building My AI Workstation: Kicking Off the Project&lt;/h1&gt;
-&lt;p&gt;Over the past few years, I&amp;rsquo;ve watched the evolution of AI move from research labs into the everyday workflows of business, productivity, and creativity. Models that once required massive clusters are now accessible to individuals, and the frontier is shifting toward &lt;strong&gt;Specialized Language Models (SLMs)&lt;/strong&gt; — models tuned for specific domains, tasks, and contexts.&lt;/p&gt;
-&lt;p&gt;To push my own understanding forward, I&amp;rsquo;ve decided to build a &lt;strong&gt;personal AI workstation&lt;/strong&gt;: a high-performance rig that will let me fine-tune, benchmark, and experiment with large models in a hands-on way. This is not just about performance numbers — it&amp;rsquo;s about exploring how to &lt;strong&gt;apply AI practically&lt;/strong&gt; and learning what it really takes to train and deploy models tailored for business value.&lt;/p&gt;</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Build on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/tags/build/</link>
+    <description>Recent content in Build on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://brianhengen.us/tags/build/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building the Ultimate AI Workstation | Part 1</title>
+      <link>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</guid>
+      <description>Planning an RTX 5090 AI workstation for fine-tuning specialized language models. Part 1 covers goals, component selection, and the SLM thesis.</description>
+      <content:encoded><![CDATA[
+
+
+
+
+<div class="series-nav-box">
+    <div class="series-nav-header">
+        <span class="series-nav-badge">📚 Series</span>
+        <span class="series-nav-title">Building an SLM Powerhouse</span>
+    </div>
+    <div class="series-nav-progress">
+        <div class="series-nav-bar">
+            <div class="series-nav-fill" style="width: 50%"></div>
+        </div>
+        <div class="series-nav-text">Part 1 of 2</div>
+    </div>
+    <a href="/series/building-an-slm-powerhouse/" class="series-nav-link">View all posts in this series →</a>
+</div>
+
+<h1 id="building-my-ai-workstation-kicking-off-the-project">Building My AI Workstation: Kicking Off the Project</h1>
+<p>Over the past few years, I&rsquo;ve watched the evolution of AI move from research labs into the everyday workflows of business, productivity, and creativity. Models that once required massive clusters are now accessible to individuals, and the frontier is shifting toward <strong>Specialized Language Models (SLMs)</strong> — models tuned for specific domains, tasks, and contexts.</p>
+<p>To push my own understanding forward, I&rsquo;ve decided to build a <strong>personal AI workstation</strong>: a high-performance rig that will let me fine-tune, benchmark, and experiment with large models in a hands-on way. This is not just about performance numbers — it&rsquo;s about exploring how to <strong>apply AI practically</strong> and learning what it really takes to train and deploy models tailored for business value.</p>
+<h2 id="why-this-project">Why This Project?</h2>
+<p>There are three main goals for this build:</p>
+<ol>
+<li><strong>Hands-on learning with SLMs.</strong> I want to go deeper into how models can be specialized — what works, what doesn&rsquo;t, and what resources are required.</li>
+<li><strong>Practical experimentation.</strong> Fine-tuning models locally provides an environment where I can test ideas quickly, without waiting on shared infrastructure or cloud quotas.</li>
+<li><strong>Personal brand and knowledge sharing.</strong> By documenting the process here, I aim to demonstrate that I&rsquo;m not just <em>talking</em> about AI adoption in business — I&rsquo;m actively experimenting with it, sharing the ups and downs of building and using a system like this.</li>
+</ol>
+<h2 id="the-build">The Build</h2>
+<p>After a lot of research and part comparisons, here&rsquo;s the final component list for the workstation:</p>
+<ul>
+<li><strong>Motherboard:</strong> Gigabyte B650 Aorus Elite AX</li>
+<li><strong>CPU:</strong> AMD Ryzen 9 7900X</li>
+<li><strong>RAM:</strong> G.Skill Flare X5 64GB DDR5-6000 CL30</li>
+<li><strong>Primary SSD:</strong> Samsung 990 Pro 2TB NVMe</li>
+<li><strong>Secondary SSD:</strong> TeamGroup MP44Q 4TB NVMe</li>
+<li><strong>PSU:</strong> Corsair RM1000e (2025)</li>
+<li><strong>Case:</strong> Fractal Pop XL Silent</li>
+<li><strong>Case Fans:</strong> 2 × Arctic P14</li>
+<li><strong>CPU Cooler:</strong> be quiet! Dark Rock Pro 5</li>
+<li><strong>GPU:</strong> NVIDIA RTX 5090 Gaming OC</li>
+</ul>
+<p>This combination balances raw compute power (with the 5090 GPU at the core), ample high-speed storage for model weights and datasets, and quiet cooling for a system that will often be under heavy sustained loads.</p>
+<h2 id="whats-next">What&rsquo;s Next</h2>
+<p>Over the coming days, I&rsquo;ll be posting updates with photos and notes as I build out the system. Expect plenty of real-world detail: cable management victories (and mistakes), BIOS tweaks, thermals, and the first time I load a model that truly pushes the GPU.</p>
+<p>From there, I&rsquo;ll dive into the software side: Ubuntu 24.04 as the primary OS (with a Windows partition for occasional extra use of the GPU&hellip;), driver setup, and my initial workflow for fine-tuning language models.</p>
+<hr>
+<p>This blog is as much about the <strong>journey</strong> as the <strong>destination</strong>. My hope is that by the time this project is complete, I&rsquo;ll have a workstation that not only supports my research and tinkering but also serves as a showcase of how AI exploration can be practical, applied, and — most importantly — shared.</p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

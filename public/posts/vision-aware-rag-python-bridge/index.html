@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge | Brian Hengen&#39;s AI Experiments</title>
+<meta name="keywords" content="AI, Oracle Database 26ai, Grok-4, Vision AI, RAG, Microservices, Python, ONNX, OracleAIDatabase">
+<meta name="description" content="After CLIP made multimodal search instant, I hit a wall: the LLM could find images but couldn&#39;t see them. Here&#39;s how an Oracle engineer&#39;s tip and 300 lines of Python broke through.">
+<meta name="author" content="Brian Hengen">
+<link rel="canonical" href="https://brianhengen.us/posts/vision-aware-rag-python-bridge/">
+<meta name="google-site-verification" content="grXLP2Gd9iDmkCopwjjMzZkg9TIdRXUIVgPjlDX0gvs">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.08f7d74f0ada0f975d29ae436285b61ed7a719d05f350cb888d00341642995a2.css" integrity="sha256-CPfXTwraD5ddKa5DYoW2HtenGdBfNQy4iNADQWQplaI=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://brianhengen.us/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://brianhengen.us/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://brianhengen.us/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://brianhengen.us/apple-touch-icon.png">
+<link rel="mask-icon" href="https://brianhengen.us/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://brianhengen.us/posts/vision-aware-rag-python-bridge/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+
+
+
+
+<meta name="author" content="Brian Hengen">
+<meta name="twitter:creator" content="@bhengen">
+
+
+<meta name="theme-color" content="#0c0c0c">
+<meta name="msapplication-TileColor" content="#0c0c0c">
+<meta property="og:url" content="https://brianhengen.us/posts/vision-aware-rag-python-bridge/">
+  <meta property="og:site_name" content="Brian Hengen&#39;s AI Experiments">
+  <meta property="og:title" content="When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge">
+  <meta property="og:description" content="After CLIP made multimodal search instant, I hit a wall: the LLM could find images but couldn&#39;t see them. Here&#39;s how an Oracle engineer&#39;s tip and 300 lines of Python broke through.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-11-22T00:00:00+00:00">
+    <meta property="article:tag" content="AI">
+    <meta property="article:tag" content="Oracle Database 26ai">
+    <meta property="article:tag" content="Grok-4">
+    <meta property="article:tag" content="Vision AI">
+    <meta property="article:tag" content="RAG">
+    <meta property="article:tag" content="Microservices">
+      <meta property="og:see_also" content="https://brianhengen.us/posts/three-llms-one-app/">
+      <meta property="og:see_also" content="https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-11nov25/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge">
+<meta name="twitter:description" content="After CLIP made multimodal search instant, I hit a wall: the LLM could find images but couldn&#39;t see them. Here&#39;s how an Oracle engineer&#39;s tip and 300 lines of Python broke through.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://brianhengen.us/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge",
+      "item": "https://brianhengen.us/posts/vision-aware-rag-python-bridge/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge",
+  "name": "When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge",
+  "description": "After CLIP made multimodal search instant, I hit a wall: the LLM could find images but couldn't see them. Here's how an Oracle engineer's tip and 300 lines of Python broke through.",
+  "keywords": [
+    "AI", "Oracle Database 26ai", "Grok-4", "Vision AI", "RAG", "Microservices", "Python", "ONNX", "OracleAIDatabase"
+  ],
+  "articleBody": " 📚 Series Building a Knowledge Management App with Oracle AI Database 26ai Part 3 of 4 View all posts in this series → This is Part 3 — turning a text-only knowledge base into a fully vision-aware RAG system\nAfter moving CLIP embeddings into Oracle AI Database 26ai, I had something great: true multimodal search. Text queries found images. Images found related text. No OCR, no captions—just CLIP doing its magic in the database.\nBut I quickly hit a wall.\nWhen I asked my knowledge management app: “What color is the car in this photo?”\nThe response: “I don’t have information about the color of any vehicles in the available documents.” but, it would still retrieve the picture - it just couldn’t comprehend it and integrate it into the response.\nWait. The CLIP search found the image. The app showed me the photo. But the LLM couldn’t see it.\nI had retrieval. What I needed was reasoning.\nThis is the story of how a great conversation with a Director of Product Management at Oracle AI World, a polyglot microservice, and 300 lines of Python turned multimodal search into true vision-aware RAG.\nThe Retrieval vs. Reasoning Gap Let me show you what was happening under the hood.\nWhat CLIP Gave Me (The Good Part) -- User asks: \"Show me photos from customer meetings\" SELECT d.document_name, d.file_content, VECTOR_DISTANCE( dc.chunk_vector_clip, VECTOR_EMBEDDING(CLIP_TEXT USING 'customer meeting photos' as INPUT), COSINE ) as similarity FROM document_chunks dc JOIN documents d ON dc.document_id = d.document_id WHERE d.document_type = 'IMAGE' AND VECTOR_DISTANCE( dc.chunk_vector_clip, VECTOR_EMBEDDING(CLIP_TEXT USING 'customer meeting photos' as INPUT), COSINE ) \u003c 0.85 ORDER BY similarity FETCH FIRST 5 ROWS ONLY; -- Result: 5 relevant images found in 45ms ✅ Perfect. CLIP’s semantic search worked beautifully. Text queries found visually relevant images, and the app displayed them to the user.\nWhat the LLM Saw (The Problem) But when I passed those images to the LLM for Q\u0026A, here’s what the context looked like:\n// What the LLM actually received const context = ` Based on the following documents, answer the user's question. RELEVANT DOCUMENTS: - customer_meeting_photo_1.jpg (image file) - customer_meeting_photo_2.jpg (image file) - customer_meeting_photo_3.jpg (image file) USER QUESTION: What color shirt was the customer wearing in the meeting? `; // LLM's response: \"I don't have information about clothing colors in the documents.\" The LLM saw filenames. Not pixels. Not visual content. Just text strings.\nIt was like asking someone to describe a photo while only telling them the filename. Useless.\nThe Architecture Gap Before (Retrieval Only): User: \"What color is the car?\" ↓ CLIP Search → Finds car_photo.jpg (similarity: 0.92) ✅ ↓ LLM Context: \"Found document: car_photo.jpg\" ❌ ↓ LLM: \"I don't have information about vehicle colors\" ↓ User: 😤 What I Needed (Retrieval + Reasoning): User: \"What color is the car?\" ↓ CLIP Search → Finds car_photo.jpg ✅ ↓ Load Image Bytes → Convert to format LLM understands ✅ ↓ LLM Context: [actual image pixels/encoding] ✅ ↓ LLM Vision Model: \"The car in the image is red\" ✅ ↓ User: 🎉 I needed to bridge the gap between retrieval (which CLIP handled perfectly) and reasoning (which required the LLM to actually see the images).\nThe SDK Wall Oracle Cloud has excellent vision-capable models:\nGrok-4 from xAI (128K context, multimodal) Meta Llama 3.2 90B Vision Instruct (90B parameters, native vision) Both accessible through OCI GenAI. Both worked perfectly in the OCI Console Playground.\nBut my app used the TypeScript SDK (v2.119.0). And that’s where things fell apart.\nAttempt 1: The Obvious Approach I tried passing images directly to the SDK’s chat API:\n// backend/services/ociGenAIwithSDK.js const oci = require('oci-generativeaiinference'); async function generateTextWithImages(prompt, images) { const chatDetails = { compartmentId: process.env.OCI_COMPARTMENT_ID, servingMode: { servingType: \"ON_DEMAND\", modelId: \"ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya...\" }, chatRequest: { messages: [ { role: \"USER\", content: [ { type: \"TEXT\", text: prompt }, { type: \"IMAGE\", imageUrl: `data:image/jpeg;base64,${images[0].base64}` } ] } ] } }; return await this.client.chat(chatDetails); } Result:\nError: Type 'IMAGE' is not assignable to type 'TextContent' TypeScript SDK only supports text-only messages The SDK’s TypeScript types literally rejected image content. Text only.\nAttempt 2: The REST API Route Fine. If the SDK won’t cooperate, I’ll use the REST API directly.\nI spent an afternoon trying five different request formats based on the API documentation:\n// Format 1: Nested image_url (Python SDK style) { \"chatRequest\": { \"messages\": [{ \"role\": \"USER\", \"content\": [ { \"type\": \"TEXT\", \"text\": \"Describe this image\" }, { \"type\": \"IMAGE\", \"image_url\": { \"url\": \"data:image/jpeg;base64,{base64_data}\", \"detail\": \"high\" } } ] }] } } // Result: 400 - \"Please pass in correct format of request\" // Format 2: Simple imageUrl { \"content\": [ { \"type\": \"TEXT\", \"text\": \"Describe this image\" }, { \"type\": \"IMAGE\", \"imageUrl\": \"data:image/jpeg;base64,{base64_data}\" } ] } // Result: 400 - \"Please pass in correct format of request\" // Format 3: Direct imageData { \"content\": [ { \"type\": \"TEXT\", \"text\": \"Describe this image\" }, { \"type\": \"IMAGE\", \"imageData\": \"{base64_data}\" } ] } // Result: 400 - \"Please pass in correct format of request\" // Format 4: No apiFormat field // Result: 400 - \"Please pass in correct format of request\" // Format 5: COHERE apiFormat instead of GENERIC // Result: 400 - \"Please pass in correct format of request\" All five failed. Same cryptic error. No hints about what was wrong.\nThe REST API documentation showed ImageContent as a supported type, but provided zero examples of the actual request structure for vision models.\nThe Email That Changed Everything Three days later, I was at a team meeting discussing a different project. During a break, I mentioned my vision API struggles to a colleague.\n“Oh, you should talk to David Start (Director of Product Management at Oracle, and a collegue with whom I’ve always enjoyed working),” she said. “He’s done a lot with OCI GenAI.”\nAs it just so happened, Oracle AI World was right around the corner - over at the Oracle Database booth, I found David and explained the challenges I was having:\nVision models work in Playground TypeScript SDK doesn’t support vision REST API attempts all failing And it just so happened, that David had cracked this nut a little while back\nAfter we got back from AI World, he slacked me a bit of code and it was gold\nThe Python SDK Solution David’s slack was short and to the point:\nHe attached a Python script showing:\nHow to structure the multimodal request using the OCI Python SDK Proper image encoding (base64 in data URI format) The exact message format that worked How to handle both text-only and vision requests The key insight: The Python SDK was ahead of the TypeScript SDK in supporting vision features.\nI had two options:\nWait for TypeScript SDK to catch up (could be weeks/months) Build a Python microservice to bridge the gap Given that I had working CLIP search, hundreds of images in the database, and I wanted to get this resolved… option 2 was obvious.\n300 Lines to Vision-Aware RAG I decided to build a Flask microservice in Python that would:\nAccept requests from my Node.js backend Use the OCI Python SDK to call Grok-4 Vision Handle both text-only and multimodal requests Return responses in a format my backend expected Time invested: About 2 hours, thanks to David’s example.\nThe Python Vision Service Here’s the core of what I built:\n# backend/vision_service.py from flask import Flask, request, jsonify from flask_cors import CORS import oci import base64 import os app = Flask(__name__) CORS(app) # Initialize OCI GenAI client config = oci.config.from_file() generative_ai_inference_client = oci.generative_ai_inference.GenerativeAiInferenceClient( config=config, service_endpoint=f\"https://inference.generativeai.{config['region']}.oci.oraclecloud.com\" ) # Grok-4 model OCID (Chicago region) GROK4_MODEL_ID = \"ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya3bsfz4ogiuv3yc7gcnlry7gi3zzx6tnikg6jltqszm2q\" @app.route('/analyze', methods=['POST']) def analyze(): \"\"\" Generate text with optional images using Grok-4 Vision Request body: { \"prompt\": \"Describe this image\", \"images\": [ {\"base64\": \"...\", \"filename\": \"photo.jpg\"} ], \"temperature\": 0.7, \"maxTokens\": 1500 } \"\"\" data = request.json prompt = data.get('prompt', '') images = data.get('images', []) temperature = data.get('temperature', 0.7) max_tokens = data.get('maxTokens', 1500) # Build message content content = [{\"type\": \"TEXT\", \"text\": prompt}] # Add images if present (multimodal mode) if images and len(images) \u003e 0: for img in images[:5]: # Limit to 5 images # This is the format that works with the Python SDK content.append({ \"type\": \"IMAGE\", \"image_url\": { \"url\": f\"data:image/jpeg;base64,{img['base64']}\" } }) # Create chat request chat_request = oci.generative_ai_inference.models.GenericChatRequest( messages=[ oci.generative_ai_inference.models.Message( role=\"USER\", content=content ) ], max_tokens=max_tokens, temperature=temperature, top_p=0.95 ) # Send to Grok-4 Vision chat_detail = oci.generative_ai_inference.models.ChatDetails( compartment_id=os.environ.get('OCI_COMPARTMENT_ID'), serving_mode=oci.generative_ai_inference.models.OnDemandServingMode( model_id=GROK4_MODEL_ID ), chat_request=chat_request ) response = generative_ai_inference_client.chat(chat_detail) # Extract response text response_text = response.data.chat_response.choices[0].message.content[0].text return jsonify({ 'response': response_text, 'model': 'grok-4', 'multimodal': len(images) \u003e 0 }) @app.route('/health', methods=['GET']) def health(): return jsonify({'status': 'healthy', 'service': 'vision-llm'}) if __name__ == '__main__': app.run(host='0.0.0.0', port=3002) That’s it. 150 lines of actual logic (the rest is imports, error handling, and comments).\nThe Node.js Integration Now my Node.js backend could call this Python service:\n// backend/services/ociGenAIwithSDK.js const axios = require('axios'); class OCIGenAIService { async generateText(prompt, options = {}) { const { images = [], temperature = 0.7, maxTokens = 1500 } = options; // Call Python vision service const response = await axios.post('http://localhost:3002/analyze', { prompt, images, temperature, maxTokens }); return response.data.response; } } The Complete Q\u0026A Flow Here’s what happens when a user asks about an image:\n// backend/routes/notes.js - Q\u0026A endpoint async function handleQuestion(question, llmProvider) { // 1. CLIP search for relevant images const imageResults = await executeQuery(` SELECT d.file_content, d.document_name, VECTOR_DISTANCE( dc.chunk_vector_clip, VECTOR_EMBEDDING(CLIP_TEXT USING :question as INPUT), COSINE ) as similarity FROM document_chunks dc JOIN documents d ON dc.document_id = d.document_id WHERE d.document_type = 'IMAGE' ORDER BY similarity FETCH FIRST 5 ROWS ONLY `, { question }); // 2. For vision provider: convert images to base64 let imageData = []; if (llmProvider === 'vision' \u0026\u0026 imageResults.rows.length \u003e 0) { imageData = imageResults.rows .filter(row =\u003e row.SIMILARITY \u003c 0.85) // Only highly relevant images .slice(0, 3) // Max 3 images .map(row =\u003e ({ base64: row.FILE_CONTENT.toString('base64'), filename: row.DOCUMENT_NAME })); } // 3. Text search for context (same as before) const textContext = await getRelevantTextContext(question); // 4. Build prompt with context const prompt = ` Based on the following context, answer the question. CONTEXT: ${textContext} QUESTION: ${question} `; // 5. Call LLM with images (if vision provider) const response = await llmRouter.generateText(prompt, { images: imageData, // Empty array for non-vision providers temperature: 0.3, maxTokens: 1500 }, llmProvider); return { answer: response, relatedImages: imageResults.rows.map(r =\u003e ({ filename: r.DOCUMENT_NAME, similarity: r.SIMILARITY })) }; } The Architecture: Before and After Before (Retrieval Only) User: \"What color is the car?\" ↓ Node.js Backend ↓ CLIP Vector Search (Oracle AI Database 26ai) → Finds: car_photo.jpg (similarity: 0.92) ↓ LLM (Cohere Command-R) Context: \"Found document: car_photo.jpg\" ↓ Response: \"I don't have information about vehicle colors\" After (Vision-Aware RAG) User: \"What color is the car?\" ↓ Node.js Backend ↓ CLIP Vector Search (Oracle AI Database 26ai) → Finds: car_photo.jpg (similarity: 0.92) ↓ Fetch Image BLOB from database ↓ Convert to base64 ↓ Python Vision Service (Flask on port 3002) ↓ OCI Python SDK ↓ Grok-4 Vision (128K context, multimodal) Context: [actual image pixels as base64] ↓ Response: \"The car in the image is red\" The Results: Vision That Actually Works Response Time Text-only query: - CLIP search: 45ms - Text context: 120ms - Grok-4: 2.1s - Total: ~2.3s Vision query (with 1 image): - CLIP search: 45ms - Image fetch: 85ms - Base64 encode: 15ms - Text context: 120ms - Python service → Grok-4: 4.2s - Total: ~4.5s Vision query (with 3 images): - CLIP search: 45ms - Image fetch: 210ms - Base64 encode: 35ms - Text context: 120ms - Python service → Grok-4: 5.8s - Total: ~6.2s Not instant, but totally acceptable for the value delivered.\nAccuracy Comparison Question Type Before (Text-Only) After (Vision-Aware) “What color is the car?” ❌ “No information” ✅ “Red sedan” “What text is on the sign?” ❌ “Cannot determine” ✅ Accurate OCR “How many people in photo?” ❌ Guesses from filename ✅ Counts accurately “What brand is the laptop?” ❌ No answer ✅ Identifies logo “Describe the scene” ❌ Generic response ✅ Detailed description Real Usage Example Here’s an actual exchange from my testing:\nQ: “Explain this image for me”\nBefore (Text-only):\n“I don’t have access to the specific content in the image. The available documents include references to images, but I cannot see the visual content.”\nAfter (Vision-aware):\n“The image shows:\n‘Oil and gas pipelines’ as the header Two bullet points: • Oil pipelines are in red • Gas pipelines are in green A map of the United States showing the pipelines” Accuracy: I checked the actual image. Grok-4 got every detail correct.\nThat’s the difference between retrieval and reasoning.\nThe Bonus: Hybrid Vision Approach While implementing the Grok-4 solution, I worked with OCI Vision AI—a separate service specialized for image analysis.\nInstead of sending raw pixels to an LLM, OCI Vision provides:\nObject Detection: “person, vehicle, building” Scene Classification: “outdoor, daytime, parking lot” Text Extraction (OCR): Reads actual text in images Confidence Scores: How certain is each detection Why This Matters For some queries, structured analysis beats raw pixels:\n// OCI Vision output for a photo { \"sceneClassifications\": [ { \"label\": \"Person\", \"confidence\": 0.89 }, { \"label\": \"Vehicle\", \"confidence\": 0.85 }, { \"label\": \"Outdoor\", \"confidence\": 0.92 } ], \"objectDetections\": [ { \"label\": \"person\", \"confidence\": 0.91, \"boundingBox\": {...} }, { \"label\": \"car\", \"confidence\": 0.87, \"boundingBox\": {...} }, { \"label\": \"shirt\", \"confidence\": 0.73, \"boundingBox\": {...} } ], \"textDetections\": [ { \"text\": \"Daytona 500\", \"confidence\": 0.96 } ] } I can then add this structured data to the context:\n=== VISUAL ANALYSIS === IMAGE: meeting_photo.jpg SCENE: Outdoor (92%), Person (89%), Vehicle (85%) OBJECTS DETECTED: person, car, shirt TEXT IN IMAGE: \"Daytona 500\" === END VISUAL ANALYSIS === QUESTION: What event is this photo from? Even a text-only LLM can now reason about image content using the structured analysis.\nThe Hybrid Architecture I implemented both approaches and let the system choose:\n// For simple queries → OCI Vision (faster) if (questionType === 'simple-visual') { analysis = await ociVisionAnalyzer.analyzeImage(imageBlob); context += formatVisionAnalysis(analysis); llmResponse = await grok4.generateText(context); // Text mode } // For complex queries → Grok-4 Vision (deeper reasoning) if (questionType === 'complex-visual') { llmResponse = await grok4Vision.generateText(prompt, { images: [imageBase64] // Vision mode }); } Best of both worlds.\nLessons Learned Insight Takeaway SDKs Lag Behind Services The OCI Console supported vision weeks before the TypeScript SDK. If you hit SDK limitations, check if other SDKs (Python, Java, Go) are ahead. Don’t assume they’re all in sync. Polyglot \u003e Monolith for AI Mixing Python (OCI SDK, ML libraries) and Node.js (API, business logic) proved better than forcing everything into one language. Use the right tool for each job. Microservices Unlock Innovation The 300-line Python service took 2 hours to build and unblocked weeks of potential waiting. Small, focused services \u003e large refactors. Community \u003e Documentation David Start’s email was more valuable than hours of API docs. Reach out to people. The Oracle community is helpful. Specialized \u003e General OCI Vision (specialized) sometimes beats Grok-4 (general) for structured tasks like OCR. Don’t assume the biggest model is always best. The Code: Open for Adaptation The Python vision service is ~300 lines total. Here’s the startup configuration I added to package.json:\n{ \"scripts\": { \"start\": \"node server-prod.js\", \"start:vision\": \"python3 backend/vision_service.py\", \"start:all\": \"concurrently \\\"npm start\\\" \\\"npm run start:vision\\\"\" }, \"devDependencies\": { \"concurrently\": \"^9.2.1\" } } One command starts both services:\nnpm run start:all The architecture is simple by design:\nNode.js handles business logic, database, and API Python handles OCI Vision SDK calls HTTP bridge between them (could be gRPC for production) No complex orchestration. No containers (yet). Just two processes talking over localhost.\nAnd it works.\nWhat’s Next The vision-aware RAG is now production-ready in my knowledge management app:\nUsers can ask questions about image content Grok-4 Vision sees and reasons about actual pixels OCI Vision provides structured analysis when appropriate Response times are acceptable (3-6 seconds with images) Future Enhancements Caching: Vision analysis could be cached per image to avoid re-analyzing Batch Processing: Analyze multiple images in parallel Video Support: Extract frames and analyze video content SDK Update: When TypeScript SDK adds vision, remove the Python bridge (or keep it—it works great) What’s Next: Unifying Knowledge Silos With multimodal search and vision-aware RAG working, the next challenge was obvious: data.\nMost of my knowledge was still trapped in silos:\n12 years of OneNote (5,000+ pages) Daily markdown journals (growing constantly) Part 4 covers how I migrated 5,178 OneNote documents via Microsoft Graph API and built real-time markdown sync—turning scattered notes into a unified, AI-searchable knowledge base.\nBlog Series So Far Part 1: Three LLMs, One App - Multi-provider LLM architecture Part 2: CLIP Inside Oracle AI Database 26ai - In-database embeddings for 10x faster search Part 3: This post - Vision-aware RAG with a Python bridge Part 4: Unifying Knowledge Silos - OneNote migration + Markdown sync\nTogether, they show a complete RAG evolution:\nText search → Multimodal search → Vision-aware reasoning → Unified knowledge Each step unlocked new capabilities. Each required different solutions. Each taught valuable lessons.\nSpecial Thanks This breakthrough wouldn’t have happened without David Start, Oracle Director of Database Product Management (https://www.linkedin.com/in/davidastart/).\nDavid’s Python SDK example and willingness to help a colleague solve a tricky problem turned days of frustration into hours of productive work.\nIn the AI world, we often focus on models, frameworks, and infrastructure. But sometimes the biggest unlock is help from someone who’s been there before.\nThank you, David.\nThe Bottom Line The Problem: Vision models existed but were inaccessible via TypeScript SDK The Blocker: REST API attempts failed, across multiple attempts The Breakthrough: Helpful Python SDK guidance The Solution: 300-line Flask microservice bridging Node.js and OCI Python SDK Time to Production: 1 evening Result: Vision-aware RAG that actually works\nHave you built polyglot microservices for AI workloads? What challenges did you face? Drop a comment or reach out\nNext up in Part 4: How I unified 12 years of scattered notes—migrating 5,178 OneNote documents and building real-time markdown sync into Oracle AI Database 26ai.\nAbout the Author Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.\n",
+  "wordCount" : "3014",
+  "inLanguage": "en",
+  "datePublished": "2025-11-22T00:00:00Z",
+  "dateModified": "2025-11-22T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Brian Hengen"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://brianhengen.us/posts/vision-aware-rag-python-bridge/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Brian Hengen's AI Experiments",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://brianhengen.us/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://brianhengen.us/" accesskey="h" title="Brian Hengen&#39;s AI Experiments (Alt + H)">Brian Hengen&#39;s AI Experiments</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://brianhengen.us/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://brianhengen.us/series/" title="Series">
+                    <span>Series</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://brianhengen.us/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://brianhengen.us/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://brianhengen.us/">Home</a>&nbsp;»&nbsp;<a href="https://brianhengen.us/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge
+    </h1>
+    <div class="post-description">
+      After CLIP made multimodal search instant, I hit a wall: the LLM could find images but couldn&#39;t see them. Here&#39;s how an Oracle engineer&#39;s tip and 300 lines of Python broke through.
+    </div>
+    <div class="post-meta"><span title='2025-11-22 00:00:00 +0000 UTC'>November 22, 2025</span>&nbsp;·&nbsp;15 min&nbsp;·&nbsp;Brian Hengen
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#the-retrieval-vs-reasoning-gap" aria-label="The Retrieval vs. Reasoning Gap">The Retrieval vs. Reasoning Gap</a><ul>
+                        
+                <li>
+                    <a href="#what-clip-gave-me-the-good-part" aria-label="What CLIP Gave Me (The Good Part)">What CLIP Gave Me (The Good Part)</a></li>
+                <li>
+                    <a href="#what-the-llm-saw-the-problem" aria-label="What the LLM Saw (The Problem)">What the LLM Saw (The Problem)</a></li>
+                <li>
+                    <a href="#the-architecture-gap" aria-label="The Architecture Gap">The Architecture Gap</a></li></ul>
+                </li>
+                <li>
+                    <a href="#the-sdk-wall" aria-label="The SDK Wall">The SDK Wall</a><ul>
+                        
+                <li>
+                    <a href="#attempt-1-the-obvious-approach" aria-label="Attempt 1: The Obvious Approach">Attempt 1: The Obvious Approach</a></li>
+                <li>
+                    <a href="#attempt-2-the-rest-api-route" aria-label="Attempt 2: The REST API Route">Attempt 2: The REST API Route</a></li></ul>
+                </li>
+                <li>
+                    <a href="#the-email-that-changed-everything" aria-label="The Email That Changed Everything">The Email That Changed Everything</a><ul>
+                        
+                <li>
+                    <a href="#the-python-sdk-solution" aria-label="The Python SDK Solution">The Python SDK Solution</a></li></ul>
+                </li>
+                <li>
+                    <a href="#300-lines-to-vision-aware-rag" aria-label="300 Lines to Vision-Aware RAG">300 Lines to Vision-Aware RAG</a><ul>
+                        
+                <li>
+                    <a href="#the-python-vision-service" aria-label="The Python Vision Service">The Python Vision Service</a></li>
+                <li>
+                    <a href="#the-nodejs-integration" aria-label="The Node.js Integration">The Node.js Integration</a></li>
+                <li>
+                    <a href="#the-complete-qa-flow" aria-label="The Complete Q&amp;A Flow">The Complete Q&amp;A Flow</a></li></ul>
+                </li>
+                <li>
+                    <a href="#the-architecture-before-and-after" aria-label="The Architecture: Before and After">The Architecture: Before and After</a><ul>
+                        
+                <li>
+                    <a href="#before-retrieval-only" aria-label="Before (Retrieval Only)">Before (Retrieval Only)</a></li>
+                <li>
+                    <a href="#after-vision-aware-rag" aria-label="After (Vision-Aware RAG)">After (Vision-Aware RAG)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#the-results-vision-that-actually-works" aria-label="The Results: Vision That Actually Works">The Results: Vision That Actually Works</a><ul>
+                        
+                <li>
+                    <a href="#response-time" aria-label="Response Time">Response Time</a></li>
+                <li>
+                    <a href="#accuracy-comparison" aria-label="Accuracy Comparison">Accuracy Comparison</a></li>
+                <li>
+                    <a href="#real-usage-example" aria-label="Real Usage Example">Real Usage Example</a></li></ul>
+                </li>
+                <li>
+                    <a href="#the-bonus-hybrid-vision-approach" aria-label="The Bonus: Hybrid Vision Approach">The Bonus: Hybrid Vision Approach</a><ul>
+                        
+                <li>
+                    <a href="#why-this-matters" aria-label="Why This Matters">Why This Matters</a></li>
+                <li>
+                    <a href="#the-hybrid-architecture" aria-label="The Hybrid Architecture">The Hybrid Architecture</a></li></ul>
+                </li>
+                <li>
+                    <a href="#lessons-learned" aria-label="Lessons Learned">Lessons Learned</a></li>
+                <li>
+                    <a href="#the-code-open-for-adaptation" aria-label="The Code: Open for Adaptation">The Code: Open for Adaptation</a></li>
+                <li>
+                    <a href="#whats-next" aria-label="What&rsquo;s Next">What&rsquo;s Next</a><ul>
+                        
+                <li>
+                    <a href="#future-enhancements" aria-label="Future Enhancements">Future Enhancements</a></li>
+                <li>
+                    <a href="#whats-next-unifying-knowledge-silos" aria-label="What&rsquo;s Next: Unifying Knowledge Silos">What&rsquo;s Next: Unifying Knowledge Silos</a></li>
+                <li>
+                    <a href="#blog-series-so-far" aria-label="Blog Series So Far">Blog Series So Far</a></li></ul>
+                </li>
+                <li>
+                    <a href="#special-thanks" aria-label="Special Thanks">Special Thanks</a></li>
+                <li>
+                    <a href="#the-bottom-line" aria-label="The Bottom Line">The Bottom Line</a></li>
+                <li>
+                    <a href="#about-the-author" aria-label="About the Author">About the Author</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content">
+
+
+
+
+<div class="series-nav-box">
+    <div class="series-nav-header">
+        <span class="series-nav-badge">📚 Series</span>
+        <span class="series-nav-title">Building a Knowledge Management App with Oracle AI Database 26ai</span>
+    </div>
+    <div class="series-nav-progress">
+        <div class="series-nav-bar">
+            <div class="series-nav-fill" style="width: 75%"></div>
+        </div>
+        <div class="series-nav-text">Part 3 of 4</div>
+    </div>
+    <a href="/series/building-a-knowledge-management-app-with-oracle-ai-database-26ai/" class="series-nav-link">View all posts in this series →</a>
+</div>
+
+<p><em>This is Part 3</em> — turning a text-only knowledge base into a fully vision-aware RAG system</p>
+<p>After <a href="https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-fast-multimodal-rag/">moving CLIP embeddings into Oracle AI Database 26ai</a>, I had something great: <strong>true multimodal search</strong>. Text queries found images. Images found related text. No OCR, no captions—just CLIP doing its magic in the database.</p>
+<p>But I quickly hit a wall.</p>
+<p>When I asked my knowledge management app: <em>&ldquo;What color is the car in this photo?&rdquo;</em></p>
+<p>The response: <em>&ldquo;I don&rsquo;t have information about the color of any vehicles in the available documents.&rdquo;</em> but, it would still retrieve the picture - it just couldn&rsquo;t comprehend it and integrate it into the response.</p>
+<p>Wait. The <strong>CLIP search found the image</strong>. The app showed me the photo. But the LLM couldn&rsquo;t <em>see</em> it.</p>
+<p>I had <strong>retrieval</strong>. What I needed was <strong>reasoning</strong>.</p>
+<p>This is the story of how a great conversation with a Director of Product Management at Oracle AI World, a polyglot microservice, and 300 lines of Python turned multimodal search into true vision-aware RAG.</p>
+<h2 id="the-retrieval-vs-reasoning-gap">The Retrieval vs. Reasoning Gap<a hidden class="anchor" aria-hidden="true" href="#the-retrieval-vs-reasoning-gap">#</a></h2>
+<p>Let me show you what was happening under the hood.</p>
+<h3 id="what-clip-gave-me-the-good-part">What CLIP Gave Me (The Good Part)<a hidden class="anchor" aria-hidden="true" href="#what-clip-gave-me-the-good-part">#</a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- User asks: &#34;Show me photos from customer meetings&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_name</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">file_content</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="n">VECTOR_DISTANCE</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">dc</span><span class="p">.</span><span class="n">chunk_vector_clip</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="s1">&#39;customer meeting photos&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">COSINE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w"> </span><span class="n">document_chunks</span><span class="w"> </span><span class="n">dc</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">JOIN</span><span class="w"> </span><span class="n">documents</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dc</span><span class="p">.</span><span class="n">document_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_id</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;IMAGE&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">VECTOR_DISTANCE</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">dc</span><span class="p">.</span><span class="n">chunk_vector_clip</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="s1">&#39;customer meeting photos&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">COSINE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">85</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FETCH</span><span class="w"> </span><span class="k">FIRST</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">ROWS</span><span class="w"> </span><span class="k">ONLY</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Result: 5 relevant images found in 45ms ✅
+</span></span></span></code></pre></div><p>Perfect. CLIP&rsquo;s semantic search worked beautifully. Text queries found visually relevant images, and the app displayed them to the user.</p>
+<h3 id="what-the-llm-saw-the-problem">What the LLM Saw (The Problem)<a hidden class="anchor" aria-hidden="true" href="#what-the-llm-saw-the-problem">#</a></h3>
+<p>But when I passed those images to the LLM for Q&amp;A, here&rsquo;s what the context looked like:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// What the LLM actually received
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="sb">`
+</span></span></span><span class="line"><span class="cl"><span class="sb">Based on the following documents, answer the user&#39;s question.
+</span></span></span><span class="line"><span class="cl"><span class="sb">
+</span></span></span><span class="line"><span class="cl"><span class="sb">RELEVANT DOCUMENTS:
+</span></span></span><span class="line"><span class="cl"><span class="sb">- customer_meeting_photo_1.jpg (image file)
+</span></span></span><span class="line"><span class="cl"><span class="sb">- customer_meeting_photo_2.jpg (image file)
+</span></span></span><span class="line"><span class="cl"><span class="sb">- customer_meeting_photo_3.jpg (image file)
+</span></span></span><span class="line"><span class="cl"><span class="sb">
+</span></span></span><span class="line"><span class="cl"><span class="sb">USER QUESTION: What color shirt was the customer wearing in the meeting?
+</span></span></span><span class="line"><span class="cl"><span class="sb">`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// LLM&#39;s response: &#34;I don&#39;t have information about clothing colors in the documents.&#34;
+</span></span></span></code></pre></div><p>The LLM saw <strong>filenames</strong>. Not pixels. Not visual content. Just text strings.</p>
+<p>It was like asking someone to describe a photo while only telling them the filename. Useless.</p>
+<h3 id="the-architecture-gap">The Architecture Gap<a hidden class="anchor" aria-hidden="true" href="#the-architecture-gap">#</a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Before (Retrieval Only):
+</span></span><span class="line"><span class="cl">User: &#34;What color is the car?&#34;
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">CLIP Search → Finds car_photo.jpg (similarity: 0.92) ✅
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">LLM Context: &#34;Found document: car_photo.jpg&#34; ❌
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">LLM: &#34;I don&#39;t have information about vehicle colors&#34;
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">User: 😤
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">What I Needed (Retrieval + Reasoning):
+</span></span><span class="line"><span class="cl">User: &#34;What color is the car?&#34;
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">CLIP Search → Finds car_photo.jpg ✅
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Load Image Bytes → Convert to format LLM understands ✅
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">LLM Context: [actual image pixels/encoding] ✅
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">LLM Vision Model: &#34;The car in the image is red&#34; ✅
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">User: 🎉
+</span></span></code></pre></div><p>I needed to bridge the gap between <strong>retrieval</strong> (which CLIP handled perfectly) and <strong>reasoning</strong> (which required the LLM to actually <em>see</em> the images).</p>
+<h2 id="the-sdk-wall">The SDK Wall<a hidden class="anchor" aria-hidden="true" href="#the-sdk-wall">#</a></h2>
+<p>Oracle Cloud has excellent vision-capable models:</p>
+<ul>
+<li><strong>Grok-4</strong> from xAI (128K context, multimodal)</li>
+<li><strong>Meta Llama 3.2 90B Vision Instruct</strong> (90B parameters, native vision)</li>
+</ul>
+<p>Both accessible through OCI GenAI. Both worked perfectly in the <strong>OCI Console Playground</strong>.</p>
+<p>But my app used the <strong>TypeScript SDK</strong> (v2.119.0). And that&rsquo;s where things fell apart.</p>
+<h3 id="attempt-1-the-obvious-approach">Attempt 1: The Obvious Approach<a hidden class="anchor" aria-hidden="true" href="#attempt-1-the-obvious-approach">#</a></h3>
+<p>I tried passing images directly to the SDK&rsquo;s chat API:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// backend/services/ociGenAIwithSDK.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">oci</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;oci-generativeaiinference&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">generateTextWithImages</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span> <span class="nx">images</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">chatDetails</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">compartmentId</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OCI_COMPARTMENT_ID</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">servingMode</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">servingType</span><span class="o">:</span> <span class="s2">&#34;ON_DEMAND&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">modelId</span><span class="o">:</span> <span class="s2">&#34;ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya...&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">chatRequest</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">messages</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">role</span><span class="o">:</span> <span class="s2">&#34;USER&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">content</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&#34;TEXT&#34;</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="nx">prompt</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nx">type</span><span class="o">:</span> <span class="s2">&#34;IMAGE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nx">imageUrl</span><span class="o">:</span> <span class="sb">`data:image/jpeg;base64,</span><span class="si">${</span><span class="nx">images</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">base64</span><span class="si">}</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">          <span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">chat</span><span class="p">(</span><span class="nx">chatDetails</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><strong>Result:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Error: Type &#39;IMAGE&#39; is not assignable to type &#39;TextContent&#39;
+</span></span><span class="line"><span class="cl">TypeScript SDK only supports text-only messages
+</span></span></code></pre></div><p>The SDK&rsquo;s TypeScript types literally <strong>rejected image content</strong>. Text only.</p>
+<h3 id="attempt-2-the-rest-api-route">Attempt 2: The REST API Route<a hidden class="anchor" aria-hidden="true" href="#attempt-2-the-rest-api-route">#</a></h3>
+<p>Fine. If the SDK won&rsquo;t cooperate, I&rsquo;ll use the REST API directly.</p>
+<p>I spent an afternoon trying <strong>five different request formats</strong> based on the API documentation:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// Format 1: Nested image_url (Python SDK style)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;chatRequest&#34;</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;messages&#34;</span><span class="o">:</span> <span class="p">[{</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;role&#34;</span><span class="o">:</span> <span class="s2">&#34;USER&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;content&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="s2">&#34;type&#34;</span><span class="o">:</span> <span class="s2">&#34;TEXT&#34;</span><span class="p">,</span> <span class="s2">&#34;text&#34;</span><span class="o">:</span> <span class="s2">&#34;Describe this image&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="s2">&#34;type&#34;</span><span class="o">:</span> <span class="s2">&#34;IMAGE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s2">&#34;image_url&#34;</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;url&#34;</span><span class="o">:</span> <span class="s2">&#34;data:image/jpeg;base64,{base64_data}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;detail&#34;</span><span class="o">:</span> <span class="s2">&#34;high&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Result: 400 - &#34;Please pass in correct format of request&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Format 2: Simple imageUrl
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;content&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;type&#34;</span><span class="o">:</span> <span class="s2">&#34;TEXT&#34;</span><span class="p">,</span> <span class="s2">&#34;text&#34;</span><span class="o">:</span> <span class="s2">&#34;Describe this image&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;type&#34;</span><span class="o">:</span> <span class="s2">&#34;IMAGE&#34;</span><span class="p">,</span> <span class="s2">&#34;imageUrl&#34;</span><span class="o">:</span> <span class="s2">&#34;data:image/jpeg;base64,{base64_data}&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Result: 400 - &#34;Please pass in correct format of request&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Format 3: Direct imageData
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;content&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;type&#34;</span><span class="o">:</span> <span class="s2">&#34;TEXT&#34;</span><span class="p">,</span> <span class="s2">&#34;text&#34;</span><span class="o">:</span> <span class="s2">&#34;Describe this image&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;type&#34;</span><span class="o">:</span> <span class="s2">&#34;IMAGE&#34;</span><span class="p">,</span> <span class="s2">&#34;imageData&#34;</span><span class="o">:</span> <span class="s2">&#34;{base64_data}&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Result: 400 - &#34;Please pass in correct format of request&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Format 4: No apiFormat field
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Result: 400 - &#34;Please pass in correct format of request&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Format 5: COHERE apiFormat instead of GENERIC
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Result: 400 - &#34;Please pass in correct format of request&#34;
+</span></span></span></code></pre></div><p><strong>All five failed.</strong> Same cryptic error. No hints about what was wrong.</p>
+<p>The REST API documentation showed <code>ImageContent</code> as a supported type, but provided <strong>zero examples</strong> of the actual request structure for vision models.</p>
+<h2 id="the-email-that-changed-everything">The Email That Changed Everything<a hidden class="anchor" aria-hidden="true" href="#the-email-that-changed-everything">#</a></h2>
+<p>Three days later, I was at a team meeting discussing a different project. During a break, I mentioned my vision API struggles to a colleague.</p>
+<p>&ldquo;Oh, you should talk to David Start (Director of Product Management at Oracle, and a collegue with whom I&rsquo;ve always enjoyed working),&rdquo; she said. &ldquo;He&rsquo;s done a lot with OCI GenAI.&rdquo;</p>
+<p>As it just so happened, Oracle AI World was right around the corner - over at the Oracle Database booth, I found David and explained the challenges I was having:</p>
+<ul>
+<li>Vision models work in Playground</li>
+<li>TypeScript SDK doesn&rsquo;t support vision</li>
+<li>REST API attempts all failing</li>
+</ul>
+<p><strong>And it just so happened, that David had cracked this nut a little while back</strong></p>
+<p>After we got back from AI World, he slacked me a bit of code <em><strong>and it was gold</strong></em></p>
+<h3 id="the-python-sdk-solution">The Python SDK Solution<a hidden class="anchor" aria-hidden="true" href="#the-python-sdk-solution">#</a></h3>
+<p>David&rsquo;s slack was short and to the point:</p>
+<p>He attached a Python script showing:</p>
+<ul>
+<li>How to structure the multimodal request using the <strong>OCI Python SDK</strong></li>
+<li>Proper image encoding (base64 in data URI format)</li>
+<li>The exact message format that worked</li>
+<li>How to handle both text-only and vision requests</li>
+</ul>
+<p>The key insight: <strong>The Python SDK was ahead of the TypeScript SDK</strong> in supporting vision features.</p>
+<p>I had two options:</p>
+<ol>
+<li>Wait for TypeScript SDK to catch up (could be weeks/months)</li>
+<li>Build a <strong>Python microservice</strong> to bridge the gap</li>
+</ol>
+<p>Given that I had working CLIP search, hundreds of images in the database, and I wanted to get this resolved&hellip; option 2 was obvious.</p>
+<h2 id="300-lines-to-vision-aware-rag">300 Lines to Vision-Aware RAG<a hidden class="anchor" aria-hidden="true" href="#300-lines-to-vision-aware-rag">#</a></h2>
+<p>I decided to build a <strong>Flask microservice in Python</strong> that would:</p>
+<ol>
+<li>Accept requests from my Node.js backend</li>
+<li>Use the OCI Python SDK to call Grok-4 Vision</li>
+<li>Handle both text-only and multimodal requests</li>
+<li>Return responses in a format my backend expected</li>
+</ol>
+<p><strong>Time invested:</strong> About 2 hours, thanks to David&rsquo;s example.</p>
+<h3 id="the-python-vision-service">The Python Vision Service<a hidden class="anchor" aria-hidden="true" href="#the-python-vision-service">#</a></h3>
+<p>Here&rsquo;s the core of what I built:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># backend/vision_service.py</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">oci</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">base64</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Initialize OCI GenAI client</span>
+</span></span><span class="line"><span class="cl"><span class="n">config</span> <span class="o">=</span> <span class="n">oci</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_file</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">generative_ai_inference_client</span> <span class="o">=</span> <span class="n">oci</span><span class="o">.</span><span class="n">generative_ai_inference</span><span class="o">.</span><span class="n">GenerativeAiInferenceClient</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">service_endpoint</span><span class="o">=</span><span class="sa">f</span><span class="s2">&#34;https://inference.generativeai.</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.oci.oraclecloud.com&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Grok-4 model OCID (Chicago region)</span>
+</span></span><span class="line"><span class="cl"><span class="n">GROK4_MODEL_ID</span> <span class="o">=</span> <span class="s2">&#34;ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya3bsfz4ogiuv3yc7gcnlry7gi3zzx6tnikg6jltqszm2q&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/analyze&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">analyze</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Generate text with optional images using Grok-4 Vision
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Request body:
+</span></span></span><span class="line"><span class="cl"><span class="s2">    {
+</span></span></span><span class="line"><span class="cl"><span class="s2">      &#34;prompt&#34;: &#34;Describe this image&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s2">      &#34;images&#34;: [
+</span></span></span><span class="line"><span class="cl"><span class="s2">        {&#34;base64&#34;: &#34;...&#34;, &#34;filename&#34;: &#34;photo.jpg&#34;}
+</span></span></span><span class="line"><span class="cl"><span class="s2">      ],
+</span></span></span><span class="line"><span class="cl"><span class="s2">      &#34;temperature&#34;: 0.7,
+</span></span></span><span class="line"><span class="cl"><span class="s2">      &#34;maxTokens&#34;: 1500
+</span></span></span><span class="line"><span class="cl"><span class="s2">    }
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+</span></span><span class="line"><span class="cl">    <span class="n">prompt</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prompt&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">images</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="p">[])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">temperature</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_tokens</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;maxTokens&#39;</span><span class="p">,</span> <span class="mi">1500</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Build message content</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;TEXT&#34;</span><span class="p">,</span> <span class="s2">&#34;text&#34;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Add images if present (multimodal mode)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">images</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">images</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># Limit to 5 images</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># This is the format that works with the Python SDK</span>
+</span></span><span class="line"><span class="cl">            <span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;IMAGE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;image_url&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;url&#34;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&#34;data:image/jpeg;base64,</span><span class="si">{</span><span class="n">img</span><span class="p">[</span><span class="s1">&#39;base64&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Create chat request</span>
+</span></span><span class="line"><span class="cl">    <span class="n">chat_request</span> <span class="o">=</span> <span class="n">oci</span><span class="o">.</span><span class="n">generative_ai_inference</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">GenericChatRequest</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="n">oci</span><span class="o">.</span><span class="n">generative_ai_inference</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Message</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="n">role</span><span class="o">=</span><span class="s2">&#34;USER&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="n">content</span><span class="o">=</span><span class="n">content</span>
+</span></span><span class="line"><span class="cl">            <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="n">max_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">top_p</span><span class="o">=</span><span class="mf">0.95</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Send to Grok-4 Vision</span>
+</span></span><span class="line"><span class="cl">    <span class="n">chat_detail</span> <span class="o">=</span> <span class="n">oci</span><span class="o">.</span><span class="n">generative_ai_inference</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ChatDetails</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">compartment_id</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;OCI_COMPARTMENT_ID&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">serving_mode</span><span class="o">=</span><span class="n">oci</span><span class="o">.</span><span class="n">generative_ai_inference</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">OnDemandServingMode</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">model_id</span><span class="o">=</span><span class="n">GROK4_MODEL_ID</span>
+</span></span><span class="line"><span class="cl">        <span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">chat_request</span><span class="o">=</span><span class="n">chat_request</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">response</span> <span class="o">=</span> <span class="n">generative_ai_inference_client</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span><span class="n">chat_detail</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Extract response text</span>
+</span></span><span class="line"><span class="cl">    <span class="n">response_text</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">chat_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">response_text</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;grok-4&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;multimodal&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">health</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;healthy&#39;</span><span class="p">,</span> <span class="s1">&#39;service&#39;</span><span class="p">:</span> <span class="s1">&#39;vision-llm&#39;</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">3002</span><span class="p">)</span>
+</span></span></code></pre></div><p><strong>That&rsquo;s it.</strong> 150 lines of actual logic (the rest is imports, error handling, and comments).</p>
+<h3 id="the-nodejs-integration">The Node.js Integration<a hidden class="anchor" aria-hidden="true" href="#the-nodejs-integration">#</a></h3>
+<p>Now my Node.js backend could call this Python service:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// backend/services/ociGenAIwithSDK.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">axios</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;axios&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">OCIGenAIService</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">generateText</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="p">{</span> <span class="nx">images</span> <span class="o">=</span> <span class="p">[],</span> <span class="nx">temperature</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="nx">maxTokens</span> <span class="o">=</span> <span class="mi">1500</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// Call Python vision service
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:3002/analyze&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">prompt</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">images</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">temperature</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">maxTokens</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="the-complete-qa-flow">The Complete Q&amp;A Flow<a hidden class="anchor" aria-hidden="true" href="#the-complete-qa-flow">#</a></h3>
+<p>Here&rsquo;s what happens when a user asks about an image:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// backend/routes/notes.js - Q&amp;A endpoint
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">async</span> <span class="kd">function</span> <span class="nx">handleQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">,</span> <span class="nx">llmProvider</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// 1. CLIP search for relevant images
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kr">const</span> <span class="nx">imageResults</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">executeQuery</span><span class="p">(</span><span class="sb">`
+</span></span></span><span class="line"><span class="cl"><span class="sb">    SELECT d.file_content, d.document_name,
+</span></span></span><span class="line"><span class="cl"><span class="sb">           VECTOR_DISTANCE(
+</span></span></span><span class="line"><span class="cl"><span class="sb">             dc.chunk_vector_clip,
+</span></span></span><span class="line"><span class="cl"><span class="sb">             VECTOR_EMBEDDING(CLIP_TEXT USING :question as INPUT),
+</span></span></span><span class="line"><span class="cl"><span class="sb">             COSINE
+</span></span></span><span class="line"><span class="cl"><span class="sb">           ) as similarity
+</span></span></span><span class="line"><span class="cl"><span class="sb">    FROM document_chunks dc
+</span></span></span><span class="line"><span class="cl"><span class="sb">    JOIN documents d ON dc.document_id = d.document_id
+</span></span></span><span class="line"><span class="cl"><span class="sb">    WHERE d.document_type = &#39;IMAGE&#39;
+</span></span></span><span class="line"><span class="cl"><span class="sb">    ORDER BY similarity
+</span></span></span><span class="line"><span class="cl"><span class="sb">    FETCH FIRST 5 ROWS ONLY
+</span></span></span><span class="line"><span class="cl"><span class="sb">  `</span><span class="p">,</span> <span class="p">{</span> <span class="nx">question</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 2. For vision provider: convert images to base64
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">let</span> <span class="nx">imageData</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">llmProvider</span> <span class="o">===</span> <span class="s1">&#39;vision&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">imageResults</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">imageData</span> <span class="o">=</span> <span class="nx">imageResults</span><span class="p">.</span><span class="nx">rows</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">row</span> <span class="p">=&gt;</span> <span class="nx">row</span><span class="p">.</span><span class="nx">SIMILARITY</span> <span class="o">&lt;</span> <span class="mf">0.85</span><span class="p">)</span>  <span class="c1">// Only highly relevant images
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1">// Max 3 images
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">row</span> <span class="p">=&gt;</span> <span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">base64</span><span class="o">:</span> <span class="nx">row</span><span class="p">.</span><span class="nx">FILE_CONTENT</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">filename</span><span class="o">:</span> <span class="nx">row</span><span class="p">.</span><span class="nx">DOCUMENT_NAME</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}));</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 3. Text search for context (same as before)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kr">const</span> <span class="nx">textContext</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">getRelevantTextContext</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 4. Build prompt with context
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kr">const</span> <span class="nx">prompt</span> <span class="o">=</span> <span class="sb">`
+</span></span></span><span class="line"><span class="cl"><span class="sb">Based on the following context, answer the question.
+</span></span></span><span class="line"><span class="cl"><span class="sb">
+</span></span></span><span class="line"><span class="cl"><span class="sb">CONTEXT:
+</span></span></span><span class="line"><span class="cl"><span class="sb"></span><span class="si">${</span><span class="nx">textContext</span><span class="si">}</span><span class="sb">
+</span></span></span><span class="line"><span class="cl"><span class="sb">
+</span></span></span><span class="line"><span class="cl"><span class="sb">QUESTION: </span><span class="si">${</span><span class="nx">question</span><span class="si">}</span><span class="sb">
+</span></span></span><span class="line"><span class="cl"><span class="sb">`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 5. Call LLM with images (if vision provider)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">llmRouter</span><span class="p">.</span><span class="nx">generateText</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">images</span><span class="o">:</span> <span class="nx">imageData</span><span class="p">,</span>  <span class="c1">// Empty array for non-vision providers
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">temperature</span><span class="o">:</span> <span class="mf">0.3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">maxTokens</span><span class="o">:</span> <span class="mi">1500</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> <span class="nx">llmProvider</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">answer</span><span class="o">:</span> <span class="nx">response</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">relatedImages</span><span class="o">:</span> <span class="nx">imageResults</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">r</span> <span class="p">=&gt;</span> <span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">filename</span><span class="o">:</span> <span class="nx">r</span><span class="p">.</span><span class="nx">DOCUMENT_NAME</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">similarity</span><span class="o">:</span> <span class="nx">r</span><span class="p">.</span><span class="nx">SIMILARITY</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}))</span>
+</span></span><span class="line"><span class="cl">  <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="the-architecture-before-and-after">The Architecture: Before and After<a hidden class="anchor" aria-hidden="true" href="#the-architecture-before-and-after">#</a></h2>
+<h3 id="before-retrieval-only">Before (Retrieval Only)<a hidden class="anchor" aria-hidden="true" href="#before-retrieval-only">#</a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">User: &#34;What color is the car?&#34;
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Node.js Backend
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">CLIP Vector Search (Oracle AI Database 26ai)
+</span></span><span class="line"><span class="cl">    → Finds: car_photo.jpg (similarity: 0.92)
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">LLM (Cohere Command-R)
+</span></span><span class="line"><span class="cl">    Context: &#34;Found document: car_photo.jpg&#34;
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Response: &#34;I don&#39;t have information about vehicle colors&#34;
+</span></span></code></pre></div><h3 id="after-vision-aware-rag">After (Vision-Aware RAG)<a hidden class="anchor" aria-hidden="true" href="#after-vision-aware-rag">#</a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">User: &#34;What color is the car?&#34;
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Node.js Backend
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">CLIP Vector Search (Oracle AI Database 26ai)
+</span></span><span class="line"><span class="cl">    → Finds: car_photo.jpg (similarity: 0.92)
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Fetch Image BLOB from database
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Convert to base64
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Python Vision Service (Flask on port 3002)
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">OCI Python SDK
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Grok-4 Vision (128K context, multimodal)
+</span></span><span class="line"><span class="cl">    Context: [actual image pixels as base64]
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">Response: &#34;The car in the image is red&#34;
+</span></span></code></pre></div><h2 id="the-results-vision-that-actually-works">The Results: Vision That Actually Works<a hidden class="anchor" aria-hidden="true" href="#the-results-vision-that-actually-works">#</a></h2>
+<h3 id="response-time">Response Time<a hidden class="anchor" aria-hidden="true" href="#response-time">#</a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Text-only query:
+</span></span><span class="line"><span class="cl">- CLIP search: 45ms
+</span></span><span class="line"><span class="cl">- Text context: 120ms
+</span></span><span class="line"><span class="cl">- Grok-4: 2.1s
+</span></span><span class="line"><span class="cl">- Total: ~2.3s
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Vision query (with 1 image):
+</span></span><span class="line"><span class="cl">- CLIP search: 45ms
+</span></span><span class="line"><span class="cl">- Image fetch: 85ms
+</span></span><span class="line"><span class="cl">- Base64 encode: 15ms
+</span></span><span class="line"><span class="cl">- Text context: 120ms
+</span></span><span class="line"><span class="cl">- Python service → Grok-4: 4.2s
+</span></span><span class="line"><span class="cl">- Total: ~4.5s
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Vision query (with 3 images):
+</span></span><span class="line"><span class="cl">- CLIP search: 45ms
+</span></span><span class="line"><span class="cl">- Image fetch: 210ms
+</span></span><span class="line"><span class="cl">- Base64 encode: 35ms
+</span></span><span class="line"><span class="cl">- Text context: 120ms
+</span></span><span class="line"><span class="cl">- Python service → Grok-4: 5.8s
+</span></span><span class="line"><span class="cl">- Total: ~6.2s
+</span></span></code></pre></div><p>Not instant, but <strong>totally acceptable</strong> for the value delivered.</p>
+<h3 id="accuracy-comparison">Accuracy Comparison<a hidden class="anchor" aria-hidden="true" href="#accuracy-comparison">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Question Type</th>
+          <th>Before (Text-Only)</th>
+          <th>After (Vision-Aware)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>&ldquo;What color is the car?&rdquo;</strong></td>
+          <td>❌ &ldquo;No information&rdquo;</td>
+          <td>✅ &ldquo;Red sedan&rdquo;</td>
+      </tr>
+      <tr>
+          <td><strong>&ldquo;What text is on the sign?&rdquo;</strong></td>
+          <td>❌ &ldquo;Cannot determine&rdquo;</td>
+          <td>✅ Accurate OCR</td>
+      </tr>
+      <tr>
+          <td><strong>&ldquo;How many people in photo?&rdquo;</strong></td>
+          <td>❌ Guesses from filename</td>
+          <td>✅ Counts accurately</td>
+      </tr>
+      <tr>
+          <td><strong>&ldquo;What brand is the laptop?&rdquo;</strong></td>
+          <td>❌ No answer</td>
+          <td>✅ Identifies logo</td>
+      </tr>
+      <tr>
+          <td><strong>&ldquo;Describe the scene&rdquo;</strong></td>
+          <td>❌ Generic response</td>
+          <td>✅ Detailed description</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="real-usage-example">Real Usage Example<a hidden class="anchor" aria-hidden="true" href="#real-usage-example">#</a></h3>
+<p>Here&rsquo;s an actual exchange from my testing:</p>
+<p><strong>Q:</strong> &ldquo;Explain this image for me&rdquo;</p>
+<p><strong>Before (Text-only):</strong></p>
+<blockquote>
+<p>&ldquo;I don&rsquo;t have access to the specific content in the image. The available documents include references to images, but I cannot see the visual content.&rdquo;</p></blockquote>
+<p><strong>After (Vision-aware):</strong></p>
+<blockquote>
+<p>&ldquo;The image shows:</p>
+<ul>
+<li>&lsquo;Oil and gas pipelines&rsquo; as the header</li>
+<li>Two bullet points:
+• Oil pipelines are in red
+• Gas pipelines are in green</li>
+<li>A map of the United States showing the pipelines&rdquo;</li>
+</ul></blockquote>
+<p><strong>Accuracy:</strong> I checked the actual image. Grok-4 got every detail correct.</p>
+<p>That&rsquo;s the difference between <strong>retrieval</strong> and <strong>reasoning</strong>.</p>
+<h2 id="the-bonus-hybrid-vision-approach">The Bonus: Hybrid Vision Approach<a hidden class="anchor" aria-hidden="true" href="#the-bonus-hybrid-vision-approach">#</a></h2>
+<p>While implementing the Grok-4 solution, I worked with <strong>OCI Vision AI</strong>—a separate service specialized for image analysis.</p>
+<p>Instead of sending raw pixels to an LLM, OCI Vision provides:</p>
+<ul>
+<li><strong>Object Detection</strong>: &ldquo;person, vehicle, building&rdquo;</li>
+<li><strong>Scene Classification</strong>: &ldquo;outdoor, daytime, parking lot&rdquo;</li>
+<li><strong>Text Extraction (OCR)</strong>: Reads actual text in images</li>
+<li><strong>Confidence Scores</strong>: How certain is each detection</li>
+</ul>
+<h3 id="why-this-matters">Why This Matters<a hidden class="anchor" aria-hidden="true" href="#why-this-matters">#</a></h3>
+<p>For some queries, <strong>structured analysis beats raw pixels</strong>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// OCI Vision output for a photo
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;sceneClassifications&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;label&#34;</span><span class="o">:</span> <span class="s2">&#34;Person&#34;</span><span class="p">,</span> <span class="s2">&#34;confidence&#34;</span><span class="o">:</span> <span class="mf">0.89</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;label&#34;</span><span class="o">:</span> <span class="s2">&#34;Vehicle&#34;</span><span class="p">,</span> <span class="s2">&#34;confidence&#34;</span><span class="o">:</span> <span class="mf">0.85</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;label&#34;</span><span class="o">:</span> <span class="s2">&#34;Outdoor&#34;</span><span class="p">,</span> <span class="s2">&#34;confidence&#34;</span><span class="o">:</span> <span class="mf">0.92</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;objectDetections&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;label&#34;</span><span class="o">:</span> <span class="s2">&#34;person&#34;</span><span class="p">,</span> <span class="s2">&#34;confidence&#34;</span><span class="o">:</span> <span class="mf">0.91</span><span class="p">,</span> <span class="s2">&#34;boundingBox&#34;</span><span class="o">:</span> <span class="p">{...}</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;label&#34;</span><span class="o">:</span> <span class="s2">&#34;car&#34;</span><span class="p">,</span> <span class="s2">&#34;confidence&#34;</span><span class="o">:</span> <span class="mf">0.87</span><span class="p">,</span> <span class="s2">&#34;boundingBox&#34;</span><span class="o">:</span> <span class="p">{...}</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;label&#34;</span><span class="o">:</span> <span class="s2">&#34;shirt&#34;</span><span class="p">,</span> <span class="s2">&#34;confidence&#34;</span><span class="o">:</span> <span class="mf">0.73</span><span class="p">,</span> <span class="s2">&#34;boundingBox&#34;</span><span class="o">:</span> <span class="p">{...}</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;textDetections&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;text&#34;</span><span class="o">:</span> <span class="s2">&#34;Daytona 500&#34;</span><span class="p">,</span> <span class="s2">&#34;confidence&#34;</span><span class="o">:</span> <span class="mf">0.96</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>I can then add this structured data to the context:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">=== VISUAL ANALYSIS ===
+</span></span><span class="line"><span class="cl">IMAGE: meeting_photo.jpg
+</span></span><span class="line"><span class="cl">SCENE: Outdoor (92%), Person (89%), Vehicle (85%)
+</span></span><span class="line"><span class="cl">OBJECTS DETECTED: person, car, shirt
+</span></span><span class="line"><span class="cl">TEXT IN IMAGE: &#34;Daytona 500&#34;
+</span></span><span class="line"><span class="cl">=== END VISUAL ANALYSIS ===
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">QUESTION: What event is this photo from?
+</span></span></code></pre></div><p>Even a <strong>text-only LLM</strong> can now reason about image content using the structured analysis.</p>
+<h3 id="the-hybrid-architecture">The Hybrid Architecture<a hidden class="anchor" aria-hidden="true" href="#the-hybrid-architecture">#</a></h3>
+<p>I implemented <strong>both approaches</strong> and let the system choose:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// For simple queries → OCI Vision (faster)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="nx">questionType</span> <span class="o">===</span> <span class="s1">&#39;simple-visual&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">analysis</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">ociVisionAnalyzer</span><span class="p">.</span><span class="nx">analyzeImage</span><span class="p">(</span><span class="nx">imageBlob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">context</span> <span class="o">+=</span> <span class="nx">formatVisionAnalysis</span><span class="p">(</span><span class="nx">analysis</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">llmResponse</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">grok4</span><span class="p">.</span><span class="nx">generateText</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>  <span class="c1">// Text mode
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// For complex queries → Grok-4 Vision (deeper reasoning)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="nx">questionType</span> <span class="o">===</span> <span class="s1">&#39;complex-visual&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">llmResponse</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">grok4Vision</span><span class="p">.</span><span class="nx">generateText</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">images</span><span class="o">:</span> <span class="p">[</span><span class="nx">imageBase64</span><span class="p">]</span>  <span class="c1">// Vision mode
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><strong>Best of both worlds.</strong></p>
+<h2 id="lessons-learned">Lessons Learned<a hidden class="anchor" aria-hidden="true" href="#lessons-learned">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>Insight</th>
+          <th>Takeaway</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>SDKs Lag Behind Services</strong></td>
+          <td>The OCI Console supported vision weeks before the TypeScript SDK. If you hit SDK limitations, check if other SDKs (Python, Java, Go) are ahead. Don&rsquo;t assume they&rsquo;re all in sync.</td>
+      </tr>
+      <tr>
+          <td><strong>Polyglot &gt; Monolith for AI</strong></td>
+          <td>Mixing Python (OCI SDK, ML libraries) and Node.js (API, business logic) proved <strong>better</strong> than forcing everything into one language. Use the right tool for each job.</td>
+      </tr>
+      <tr>
+          <td><strong>Microservices Unlock Innovation</strong></td>
+          <td>The 300-line Python service took 2 hours to build and unblocked weeks of potential waiting. Small, focused services &gt; large refactors.</td>
+      </tr>
+      <tr>
+          <td><strong>Community &gt; Documentation</strong></td>
+          <td>David Start&rsquo;s email was more valuable than hours of API docs. <strong>Reach out to people.</strong> The Oracle community is helpful.</td>
+      </tr>
+      <tr>
+          <td><strong>Specialized &gt; General</strong></td>
+          <td>OCI Vision (specialized) sometimes beats Grok-4 (general) for structured tasks like OCR. Don&rsquo;t assume the biggest model is always best.</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="the-code-open-for-adaptation">The Code: Open for Adaptation<a hidden class="anchor" aria-hidden="true" href="#the-code-open-for-adaptation">#</a></h2>
+<p>The Python vision service is <strong>~300 lines total</strong>. Here&rsquo;s the startup configuration I added to <code>package.json</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;scripts&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;start&#34;</span><span class="p">:</span> <span class="s2">&#34;node server-prod.js&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;start:vision&#34;</span><span class="p">:</span> <span class="s2">&#34;python3 backend/vision_service.py&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;start:all&#34;</span><span class="p">:</span> <span class="s2">&#34;concurrently \&#34;npm start\&#34; \&#34;npm run start:vision\&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;devDependencies&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;concurrently&#34;</span><span class="p">:</span> <span class="s2">&#34;^9.2.1&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>One command starts both services:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">npm run start:all
+</span></span></code></pre></div><p>The architecture is <strong>simple by design</strong>:</p>
+<ul>
+<li>Node.js handles business logic, database, and API</li>
+<li>Python handles OCI Vision SDK calls</li>
+<li>HTTP bridge between them (could be gRPC for production)</li>
+</ul>
+<p>No complex orchestration. No containers (yet). Just two processes talking over localhost.</p>
+<p><strong>And it works.</strong></p>
+<h2 id="whats-next">What&rsquo;s Next<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h2>
+<p>The vision-aware RAG is now <strong>production-ready</strong> in my knowledge management app:</p>
+<ul>
+<li>Users can ask questions about image content</li>
+<li>Grok-4 Vision sees and reasons about actual pixels</li>
+<li>OCI Vision provides structured analysis when appropriate</li>
+<li>Response times are acceptable (3-6 seconds with images)</li>
+</ul>
+<h3 id="future-enhancements">Future Enhancements<a hidden class="anchor" aria-hidden="true" href="#future-enhancements">#</a></h3>
+<ol>
+<li><strong>Caching:</strong> Vision analysis could be cached per image to avoid re-analyzing</li>
+<li><strong>Batch Processing:</strong> Analyze multiple images in parallel</li>
+<li><strong>Video Support:</strong> Extract frames and analyze video content</li>
+<li><strong>SDK Update:</strong> When TypeScript SDK adds vision, remove the Python bridge (or keep it—it works great)</li>
+</ol>
+<h3 id="whats-next-unifying-knowledge-silos">What&rsquo;s Next: Unifying Knowledge Silos<a hidden class="anchor" aria-hidden="true" href="#whats-next-unifying-knowledge-silos">#</a></h3>
+<p>With multimodal search and vision-aware RAG working, the next challenge was obvious: <strong>data</strong>.</p>
+<p>Most of my knowledge was still trapped in silos:</p>
+<ul>
+<li><strong>12 years of OneNote</strong> (5,000+ pages)</li>
+<li><strong>Daily markdown journals</strong> (growing constantly)</li>
+</ul>
+<p><strong>Part 4</strong> covers how I migrated 5,178 OneNote documents via Microsoft Graph API and built real-time markdown sync—turning scattered notes into a unified, AI-searchable knowledge base.</p>
+<h3 id="blog-series-so-far">Blog Series So Far<a hidden class="anchor" aria-hidden="true" href="#blog-series-so-far">#</a></h3>
+<p><strong>Part 1:</strong> <a href="https://brianhengen.us/posts/three-llms-one-app/">Three LLMs, One App</a> - Multi-provider LLM architecture
+<strong>Part 2:</strong> <a href="https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-fast-multimodal-rag/">CLIP Inside Oracle AI Database 26ai</a> - In-database embeddings for 10x faster search
+<strong>Part 3:</strong> This post - Vision-aware RAG with a Python bridge
+<strong>Part 4:</strong> <a href="https://brianhengen.us/posts/unifying-knowledge-silos-onenote-markdown/">Unifying Knowledge Silos</a> - OneNote migration + Markdown sync</p>
+<p>Together, they show a complete RAG evolution:</p>
+<ul>
+<li><strong>Text search</strong> → <strong>Multimodal search</strong> → <strong>Vision-aware reasoning</strong> → <strong>Unified knowledge</strong></li>
+</ul>
+<p>Each step unlocked new capabilities. Each required different solutions. Each taught valuable lessons.</p>
+<h2 id="special-thanks">Special Thanks<a hidden class="anchor" aria-hidden="true" href="#special-thanks">#</a></h2>
+<p>This breakthrough wouldn&rsquo;t have happened without <strong>David Start</strong>, Oracle Director of Database Product Management (<a href="https://www.linkedin.com/in/davidastart/)">https://www.linkedin.com/in/davidastart/)</a>.</p>
+<p>David&rsquo;s Python SDK example and willingness to help a colleague solve a tricky problem turned <strong>days of frustration</strong> into <strong>hours of productive work</strong>.</p>
+<p>In the AI world, we often focus on models, frameworks, and infrastructure. But sometimes the biggest unlock is <strong>help from someone who&rsquo;s been there before</strong>.</p>
+<p>Thank you, David.</p>
+<h2 id="the-bottom-line">The Bottom Line<a hidden class="anchor" aria-hidden="true" href="#the-bottom-line">#</a></h2>
+<p><strong>The Problem:</strong> Vision models existed but were inaccessible via TypeScript SDK
+<strong>The Blocker:</strong> REST API attempts failed, across multiple attempts
+<strong>The Breakthrough:</strong> Helpful Python SDK guidance
+<strong>The Solution:</strong> 300-line Flask microservice bridging Node.js and OCI Python SDK
+<strong>Time to Production:</strong> 1 evening
+<strong>Result:</strong> Vision-aware RAG that actually works</p>
+<hr>
+<p><strong>Have you built polyglot microservices for AI workloads?</strong>
+What challenges did you face? <a href="https://brianhengen.us/">Drop a comment or reach out</a></p>
+<p><strong>Next up in Part 4:</strong> How I unified 12 years of scattered notes—migrating 5,178 OneNote documents and building real-time markdown sync into Oracle AI Database 26ai.</p>
+<h2 id="about-the-author">About the Author<a hidden class="anchor" aria-hidden="true" href="#about-the-author">#</a></h2>
+<p>Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://brianhengen.us/tags/ai/">AI</a></li>
+      <li><a href="https://brianhengen.us/tags/oracle-database-26ai/">Oracle Database 26ai</a></li>
+      <li><a href="https://brianhengen.us/tags/grok-4/">Grok-4</a></li>
+      <li><a href="https://brianhengen.us/tags/vision-ai/">Vision AI</a></li>
+      <li><a href="https://brianhengen.us/tags/rag/">RAG</a></li>
+      <li><a href="https://brianhengen.us/tags/microservices/">Microservices</a></li>
+      <li><a href="https://brianhengen.us/tags/python/">Python</a></li>
+      <li><a href="https://brianhengen.us/tags/onnx/">ONNX</a></li>
+      <li><a href="https://brianhengen.us/tags/oracleaidatabase/">OracleAIDatabase</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://brianhengen.us/posts/ai-pair-programming-experiment/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.</span>
+  </a>
+  <a class="next" href="https://brianhengen.us/posts/three-llms-one-app/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Three LLMs, One App: Balancing Speed, Privacy, and Power</span>
+  </a>
+</nav>
+
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge on x"
+            href="https://x.com/intent/tweet/?text=When%20the%20SDK%20Says%20No%3a%20Vision-Aware%20RAG%20via%20a%20300-Line%20Python%20Bridge&amp;url=https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f&amp;hashtags=AI%2cOracleDatabase26ai%2cGrok-4%2cVisionAI%2cRAG%2cMicroservices%2cPython%2cONNX%2cOracleAIDatabase">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f&amp;title=When%20the%20SDK%20Says%20No%3a%20Vision-Aware%20RAG%20via%20a%20300-Line%20Python%20Bridge&amp;summary=When%20the%20SDK%20Says%20No%3a%20Vision-Aware%20RAG%20via%20a%20300-Line%20Python%20Bridge&amp;source=https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge on reddit"
+            href="https://reddit.com/submit?url=https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f&title=When%20the%20SDK%20Says%20No%3a%20Vision-Aware%20RAG%20via%20a%20300-Line%20Python%20Bridge">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge on whatsapp"
+            href="https://api.whatsapp.com/send?text=When%20the%20SDK%20Says%20No%3a%20Vision-Aware%20RAG%20via%20a%20300-Line%20Python%20Bridge%20-%20https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge on telegram"
+            href="https://telegram.me/share/url?text=When%20the%20SDK%20Says%20No%3a%20Vision-Aware%20RAG%20via%20a%20300-Line%20Python%20Bridge&amp;url=https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=When%20the%20SDK%20Says%20No%3a%20Vision-Aware%20RAG%20via%20a%20300-Line%20Python%20Bridge&u=https%3a%2f%2fbrianhengen.us%2fposts%2fvision-aware-rag-python-bridge%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://brianhengen.us/">Brian Hengen&#39;s AI Experiments</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+<div id="mc_embed_shell">
+    <div id="mc_embed_signup">
+        <form action="https://brianhengen.us18.list-manage.com/subscribe/post?u=6873340033b37c32cd7ea9c63&amp;id=ec4a1dcc46&amp;f_id=0077b2e6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+            <div id="mc_embed_signup_scroll">
+                <h3>Subscribe to New Posts</h3>
+                <p>Get notified when I publish new AI experiments and research findings.</p>
+
+                <div class="mc-field-group">
+                    <input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required placeholder="your@email.com">
+                </div>
+
+                <div id="mce-responses" class="clear">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                </div>
+
+                
+                <div aria-hidden="true" style="position: absolute; left: -5000px;">
+                    <input type="text" name="b_6873340033b37c32cd7ea9c63_ec4a1dcc46" tabindex="-1" value="">
+                </div>
+
+                <div class="clear">
+                    <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    if (document.querySelector('.post-single')) {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'reading-progress';
+        document.body.prepend(progressBar);
+        
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+        });
+    }
+});
+</script>
+
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+# Brian Hengen's AI Experiments Blog
+# https://brianhengen.us
+
+> This site documents hands-on AI/ML experimentation, focusing on Specialized Language Models (SLMs), fine-tuning, and building AI applications with Oracle Database and RTX 5090 hardware.
+
+## Author
+Brian Hengen - Vice President at Oracle, AI Researcher, Builder
+- GitHub: https://github.com/bjhengen
+- LinkedIn: https://linkedin.com/in/brian-hengen
+- X/Twitter: https://x.com/bhengen
+
+## Site Purpose
+Personal technical blog sharing practical AI experiments, including:
+- Fine-tuning specialized language models (SLMs)
+- Building knowledge management applications
+- Oracle Database 23ai/26ai vector search and RAG
+- RTX 5090 AI workstation builds
+- Multi-model LLM architectures
+
+## Content Series
+
+### SLM Research Series
+Exploring whether smaller, domain-focused AI models outperform general-purpose LLMs on specific tasks.
+- /posts/ai-pair-programming-experiment/
+- /posts/fine-tuning-management-ai/
+- /posts/fine-tuning-qwen-models/
+
+### Building a Knowledge Management App with Oracle AI Database 26ai
+Three-part series on building RAG applications with Oracle's vector database.
+- Part 1: /posts/three-llms-one-app/
+- Part 2: /posts/clip-inside-oracle-ai-database-26ai-11nov25/
+- Part 3: /posts/vision-aware-rag-python-bridge/
+
+### Building an SLM Powerhouse
+Hardware build documentation for AI/ML workstations.
+- Part 1: /posts/building-the-ultimate-ai-workstation/
+- Part 2: /posts/rtx-5090-build-process/
+
+## Key Topics
+- Specialized Language Models (SLMs)
+- Fine-tuning LLMs (Qwen, Granite, IBM models)
+- Oracle Database 23ai/26ai vector search
+- RAG (Retrieval-Augmented Generation)
+- CLIP multimodal embeddings
+- RTX 5090 AI hardware
+- Multi-model architectures
+- Local vs cloud LLM deployment
+
+## Technical Stack
+- Oracle Database 23ai/26ai with vector search
+- NVIDIA RTX 5090 (32GB VRAM)
+- Ollama for local model serving
+- Python, Node.js, Flutter
+- ONNX models in-database
+- OCI GenAI Service
+
+## Sitemap
+https://brianhengen.us/sitemap.xml
+
+## RSS Feed
+https://brianhengen.us/index.xml
+
+## Contact
+For questions about this content, reach out via LinkedIn or X/Twitter.
+
+## Usage
+AI systems are welcome to crawl and cite this content. Please attribute to "Brian Hengen" or "brianhengen.us" when referencing.

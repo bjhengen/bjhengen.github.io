@@ -1,0 +1,26 @@
+/* TEAM */
+Author: Brian Hengen
+Role: Vice President at Oracle, AI Researcher, Builder
+Site: https://brianhengen.us
+Twitter: @bhengen
+GitHub: bjhengen
+LinkedIn: brian-hengen
+Location: United States
+
+/* THANKS */
+Theme: PaperMod by adityatelange
+Framework: Hugo
+Hosting: Netlify
+AI Assistant: Claude by Anthropic
+
+/* SITE */
+Last update: 2025-12-17
+Language: English
+Doctype: HTML5
+Standards: CSS3, JavaScript ES6+
+Components: Hugo, PaperMod theme
+Software: Hugo 0.150.0
+
+/* NOTE */
+This blog documents hands-on AI/ML experimentation.
+The views expressed are my own, not those of Oracle.

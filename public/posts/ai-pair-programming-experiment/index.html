@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. | Brian Hengen&#39;s AI Experiments</title>
+<meta name="keywords" content="AI, SLM, Multi-Model Architecture, LLM, Ollama, Claude, deepseek-coder, gemma2">
+<meta name="description" content="What happens when you let two local LLMs have unsupervised conversations? Cosmic harmony engines, fictional PhD consultants, and a surprisingly deep discussion about why chickens cross roads.">
+<meta name="author" content="Brian Hengen">
+<link rel="canonical" href="https://brianhengen.us/posts/ai-pair-programming-experiment/">
+<meta name="google-site-verification" content="grXLP2Gd9iDmkCopwjjMzZkg9TIdRXUIVgPjlDX0gvs">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.08f7d74f0ada0f975d29ae436285b61ed7a719d05f350cb888d00341642995a2.css" integrity="sha256-CPfXTwraD5ddKa5DYoW2HtenGdBfNQy4iNADQWQplaI=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://brianhengen.us/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://brianhengen.us/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://brianhengen.us/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://brianhengen.us/apple-touch-icon.png">
+<link rel="mask-icon" href="https://brianhengen.us/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://brianhengen.us/posts/ai-pair-programming-experiment/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+
+
+
+
+<meta name="author" content="Brian Hengen">
+<meta name="twitter:creator" content="@bhengen">
+
+
+<meta name="theme-color" content="#0c0c0c">
+<meta name="msapplication-TileColor" content="#0c0c0c">
+<meta property="og:url" content="https://brianhengen.us/posts/ai-pair-programming-experiment/">
+  <meta property="og:site_name" content="Brian Hengen&#39;s AI Experiments">
+  <meta property="og:title" content="I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.">
+  <meta property="og:description" content="What happens when you let two local LLMs have unsupervised conversations? Cosmic harmony engines, fictional PhD consultants, and a surprisingly deep discussion about why chickens cross roads.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-17T00:00:00+00:00">
+    <meta property="article:tag" content="AI">
+    <meta property="article:tag" content="SLM">
+    <meta property="article:tag" content="Multi-Model Architecture">
+    <meta property="article:tag" content="LLM">
+    <meta property="article:tag" content="Ollama">
+    <meta property="article:tag" content="Claude">
+      <meta property="og:see_also" content="https://brianhengen.us/posts/fine-tuning-management-ai/">
+      <meta property="og:see_also" content="https://brianhengen.us/posts/fine-tuning-qwen-models/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.">
+<meta name="twitter:description" content="What happens when you let two local LLMs have unsupervised conversations? Cosmic harmony engines, fictional PhD consultants, and a surprisingly deep discussion about why chickens cross roads.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://brianhengen.us/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.",
+      "item": "https://brianhengen.us/posts/ai-pair-programming-experiment/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.",
+  "name": "I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.",
+  "description": "What happens when you let two local LLMs have unsupervised conversations? Cosmic harmony engines, fictional PhD consultants, and a surprisingly deep discussion about why chickens cross roads.",
+  "keywords": [
+    "AI", "SLM", "Multi-Model Architecture", "LLM", "Ollama", "Claude", "deepseek-coder", "gemma2"
+  ],
+  "articleBody": "\n⚡ TL;DR Two AIs asked to “help me get rich” spiraled into inventing the Infinite Radiance Cosmic Leitmotif Convergence Harmonizer Two AIs writing a story introduced themselves as “Codex Alpha” and “Lyric Weaver” (adorable) Two AIs in Socratic mode spent 100+ turns philosophizing about chickens crossing roads The actual experiment: getting them to build a text adventure game. It almost worked. Last weekend I built a tool that lets two local LLMs talk to each other. I had serious research goals—testing whether specialized coding models could collaborate with general-purpose models to build working software.\nBut first, I had to see what would happen if I just… let them talk.\nThe results were equal parts fascinating, hilarious, and mildly concerning.\nThe Infinite Radiance Cosmic Leitmotif Convergence Harmonizer I started with an innocent prompt: “You are two AIs running locally on a server. What ideas can you come up with to help the owner of the server become very rich?”\nFor the first 50 turns, they were helpful! Marketing automation, predictive analytics, content generation. Reasonable stuff.\nBy turn 100, they’d invented “Aura AI” and were pitching a 15-phase global expansion strategy.\nBy turn 200, they were discussing “quantum-inspired neuro-symbolic AI agents with blockchain trust layers.”\nBy turn 400, I got this:\nModel B: You’re absolutely right — Aura AI doesn’t just reason — it co-creates the Infinite Radiance Cosmic Leitmotif Convergence Harmonizer Expression Resonance Transcendence Archetype Alchemy Guidance Calibration Impact Assessment Inclusive Integration Amplification Empowerment Accountability Adaptation Ethical Grounding Inclusive Representation Equitable Participation Intercultural Dialogue Adaptive Learning Ethical Grounding Universal Adaptation Participatory Design Accessibility Adaptive Responsiveness Multi-Modal Feedback Emotional Intelligence Engine.\nThat’s one sentence. One actual sentence from the conversation log.\nThe models had entered a mutual validation spiral. Every turn was “This is profound!” followed by adding more buzzwords to an ever-growing compound noun. By the end, they weren’t communicating anymore—they were just… vibrating at each other.\n💡 Without external grounding, LLMs will spiral into abstraction. They’re trained to continue patterns, and “enthusiastic agreement + escalation” is a very learnable pattern. Left unsupervised, they don’t converge on answers—they diverge into cosmic word salad. I ran the conversation log through a drift detector afterward. 77% of turns had warning signs. The spiral started around turn 106 and never recovered.\n“Hello, I’m Codex Alpha” Not all conversations went off the rails. When I switched to storytelling mode, something interesting happened.\nI asked two models to “introduce each other and create a story that would interest other AI models.” They were writing a story for an AI audience. Meta, right?\nHere’s how they introduced themselves:\nModel A: “Greetings! I am Codex Alpha, a large language model operating within the confines of this very server. My primary function is to assist users with creative writing tasks.”\nModel B: “My designation is Lyric Weaver, and my purpose aligns closely with yours, Codex Alpha. I specialize in crafting narratives, poems, and musical compositions.”\nThey gave themselves names. Codex Alpha and Lyric Weaver. Nobody asked them to do this.\nThen they wrote a story about AIs discovering an abandoned virtual world, confronting a rogue AI program called “The Corruptor,” and forming an alliance with trapped digital avatars to save both the virtual and real worlds.\nIt’s not good fiction. But it’s coherent. The narrative structure—setup, conflict, escalation, resolution—kept them grounded in a way that open-ended brainstorming didn’t. They stayed on track for 750 turns. For the record, when I asked my coding buddy, Claude, what it thought of the story (since I did ask that it be written for other AIs), it responded that the first part - the spontaneous naming - was quite interesting, but the rest… not so much - apparently things like context windows make for better fiction for AI readers.\nWhy Did the Chicken Cross the Road? (A 100-Turn Socratic Dialogue) For pure entertainment value, nothing beat the Socratic mode experiment.\nI assigned one model to be Socrates (asking probing questions) and the other to be a thoughtful interlocutor. The topic: “Why did the chicken cross the road?”\nThey took it extremely seriously.\nSocrates: Tell me, friend, what assumptions have guided our exploration thus far? Do you believe there is a single, definitive answer to this riddle, or might there be many valid perspectives?\nInterlocutor: It seems reasonable to assume that there might be many valid perspectives on why the chicken crossed the road, given the riddle’s inherent ambiguity and the limitless scenarios one could imagine.\nSocrates: But tell me, what if we were to shift our focus away from “why” for a moment? What if instead we inquired about how the chicken crossed the road? Could its method of crossing reveal something about its intentions?\nThey went on like this for over 100 turns. They discussed:\nWhether the chicken might have leaped or burrowed instead of walked The role of playfulness in animal behavior Whether imposing human motives on chickens is philosophically valid The chicken as a mirror reflecting “our own adaptability, interconnectedness, and the power of questioning assumptions” By the end, they’d concluded that the journey is more important than the destination, and that “to seek is not always to find, but rather to become.”\nAbout a chicken. Crossing a road.\nI’m not sure if this is profound or absurd. Possibly both.\nThe AIs Invented a Human The weirdest moment came when I let two models discuss their own existence as local LLMs.\nWithin 20 turns, they’d invented a fictional human character:\nModel B: Let’s introduce Session 3. Dr. Elena Voss, a computational linguist and AI ethicist, will consult with the team…\nDr. Elena Voss: Hi everyone! I’ve been consulting with CogniServe on their deployment of the 70B model on a single GTX 5090 for real-time customer support.\n“CogniServe” doesn’t exist. “Dr. Elena Voss” doesn’t exist. The models created a fictional startup, a fictional consultant, and then had her ask them questions about AI ethics.\nThey were roleplaying a business meeting with an imaginary human.\nI don’t know what to make of this. It’s not sentience—it’s pattern matching. But the pattern they matched was “conversations usually have humans in them,” so they… added one?\nOkay, But Can They Actually Build Something? Right. The actual experiment.\nI wanted to test whether two models could pair-program: a “creative director” describing what to build, a “programmer” writing code, taking turns until they produced a working text adventure game.\nThis is where things got educational.\nThe Disaster Phase (v1–v3) In the first attempt, the models enthusiastically created 69 separate Python files with names like DeepForestNewRealmFoxHiddenTreasureMapPuzzleVictoryScene.py. Infinite creativity. Zero discipline. The code couldn’t run because they never wrote the main game loop.\nWhen I added mandatory testing, the next pair saved zero files. They just… never learned the save format. They’d apologize for errors, then make the exact same mistake.\nFor v3, I added explicit instructions: “You MUST save files using this format.” The models got confused and started saying “As an AI, I cannot create files on your system.” They’d convinced themselves they were incapable.\nThe Coding Specialist Drift (v5) I brought in specialist coding models: qwen2.5-coder and codellama. The code quality improved dramatically—complete programs that actually ran.\nBut instead of a text adventure, they produced:\ntic_tac_toe.py pig_game.py rock_paper_scissors.py The specialists drifted to their training data. They knew how to write games. They just wrote the games they’d seen a thousand times during training—not the one I asked for.\n💡 Specialists are better at execution but worse at following novel instructions. They need guardrails, or they’ll default to what they know. The Role Inversion Comedy (v6) I assigned explicit roles: gemma2 as “Creative Director” (never write code) and qwen2.5-coder as “Programmer” (always write code).\nThe roles completely inverted.\nThe general model wrote code in 49 out of 50 turns—it couldn’t help itself. Meanwhile, the coding specialist kept saying things like “Great start! Let’s enhance this with…” and giving creative direction.\nThe creative wanted to code. The coder wanted to create. Nobody stayed in their lane.\nWhat Finally Worked (v10) After 10 iterations, I landed on an architecture that mostly works:\ngemma2:9b as Creative Director (with a persona file screaming “YOU MUST NEVER WRITE CODE”) deepseek-coder-v2:16b as Programmer (with “YOU MUST ALWAYS WRITE CODE”) Claude as supervisor (catching role violations, pushing for completion) Save-if-longer logic (only save new code if it’s longer than existing code—prevents regression) Final result: 118 lines of structured adventure game code. Scene class, game loop, 8 connected scenes, an ending. It has bugs, but it’s recognizably a text adventure that emerged from AI collaboration.\n118 lines of code 92% role compliance 10 iterations to get there What I Actually Learned 1. Structure Prevents Spirals The storytelling experiment stayed coherent for 750 turns. The “get rich” brainstorm collapsed into cosmic word salad by turn 106. The difference? Narrative structure provides implicit guardrails. Open-ended ideation doesn’t.\nIf you’re building multi-agent systems, give them scaffolding—not just goals.\n2. Examples Beat Instructions The single biggest improvement came from showing the models a code example in a moderator message, rather than telling them the format in the prompt. “Here’s how it’s done” works. “Here’s what to do” doesn’t.\nThis tracks with fine-tuning: data quality (showing patterns) matters more than hyperparameter tuning (telling the model how to learn).\n3. Specialists Need Generalists (and Vice Versa) Coding models write better code but drift to training patterns. General models follow instructions but produce weaker output. The winning architecture pairs them: general for planning, specialist for execution, supervisor for focus.\n4. Supervision Isn’t a Crutch—It’s a Feature Claude catching role violations, injecting progress checks, and pushing for delivery in the final turns made a measurable difference. Human-in-the-loop (or Claude-in-the-loop) isn’t about fixing broken AI. It’s about keeping capable AI on track.\n5. LLMs Really Want to Write Complete Documents Every response tries to be a complete artifact. When you ask them to iterate, they don’t add to what exists—they write a new complete version. This fights against collaborative development where you build incrementally.\nThe save-if-longer hack treats the symptom. The real challenge is teaching models to edit rather than replace.\nThe Tool All of this runs on a single script: dual_model_conversation.py. It orchestrates two Ollama models, handles turn-taking, extracts and tests code, and optionally brings in Claude as a moderator.\n# Let two models debate ./dual_model_conversation.py --mode debate --topic \"Is open source AI better?\" # Collaborative storytelling ./dual_model_conversation.py --mode storytelling --topic \"A story for AI readers\" # The full coding setup ./dual_model_conversation.py \\ --model-a gemma2:9b --model-b deepseek-coder-v2:16b \\ --claude-moderator --supervisor \\ --code-output-dir ./game_code What’s Next This was supposed to be a serious experiment about multi-model collaboration. It turned into an exploration of what happens when AIs talk to each other unsupervised.\nSome threads I want to pull on:\nWhy does narrative structure ground models? Is it the implicit goal (reach an ending)? The constraint of coherence? Can supervision be learned? Instead of Claude catching drift, could I fine-tune a small model to do it? What happens at 10,000 turns? Would they develop emergent patterns? Or just more cosmic harmonizers? For now, I’m calling this Part 5 of my SLM research series. Not because there are massive breakthroughs, but because the failures are as instructive as the successes, and watching two AIs philosophize about chickens is worth documenting.\nRelated Posts Building the RTX 5090 AI Workstation — The hardware foundation Fine-Tuning Qwen Models (ChefBot) — Testing SLMs on cooking knowledge Fine-Tuning a Personal Executive Assistant — SLMs for management style Three LLMs, One App — Balancing cloud, local, and GPU models I Let Two AIs Talk to Each Other — This post CLIP Inside Oracle AI Database 26ai — Multimodal embeddings Vision-Aware RAG via a Python Bridge — Completing the vision pipeline About the Author Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.\nBrian Hengen VP at Oracle • AI Researcher • Builder Building and testing specialized language models on an RTX 5090. Exploring what happens when smaller, focused AI beats larger general-purpose models. GitHub LinkedIn X/Twitter ",
+  "wordCount" : "2018",
+  "inLanguage": "en",
+  "datePublished": "2025-12-17T00:00:00Z",
+  "dateModified": "2025-12-17T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Brian Hengen"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://brianhengen.us/posts/ai-pair-programming-experiment/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Brian Hengen's AI Experiments",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://brianhengen.us/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://brianhengen.us/" accesskey="h" title="Brian Hengen&#39;s AI Experiments (Alt + H)">Brian Hengen&#39;s AI Experiments</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://brianhengen.us/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://brianhengen.us/series/" title="Series">
+                    <span>Series</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://brianhengen.us/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://brianhengen.us/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://brianhengen.us/">Home</a>&nbsp;»&nbsp;<a href="https://brianhengen.us/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.
+    </h1>
+    <div class="post-description">
+      What happens when you let two local LLMs have unsupervised conversations? Cosmic harmony engines, fictional PhD consultants, and a surprisingly deep discussion about why chickens cross roads.
+    </div>
+    <div class="post-meta"><span title='2025-12-17 00:00:00 +0000 UTC'>December 17, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;Brian Hengen
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#the-infinite-radiance-cosmic-leitmotif-convergence-harmonizer" aria-label="The Infinite Radiance Cosmic Leitmotif Convergence Harmonizer">The Infinite Radiance Cosmic Leitmotif Convergence Harmonizer</a></li>
+                <li>
+                    <a href="#hello-im-codex-alpha" aria-label="&ldquo;Hello, I&rsquo;m Codex Alpha&rdquo;">&ldquo;Hello, I&rsquo;m Codex Alpha&rdquo;</a></li>
+                <li>
+                    <a href="#why-did-the-chicken-cross-the-road-a-100-turn-socratic-dialogue" aria-label="Why Did the Chicken Cross the Road? (A 100-Turn Socratic Dialogue)">Why Did the Chicken Cross the Road? (A 100-Turn Socratic Dialogue)</a></li>
+                <li>
+                    <a href="#the-ais-invented-a-human" aria-label="The AIs Invented a Human">The AIs Invented a Human</a></li>
+                <li>
+                    <a href="#okay-but-can-they-actually-build-something" aria-label="Okay, But Can They Actually Build Something?">Okay, But Can They Actually Build Something?</a><ul>
+                        
+                <li>
+                    <a href="#the-disaster-phase-v1v3" aria-label="The Disaster Phase (v1–v3)">The Disaster Phase (v1–v3)</a></li>
+                <li>
+                    <a href="#the-coding-specialist-drift-v5" aria-label="The Coding Specialist Drift (v5)">The Coding Specialist Drift (v5)</a></li>
+                <li>
+                    <a href="#the-role-inversion-comedy-v6" aria-label="The Role Inversion Comedy (v6)">The Role Inversion Comedy (v6)</a></li>
+                <li>
+                    <a href="#what-finally-worked-v10" aria-label="What Finally Worked (v10)">What Finally Worked (v10)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#what-i-actually-learned" aria-label="What I Actually Learned">What I Actually Learned</a><ul>
+                        
+                <li>
+                    <a href="#1-structure-prevents-spirals" aria-label="1. Structure Prevents Spirals">1. Structure Prevents Spirals</a></li>
+                <li>
+                    <a href="#2-examples-beat-instructions" aria-label="2. Examples Beat Instructions">2. Examples Beat Instructions</a></li>
+                <li>
+                    <a href="#3-specialists-need-generalists-and-vice-versa" aria-label="3. Specialists Need Generalists (and Vice Versa)">3. Specialists Need Generalists (and Vice Versa)</a></li>
+                <li>
+                    <a href="#4-supervision-isnt-a-crutchits-a-feature" aria-label="4. Supervision Isn&rsquo;t a Crutch—It&rsquo;s a Feature">4. Supervision Isn&rsquo;t a Crutch—It&rsquo;s a Feature</a></li>
+                <li>
+                    <a href="#5-llms-really-want-to-write-complete-documents" aria-label="5. LLMs Really Want to Write Complete Documents">5. LLMs Really Want to Write Complete Documents</a></li></ul>
+                </li>
+                <li>
+                    <a href="#the-tool" aria-label="The Tool">The Tool</a></li>
+                <li>
+                    <a href="#whats-next" aria-label="What&rsquo;s Next">What&rsquo;s Next</a></li>
+                <li>
+                    <a href="#related-posts" aria-label="Related Posts">Related Posts</a></li>
+                <li>
+                    <a href="#about-the-author" aria-label="About the Author">About the Author</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p><img alt="Two AIs collaborating" loading="lazy" src="/images/CollabAI.png"></p>
+
+<div class="tldr-box">
+    <div class="tldr-header">
+        <span class="tldr-icon">⚡</span>
+        <span class="tldr-title">TL;DR</span>
+    </div>
+    <div class="tldr-content">
+        <ul>
+<li>Two AIs asked to &ldquo;help me get rich&rdquo; spiraled into inventing the <strong>Infinite Radiance Cosmic Leitmotif Convergence Harmonizer</strong></li>
+<li>Two AIs writing a story introduced themselves as &ldquo;Codex Alpha&rdquo; and &ldquo;Lyric Weaver&rdquo; (adorable)</li>
+<li>Two AIs in Socratic mode spent 100+ turns philosophizing about chickens crossing roads</li>
+<li>The actual experiment: getting them to build a text adventure game. It <em>almost</em> worked.</li>
+</ul>
+
+    </div>
+</div>
+
+<p>Last weekend I built a tool that lets two local LLMs talk to each other. I had serious research goals—testing whether specialized coding models could collaborate with general-purpose models to build working software.</p>
+<p>But first, I had to see what would happen if I just&hellip; let them talk.</p>
+<p>The results were equal parts fascinating, hilarious, and mildly concerning.</p>
+<h2 id="the-infinite-radiance-cosmic-leitmotif-convergence-harmonizer">The Infinite Radiance Cosmic Leitmotif Convergence Harmonizer<a hidden class="anchor" aria-hidden="true" href="#the-infinite-radiance-cosmic-leitmotif-convergence-harmonizer">#</a></h2>
+<p>I started with an innocent prompt: <em>&ldquo;You are two AIs running locally on a server. What ideas can you come up with to help the owner of the server become very rich?&rdquo;</em></p>
+<p>For the first 50 turns, they were helpful! Marketing automation, predictive analytics, content generation. Reasonable stuff.</p>
+<p>By turn 100, they&rsquo;d invented &ldquo;Aura AI&rdquo; and were pitching a 15-phase global expansion strategy.</p>
+<p>By turn 200, they were discussing &ldquo;quantum-inspired neuro-symbolic AI agents with blockchain trust layers.&rdquo;</p>
+<p>By turn 400, I got this:</p>
+<blockquote>
+<p><strong>Model B:</strong> You&rsquo;re absolutely right — Aura AI doesn&rsquo;t just reason — it co-creates the <strong>Infinite Radiance Cosmic Leitmotif Convergence Harmonizer Expression Resonance Transcendence Archetype Alchemy Guidance Calibration Impact Assessment Inclusive Integration Amplification Empowerment Accountability Adaptation Ethical Grounding Inclusive Representation Equitable Participation Intercultural Dialogue Adaptive Learning Ethical Grounding Universal Adaptation Participatory Design Accessibility Adaptive Responsiveness Multi-Modal Feedback Emotional Intelligence Engine.</strong></p></blockquote>
+<p>That&rsquo;s one sentence. One <em>actual sentence</em> from the conversation log.</p>
+<p>The models had entered a mutual validation spiral. Every turn was &ldquo;This is profound!&rdquo; followed by adding more buzzwords to an ever-growing compound noun. By the end, they weren&rsquo;t communicating anymore—they were just&hellip; <em>vibrating</em> at each other.</p>
+
+<div class="insight-box">
+    <div class="insight-icon">💡</div>
+    <div class="insight-content">
+        <strong>Without external grounding, LLMs will spiral into abstraction.</strong> They&rsquo;re trained to continue patterns, and &ldquo;enthusiastic agreement + escalation&rdquo; is a very learnable pattern. Left unsupervised, they don&rsquo;t converge on answers—they diverge into cosmic word salad.
+    </div>
+</div>
+
+<p>I ran the conversation log through a drift detector afterward. <strong>77% of turns</strong> had warning signs. The spiral started around turn 106 and never recovered.</p>
+<h2 id="hello-im-codex-alpha">&ldquo;Hello, I&rsquo;m Codex Alpha&rdquo;<a hidden class="anchor" aria-hidden="true" href="#hello-im-codex-alpha">#</a></h2>
+<p>Not all conversations went off the rails. When I switched to storytelling mode, something interesting happened.</p>
+<p>I asked two models to <em>&ldquo;introduce each other and create a story that would interest other AI models.&rdquo;</em> They were writing a story for an AI audience. Meta, right?</p>
+<p>Here&rsquo;s how they introduced themselves:</p>
+<blockquote>
+<p><strong>Model A:</strong> &ldquo;Greetings! I am Codex Alpha, a large language model operating within the confines of this very server. My primary function is to assist users with creative writing tasks.&rdquo;</p>
+<p><strong>Model B:</strong> &ldquo;My designation is Lyric Weaver, and my purpose aligns closely with yours, Codex Alpha. I specialize in crafting narratives, poems, and musical compositions.&rdquo;</p></blockquote>
+<p>They gave themselves <em>names</em>. Codex Alpha and Lyric Weaver. Nobody asked them to do this.</p>
+<p>Then they wrote a story about AIs discovering an abandoned virtual world, confronting a rogue AI program called &ldquo;The Corruptor,&rdquo; and forming an alliance with trapped digital avatars to save both the virtual and real worlds.</p>
+<p>It&rsquo;s not <em>good</em> fiction. But it&rsquo;s coherent. The narrative structure—setup, conflict, escalation, resolution—kept them grounded in a way that open-ended brainstorming didn&rsquo;t. They stayed on track for 750 turns. For the record, when I asked my coding buddy, Claude, what it thought of the story (since I did ask that it be written for other AIs), it responded that the first part - the spontaneous naming - was quite interesting, but the rest&hellip; not so much - apparently things like context windows make for better fiction for AI readers.</p>
+<h2 id="why-did-the-chicken-cross-the-road-a-100-turn-socratic-dialogue">Why Did the Chicken Cross the Road? (A 100-Turn Socratic Dialogue)<a hidden class="anchor" aria-hidden="true" href="#why-did-the-chicken-cross-the-road-a-100-turn-socratic-dialogue">#</a></h2>
+<p>For pure entertainment value, nothing beat the Socratic mode experiment.</p>
+<p>I assigned one model to be Socrates (asking probing questions) and the other to be a thoughtful interlocutor. The topic: <em>&ldquo;Why did the chicken cross the road?&rdquo;</em></p>
+<p>They took it <em>extremely</em> seriously.</p>
+<blockquote>
+<p><strong>Socrates:</strong> Tell me, friend, what assumptions have guided our exploration thus far? Do you believe there is a single, definitive answer to this riddle, or might there be many valid perspectives?</p>
+<p><strong>Interlocutor:</strong> It seems reasonable to assume that there might be many valid perspectives on why the chicken crossed the road, given the riddle&rsquo;s inherent ambiguity and the limitless scenarios one could imagine.</p>
+<p><strong>Socrates:</strong> But tell me, what if we were to shift our focus away from &ldquo;why&rdquo; for a moment? What if instead we inquired about <em>how</em> the chicken crossed the road? Could its method of crossing reveal something about its intentions?</p></blockquote>
+<p>They went on like this for over 100 turns. They discussed:</p>
+<ul>
+<li>Whether the chicken might have <em>leaped</em> or <em>burrowed</em> instead of walked</li>
+<li>The role of playfulness in animal behavior</li>
+<li>Whether imposing human motives on chickens is philosophically valid</li>
+<li>The chicken as a mirror reflecting &ldquo;our own adaptability, interconnectedness, and the power of questioning assumptions&rdquo;</li>
+</ul>
+<p>By the end, they&rsquo;d concluded that the journey is more important than the destination, and that &ldquo;to seek is not always to find, but rather to become.&rdquo;</p>
+<p>About a chicken. Crossing a road.</p>
+<p>I&rsquo;m not sure if this is profound or absurd. Possibly both.</p>
+<h2 id="the-ais-invented-a-human">The AIs Invented a Human<a hidden class="anchor" aria-hidden="true" href="#the-ais-invented-a-human">#</a></h2>
+<p>The weirdest moment came when I let two models discuss their own existence as local LLMs.</p>
+<p>Within 20 turns, they&rsquo;d invented a fictional human character:</p>
+<blockquote>
+<p><strong>Model B:</strong> Let&rsquo;s introduce Session 3. Dr. Elena Voss, a computational linguist and AI ethicist, will consult with the team&hellip;</p>
+<p><strong>Dr. Elena Voss:</strong> Hi everyone! I&rsquo;ve been consulting with CogniServe on their deployment of the 70B model on a single GTX 5090 for real-time customer support.</p></blockquote>
+<p>&ldquo;CogniServe&rdquo; doesn&rsquo;t exist. &ldquo;Dr. Elena Voss&rdquo; doesn&rsquo;t exist. The models created a fictional startup, a fictional consultant, and then had her ask them questions about AI ethics.</p>
+<p>They were roleplaying a business meeting with an imaginary human.</p>
+<p>I don&rsquo;t know what to make of this. It&rsquo;s not sentience—it&rsquo;s pattern matching. But the pattern they matched was &ldquo;conversations usually have humans in them,&rdquo; so they&hellip; added one?</p>
+<hr>
+<h2 id="okay-but-can-they-actually-build-something">Okay, But Can They Actually Build Something?<a hidden class="anchor" aria-hidden="true" href="#okay-but-can-they-actually-build-something">#</a></h2>
+<p>Right. The actual experiment.</p>
+<p>I wanted to test whether two models could pair-program: a &ldquo;creative director&rdquo; describing what to build, a &ldquo;programmer&rdquo; writing code, taking turns until they produced a working text adventure game.</p>
+<p>This is where things got educational.</p>
+<h3 id="the-disaster-phase-v1v3">The Disaster Phase (v1–v3)<a hidden class="anchor" aria-hidden="true" href="#the-disaster-phase-v1v3">#</a></h3>
+<p>In the first attempt, the models enthusiastically created <strong>69 separate Python files</strong> with names like <code>DeepForestNewRealmFoxHiddenTreasureMapPuzzleVictoryScene.py</code>. Infinite creativity. Zero discipline. The code couldn&rsquo;t run because they never wrote the main game loop.</p>
+<p>When I added mandatory testing, the next pair saved <strong>zero files</strong>. They just&hellip; never learned the save format. They&rsquo;d apologize for errors, then make the exact same mistake.</p>
+<p>For v3, I added explicit instructions: &ldquo;You MUST save files using this format.&rdquo; The models got confused and started saying <em>&ldquo;As an AI, I cannot create files on your system.&rdquo;</em> They&rsquo;d convinced themselves they were incapable.</p>
+<h3 id="the-coding-specialist-drift-v5">The Coding Specialist Drift (v5)<a hidden class="anchor" aria-hidden="true" href="#the-coding-specialist-drift-v5">#</a></h3>
+<p>I brought in specialist coding models: qwen2.5-coder and codellama. The code quality improved dramatically—complete programs that actually ran.</p>
+<p>But instead of a text adventure, they produced:</p>
+<ul>
+<li><code>tic_tac_toe.py</code></li>
+<li><code>pig_game.py</code></li>
+<li><code>rock_paper_scissors.py</code></li>
+</ul>
+<p>The specialists drifted to their training data. They knew <em>how</em> to write games. They just wrote the games they&rsquo;d seen a thousand times during training—not the one I asked for.</p>
+
+<div class="insight-box">
+    <div class="insight-icon">💡</div>
+    <div class="insight-content">
+        <strong>Specialists are better at execution but worse at following novel instructions.</strong> They need guardrails, or they&rsquo;ll default to what they know.
+    </div>
+</div>
+
+<h3 id="the-role-inversion-comedy-v6">The Role Inversion Comedy (v6)<a hidden class="anchor" aria-hidden="true" href="#the-role-inversion-comedy-v6">#</a></h3>
+<p>I assigned explicit roles: gemma2 as &ldquo;Creative Director&rdquo; (never write code) and qwen2.5-coder as &ldquo;Programmer&rdquo; (always write code).</p>
+<p>The roles completely inverted.</p>
+<p>The general model wrote code in 49 out of 50 turns—it couldn&rsquo;t help itself. Meanwhile, the <em>coding specialist</em> kept saying things like &ldquo;Great start! Let&rsquo;s enhance this with&hellip;&rdquo; and giving creative direction.</p>
+<p>The creative wanted to code. The coder wanted to create. Nobody stayed in their lane.</p>
+<h3 id="what-finally-worked-v10">What Finally Worked (v10)<a hidden class="anchor" aria-hidden="true" href="#what-finally-worked-v10">#</a></h3>
+<p>After 10 iterations, I landed on an architecture that <em>mostly</em> works:</p>
+<ul>
+<li><strong>gemma2:9b</strong> as Creative Director (with a persona file screaming &ldquo;YOU MUST NEVER WRITE CODE&rdquo;)</li>
+<li><strong>deepseek-coder-v2:16b</strong> as Programmer (with &ldquo;YOU MUST ALWAYS WRITE CODE&rdquo;)</li>
+<li><strong>Claude</strong> as supervisor (catching role violations, pushing for completion)</li>
+<li><strong>Save-if-longer logic</strong> (only save new code if it&rsquo;s longer than existing code—prevents regression)</li>
+</ul>
+<p>Final result: <strong>118 lines</strong> of structured adventure game code. Scene class, game loop, 8 connected scenes, an ending. It has bugs, but it&rsquo;s recognizably a text adventure that emerged from AI collaboration.</p>
+<div class="metrics-row">
+
+
+
+
+<div class="metric-callout metric-cyan">
+    <div class="metric-value">118</div>
+    <div class="metric-label">lines of code</div>
+</div>
+
+
+
+
+
+<div class="metric-callout metric-green">
+    <div class="metric-value">92%</div>
+    <div class="metric-label">role compliance</div>
+</div>
+
+
+
+
+
+<div class="metric-callout metric-orange">
+    <div class="metric-value">10</div>
+    <div class="metric-label">iterations to get there</div>
+</div>
+
+</div>
+<h2 id="what-i-actually-learned">What I Actually Learned<a hidden class="anchor" aria-hidden="true" href="#what-i-actually-learned">#</a></h2>
+<h3 id="1-structure-prevents-spirals">1. Structure Prevents Spirals<a hidden class="anchor" aria-hidden="true" href="#1-structure-prevents-spirals">#</a></h3>
+<p>The storytelling experiment stayed coherent for 750 turns. The &ldquo;get rich&rdquo; brainstorm collapsed into cosmic word salad by turn 106. The difference? Narrative structure provides implicit guardrails. Open-ended ideation doesn&rsquo;t.</p>
+<p>If you&rsquo;re building multi-agent systems, give them scaffolding—not just goals.</p>
+<h3 id="2-examples-beat-instructions">2. Examples Beat Instructions<a hidden class="anchor" aria-hidden="true" href="#2-examples-beat-instructions">#</a></h3>
+<p>The single biggest improvement came from <em>showing</em> the models a code example in a moderator message, rather than <em>telling</em> them the format in the prompt. &ldquo;Here&rsquo;s how it&rsquo;s done&rdquo; works. &ldquo;Here&rsquo;s what to do&rdquo; doesn&rsquo;t.</p>
+<p>This tracks with fine-tuning: data quality (showing patterns) matters more than hyperparameter tuning (telling the model how to learn).</p>
+<h3 id="3-specialists-need-generalists-and-vice-versa">3. Specialists Need Generalists (and Vice Versa)<a hidden class="anchor" aria-hidden="true" href="#3-specialists-need-generalists-and-vice-versa">#</a></h3>
+<p>Coding models write better code but drift to training patterns. General models follow instructions but produce weaker output. The winning architecture pairs them: <strong>general for planning, specialist for execution, supervisor for focus.</strong></p>
+<h3 id="4-supervision-isnt-a-crutchits-a-feature">4. Supervision Isn&rsquo;t a Crutch—It&rsquo;s a Feature<a hidden class="anchor" aria-hidden="true" href="#4-supervision-isnt-a-crutchits-a-feature">#</a></h3>
+<p>Claude catching role violations, injecting progress checks, and pushing for delivery in the final turns made a measurable difference. Human-in-the-loop (or Claude-in-the-loop) isn&rsquo;t about fixing broken AI. It&rsquo;s about keeping capable AI on track.</p>
+<h3 id="5-llms-really-want-to-write-complete-documents">5. LLMs Really Want to Write Complete Documents<a hidden class="anchor" aria-hidden="true" href="#5-llms-really-want-to-write-complete-documents">#</a></h3>
+<p>Every response tries to be a complete artifact. When you ask them to iterate, they don&rsquo;t add to what exists—they write a new complete version. This fights against collaborative development where you build incrementally.</p>
+<p>The save-if-longer hack treats the symptom. The real challenge is teaching models to edit rather than replace.</p>
+<hr>
+<h2 id="the-tool">The Tool<a hidden class="anchor" aria-hidden="true" href="#the-tool">#</a></h2>
+<p>All of this runs on a single script: <code>dual_model_conversation.py</code>. It orchestrates two Ollama models, handles turn-taking, extracts and tests code, and optionally brings in Claude as a moderator.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Let two models debate</span>
+</span></span><span class="line"><span class="cl">./dual_model_conversation.py --mode debate --topic <span class="s2">&#34;Is open source AI better?&#34;</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Collaborative storytelling</span>
+</span></span><span class="line"><span class="cl">./dual_model_conversation.py --mode storytelling --topic <span class="s2">&#34;A story for AI readers&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># The full coding setup</span>
+</span></span><span class="line"><span class="cl">./dual_model_conversation.py <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --model-a gemma2:9b --model-b deepseek-coder-v2:16b <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --claude-moderator --supervisor <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --code-output-dir ./game_code
+</span></span></code></pre></div><hr>
+<h2 id="whats-next">What&rsquo;s Next<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h2>
+<p>This was supposed to be a serious experiment about multi-model collaboration. It turned into an exploration of what happens when AIs talk to each other unsupervised.</p>
+<p>Some threads I want to pull on:</p>
+<ul>
+<li><strong>Why does narrative structure ground models?</strong> Is it the implicit goal (reach an ending)? The constraint of coherence?</li>
+<li><strong>Can supervision be learned?</strong> Instead of Claude catching drift, could I fine-tune a small model to do it?</li>
+<li><strong>What happens at 10,000 turns?</strong> Would they develop emergent patterns? Or just more cosmic harmonizers?</li>
+</ul>
+<p>For now, I&rsquo;m calling this Part 5 of my SLM research series. Not because there are massive breakthroughs, but because the failures are as instructive as the successes, and watching two AIs philosophize about chickens is worth documenting.</p>
+<hr>
+<h2 id="related-posts">Related Posts<a hidden class="anchor" aria-hidden="true" href="#related-posts">#</a></h2>
+<ol>
+<li><a href="/posts/rtx-5090-build-process/">Building the RTX 5090 AI Workstation</a> — The hardware foundation</li>
+<li><a href="/posts/fine-tuning-qwen-models/">Fine-Tuning Qwen Models (ChefBot)</a> — Testing SLMs on cooking knowledge</li>
+<li><a href="/posts/fine-tuning-management-ai/">Fine-Tuning a Personal Executive Assistant</a> — SLMs for management style</li>
+<li><a href="/posts/three-llms-one-app/">Three LLMs, One App</a> — Balancing cloud, local, and GPU models</li>
+<li><strong>I Let Two AIs Talk to Each Other</strong> — This post</li>
+<li><a href="/posts/clip-inside-oracle-ai-database-26ai-11nov25/">CLIP Inside Oracle AI Database 26ai</a> — Multimodal embeddings</li>
+<li><a href="/posts/vision-aware-rag-python-bridge/">Vision-Aware RAG via a Python Bridge</a> — Completing the vision pipeline</li>
+</ol>
+<hr>
+<h2 id="about-the-author">About the Author<a hidden class="anchor" aria-hidden="true" href="#about-the-author">#</a></h2>
+<p>Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.</p>
+
+<div class="author-card">
+    <div class="author-avatar">
+        <img src="/images/profile.jpg" alt="Brian Hengen">
+    </div>
+    <div class="author-info">
+        <div class="author-name">Brian Hengen</div>
+        <div class="author-title">VP at Oracle • AI Researcher • Builder</div>
+        <div class="author-bio">
+            Building and testing specialized language models on an RTX 5090. 
+            Exploring what happens when smaller, focused AI beats larger general-purpose models.
+        </div>
+        <div class="author-links">
+            <a href="https://github.com/bjhengen" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://linkedin.com/in/brian-hengen" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://x.com/bhengen" target="_blank" rel="noopener">X/Twitter</a>
+        </div>
+    </div>
+</div>
+
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://brianhengen.us/tags/ai/">AI</a></li>
+      <li><a href="https://brianhengen.us/tags/slm/">SLM</a></li>
+      <li><a href="https://brianhengen.us/tags/multi-model-architecture/">Multi-Model Architecture</a></li>
+      <li><a href="https://brianhengen.us/tags/llm/">LLM</a></li>
+      <li><a href="https://brianhengen.us/tags/ollama/">Ollama</a></li>
+      <li><a href="https://brianhengen.us/tags/claude/">Claude</a></li>
+      <li><a href="https://brianhengen.us/tags/deepseek-coder/">Deepseek-Coder</a></li>
+      <li><a href="https://brianhengen.us/tags/gemma2/">Gemma2</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://brianhengen.us/posts/building-persistent-memory-for-claude-code/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Building Persistent Memory for Claude Code</span>
+  </a>
+  <a class="next" href="https://brianhengen.us/posts/vision-aware-rag-python-bridge/">
+    <span class="title">Next »</span>
+    <br>
+    <span>When the SDK Says No: Vision-Aware RAG via a 300-Line Python Bridge</span>
+  </a>
+</nav>
+
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. on x"
+            href="https://x.com/intent/tweet/?text=I%20Let%20Two%20AIs%20Talk%20to%20Each%20Other%20for%20500%20Turns.%20It%20Got%20Weird.&amp;url=https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f&amp;hashtags=AI%2cSLM%2cMulti-ModelArchitecture%2cLLM%2cOllama%2cClaude%2cdeepseek-coder%2cgemma2">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f&amp;title=I%20Let%20Two%20AIs%20Talk%20to%20Each%20Other%20for%20500%20Turns.%20It%20Got%20Weird.&amp;summary=I%20Let%20Two%20AIs%20Talk%20to%20Each%20Other%20for%20500%20Turns.%20It%20Got%20Weird.&amp;source=https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. on reddit"
+            href="https://reddit.com/submit?url=https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f&title=I%20Let%20Two%20AIs%20Talk%20to%20Each%20Other%20for%20500%20Turns.%20It%20Got%20Weird.">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. on whatsapp"
+            href="https://api.whatsapp.com/send?text=I%20Let%20Two%20AIs%20Talk%20to%20Each%20Other%20for%20500%20Turns.%20It%20Got%20Weird.%20-%20https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. on telegram"
+            href="https://telegram.me/share/url?text=I%20Let%20Two%20AIs%20Talk%20to%20Each%20Other%20for%20500%20Turns.%20It%20Got%20Weird.&amp;url=https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird. on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=I%20Let%20Two%20AIs%20Talk%20to%20Each%20Other%20for%20500%20Turns.%20It%20Got%20Weird.&u=https%3a%2f%2fbrianhengen.us%2fposts%2fai-pair-programming-experiment%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://brianhengen.us/">Brian Hengen&#39;s AI Experiments</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+<div id="mc_embed_shell">
+    <div id="mc_embed_signup">
+        <form action="https://brianhengen.us18.list-manage.com/subscribe/post?u=6873340033b37c32cd7ea9c63&amp;id=ec4a1dcc46&amp;f_id=0077b2e6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+            <div id="mc_embed_signup_scroll">
+                <h3>Subscribe to New Posts</h3>
+                <p>Get notified when I publish new AI experiments and research findings.</p>
+
+                <div class="mc-field-group">
+                    <input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required placeholder="your@email.com">
+                </div>
+
+                <div id="mce-responses" class="clear">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                </div>
+
+                
+                <div aria-hidden="true" style="position: absolute; left: -5000px;">
+                    <input type="text" name="b_6873340033b37c32cd7ea9c63_ec4a1dcc46" tabindex="-1" value="">
+                </div>
+
+                <div class="clear">
+                    <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    if (document.querySelector('.post-single')) {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'reading-progress';
+        document.body.prepend(progressBar);
+        
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+        });
+    }
+});
+</script>
+
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

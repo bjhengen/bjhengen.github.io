@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Knowledge Management on Brian Hengen&#39;s AI Experiments</title>
+    <link>http://localhost:1313/categories/knowledge-management/</link>
+    <description>Recent content in Knowledge Management on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/knowledge-management/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Rich Text Editing with Image Paste and OneNote Integration</title>
+      <link>http://localhost:1313/posts/quill-image-paste-onenote-integration/</link>
+      <pubDate>Tue, 04 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/quill-image-paste-onenote-integration/</guid>
+      <description>Adding clipboard image paste and OneNote integration to a Flutter knowledge management app using Quill rich text editor.</description>
+      <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
+<p>Building a knowledge management application requires powerful note-taking capabilities. Over the past week, I&rsquo;ve been enhancing my Flutter-based MGR App with advanced rich text editing features, including clipboard image paste support and complete OneNote integration. Here&rsquo;s the journey.</p>
+<h2 id="the-challenge-rich-text-editing">The Challenge: Rich Text Editing</h2>
+<p>Modern note-taking applications need more than basic text formatting. Users expect to:</p>
+<ul>
+<li>Paste images directly from clipboard</li>
+<li>Format text with rich styling</li>
+<li>Embed various content types</li>
+<li>Edit notes seamlessly across devices</li>
+</ul>
+<p>I chose <strong>Flutter Quill v11</strong> as the rich text editor, but quickly discovered that the v11 API had significant breaking changes from previous versions.</p>
+<h2 id="implementing-clipboard-image-paste">Implementing Clipboard Image Paste</h2>
+<h3 id="the-problem">The Problem</h3>
+<p>The initial Quill implementation worked well for text, but had no way to paste images from the clipboard. The image insert button required file selection, which disrupts the writing flow.</p>
+<h3 id="the-solution">The Solution</h3>
+<p>I implemented clipboard paste support using three key components:</p>
+<h4 id="1-clipboard-detection-with-super_clipboard">1. Clipboard Detection with super_clipboard</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-dart" data-lang="dart"><span class="line"><span class="cl"><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">_handlePaste</span><span class="p">()</span> <span class="kd">async</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">final</span> <span class="n">clipboard</span> <span class="o">=</span> <span class="n">SystemClipboard</span><span class="p">.</span><span class="n">instance</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="n">clipboard</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">final</span> <span class="n">reader</span> <span class="o">=</span> <span class="kd">await</span> <span class="n">clipboard</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// Try PNG format
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">canProvide</span><span class="p">(</span><span class="n">Formats</span><span class="p">.</span><span class="n">png</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">reader</span><span class="p">.</span><span class="n">getFile</span><span class="p">(</span><span class="n">Formats</span><span class="p">.</span><span class="n">png</span><span class="p">,</span> <span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="kd">async</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">final</span> <span class="n">bytes</span> <span class="o">=</span> <span class="kd">await</span> <span class="n">file</span><span class="p">.</span><span class="n">readAll</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="n">_insertImageFromBytes</span><span class="p">(</span><span class="n">bytes</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// Similar for JPEG and GIF...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h4 id="2-keyboard-event-handling">2. Keyboard Event Handling</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-dart" data-lang="dart"><span class="line"><span class="cl"><span class="n">RawKeyboardListener</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="nl">focusNode:</span> <span class="n">FocusNode</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">  <span class="nl">onKey:</span> <span class="p">(</span><span class="n">RawKeyEvent</span> <span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">event</span> <span class="k">is</span> <span class="n">RawKeyDownEvent</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">final</span> <span class="n">isMetaPressed</span> <span class="o">=</span> <span class="n">event</span><span class="p">.</span><span class="n">isMetaPressed</span> <span class="o">||</span> <span class="n">event</span><span class="p">.</span><span class="n">isControlPressed</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="n">isMetaPressed</span> <span class="o">&amp;&amp;</span> <span class="n">event</span><span class="p">.</span><span class="n">logicalKey</span> <span class="o">==</span> <span class="n">LogicalKeyboardKey</span><span class="p">.</span><span class="n">keyV</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">_handlePaste</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nl">child:</span> <span class="n">QuillEditor</span><span class="p">(</span><span class="cm">/* ... */</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><h4 id="3-base64-image-embedding">3. Base64 Image Embedding</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-dart" data-lang="dart"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">_insertImageFromBytes</span><span class="p">(</span><span class="n">Uint8List</span> <span class="n">bytes</span><span class="p">,</span> <span class="kt">String</span> <span class="n">format</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">final</span> <span class="n">base64String</span> <span class="o">=</span> <span class="n">base64Encode</span><span class="p">(</span><span class="n">bytes</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">final</span> <span class="n">imageUrl</span> <span class="o">=</span> <span class="s1">&#39;data:image/</span><span class="si">$</span><span class="n">format</span><span class="s1">;base64,</span><span class="si">$</span><span class="n">base64String</span><span class="s1">&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">_quillController</span><span class="p">.</span><span class="n">replaceText</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">index</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">length</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BlockEmbed</span><span class="p">.</span><span class="n">image</span><span class="p">(</span><span class="n">imageUrl</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="api-challenges">API Challenges</h3>
+<p>The <code>super_clipboard</code> package API was tricky to work with. The documentation suggested methods that didn&rsquo;t exist in v0.9.1. After multiple iterations, I discovered the correct pattern:</p>
+<ul>
+<li>Use <code>reader.canProvide()</code> to check for format availability</li>
+<li>Use <code>reader.getFile()</code> with a callback (not <code>readFile()</code> or <code>readValue()</code>)</li>
+<li>Call <code>readAll()</code> on the file object to get bytes</li>
+</ul>
+<h2 id="onenote-integration-5000-documents">OneNote Integration: 5,000+ Documents</h2>
+<p>In parallel with the UI enhancements, I completed a massive data migration project importing over 5,000 OneNote documents into the RAG system.</p>
+<h3 id="the-process">The Process</h3>
+<ol>
+<li><strong>API Authentication</strong>: Implemented device code flow auth for Microsoft Graph API</li>
+<li><strong>Recursive Extraction</strong>: Built scripts to traverse nested section groups</li>
+<li><strong>Content Processing</strong>: Extracted HTML content and converted to searchable text</li>
+<li><strong>Fiscal Year Organization</strong>: Standardized document dates (FY14-FY26)</li>
+<li><strong>Vectorization</strong>: Created 23,000+ embeddings using Oracle&rsquo;s in-database CLIP model</li>
+<li><strong>Image Handling</strong>: Preserved image references and folder structure</li>
+</ol>
+<h3 id="key-challenges">Key Challenges</h3>
+<p><strong>Rate Limiting</strong>: Microsoft Graph API has strict throttling. Solution: Built resumable scripts with checkpoint tracking and exponential backoff.</p>
+<p><strong>Large Documents</strong>: Some OneNote pages exceeded 70KB. Solution: Enhanced CLOB reading with proper connection management.</p>
+<p><strong>Date Extraction</strong>: OneNote metadata was inconsistent. Solution: Fiscal year pattern matching with June 1st standardization.</p>
+<h2 id="backend-services-management">Backend Services Management</h2>
+<p>With multiple backend services (Node.js API on port 3000, Python vision service on port 3002), I needed better dev tools.</p>
+<h3 id="unified-services-control-script">Unified Services Control Script</h3>
+<p>Created <code>services-control.sh</code> for managing both services:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1"># Usage: ./services-control.sh {start|stop|restart|status|logs} [backend|vision|all]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Start both services</span>
+</span></span><span class="line"><span class="cl">./services-control.sh start
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Check status</span>
+</span></span><span class="line"><span class="cl">./services-control.sh status
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># View logs</span>
+</span></span><span class="line"><span class="cl">./services-control.sh logs
+</span></span></code></pre></div><h4 id="features">Features</h4>
+<ul>
+<li><strong>Smart Process Management</strong>: Detects services by PID and port</li>
+<li><strong>Orphan Cleanup</strong>: Automatically kills abandoned processes</li>
+<li><strong>Color-Coded Output</strong>: Easy-to-read status information</li>
+<li><strong>Graceful Shutdown</strong>: SIGTERM first, SIGKILL as fallback</li>
+<li><strong>Live Log Viewing</strong>: Tail both service logs simultaneously</li>
+</ul>
+<p>Example status output:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</span></span><span class="line"><span class="cl">📊 MGR App Services Status
+</span></span><span class="line"><span class="cl">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">🔹 Node.js Backend (port 3000):
+</span></span><span class="line"><span class="cl">   ✅ RUNNING
+</span></span><span class="line"><span class="cl">   PID: 84208
+</span></span><span class="line"><span class="cl">   Endpoint: http://localhost:3000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">🔹 Python Vision Service (port 3002):
+</span></span><span class="line"><span class="cl">   ✅ RUNNING
+</span></span><span class="line"><span class="cl">   PID: 91294
+</span></span><span class="line"><span class="cl">   Endpoint: http://localhost:3002
+</span></span></code></pre></div><h2 id="technical-stack-updates">Technical Stack Updates</h2>
+<h3 id="flutter-dependencies">Flutter Dependencies</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">dependencies</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">flutter_quill</span><span class="p">:</span><span class="w"> </span><span class="l">^11.5.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">flutter_quill_extensions</span><span class="p">:</span><span class="w"> </span><span class="l">^11.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">super_clipboard</span><span class="p">:</span><span class="w"> </span><span class="l">^0.9.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">html_editor_enhanced</span><span class="p">:</span><span class="w"> </span><span class="l">^2.7.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">file_picker</span><span class="p">:</span><span class="w"> </span><span class="l">^10.3.3</span><span class="w">
+</span></span></span></code></pre></div><h3 id="backend-components">Backend Components</h3>
+<ul>
+<li><strong>Node.js</strong>: Express API server with Oracle database integration</li>
+<li><strong>Python</strong>: Vision service for image analysis (Grok Vision API)</li>
+<li><strong>Oracle Database</strong>: 23ai with vector search and in-database embeddings</li>
+<li><strong>Microsoft Graph</strong>: OneNote API integration with OAuth device flow</li>
+</ul>
+<h2 id="results-and-impact">Results and Impact</h2>
+<h3 id="quill-editor-enhancements">Quill Editor Enhancements</h3>
+<p>✅ <strong>Clipboard paste working</strong> for PNG, JPEG, and GIF images
+✅ <strong>Base64 embedding</strong> - no separate file storage needed
+✅ <strong>Cross-platform support</strong> - Cmd+V (macOS) and Ctrl+V (Windows/Linux)
+✅ <strong>Flutter Quill v11</strong> - fully migrated to latest API</p>
+<h3 id="onenote-integration">OneNote Integration</h3>
+<p>✅ <strong>5,178 documents</strong> fully vectorized and searchable
+✅ <strong>23,000+ embeddings</strong> using in-database CLIP model
+✅ <strong>Fiscal year organization</strong> with standardized dates
+✅ <strong>Complete folder structure</strong> preserved from OneNote</p>
+<h3 id="developer-experience">Developer Experience</h3>
+<p>✅ <strong>One command</strong> to start/stop all backend services
+✅ <strong>Clear status visibility</strong> for all running processes
+✅ <strong>Centralized logging</strong> for easier debugging
+✅ <strong>Automated cleanup</strong> of orphaned processes</p>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<h3 id="1-read-the-source-code">1. Read the Source Code</h3>
+<p>Documentation for <code>super_clipboard</code> was misleading. The actual working API was different from examples. Reading the source code and examining type definitions saved hours of debugging.</p>
+<h3 id="2-incremental-testing-is-critical">2. Incremental Testing is Critical</h3>
+<p>Each Quill API change required a full <code>flutter clean &amp;&amp; flutter run</code> cycle. Testing small changes incrementally prevented cascading errors.</p>
+<h3 id="3-rate-limiting-strategies-matter">3. Rate Limiting Strategies Matter</h3>
+<p>For large-scale API integrations like OneNote, proper rate limiting with checkpoint resume is essential. Lost several hours of progress early on due to incomplete error handling.</p>
+<h3 id="4-base64-vs-external-storage-trade-offs">4. Base64 vs External Storage Trade-offs</h3>
+<p>Embedding images as base64 data URLs is convenient but increases document size. For production, consider:</p>
+<ul>
+<li>Image compression before encoding</li>
+<li>Size limits for inline images</li>
+<li>External storage for large images</li>
+<li>Lazy loading for image-heavy documents</li>
+</ul>
+<h2 id="whats-next">What&rsquo;s Next</h2>
+<h3 id="planned-enhancements">Planned Enhancements</h3>
+<ul>
+<li><strong>Image Compression</strong>: Automatically resize/compress pasted images</li>
+<li><strong>External Image Storage</strong>: S3/Oracle Object Storage for large images</li>
+<li><strong>OneNote Sync</strong>: Bi-directional sync with OneNote API</li>
+<li><strong>Rich Text Search</strong>: Full-text search across formatted content</li>
+<li><strong>Collaborative Editing</strong>: Real-time multi-user editing</li>
+</ul>
+<h3 id="performance-optimizations">Performance Optimizations</h3>
+<ul>
+<li>Lazy loading for large documents</li>
+<li>Virtual scrolling for long note lists</li>
+<li>Background vectorization for new notes</li>
+<li>Caching layer for frequently accessed content</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Building a modern knowledge management system requires attention to user experience details. Clipboard image paste seems like a small feature, but it dramatically improves the note-taking workflow. Combined with the massive OneNote integration, the app now provides a powerful foundation for organizational knowledge capture and retrieval.</p>
+<p>The combination of Flutter&rsquo;s cross-platform capabilities, Quill&rsquo;s rich text editing, Oracle&rsquo;s vector search, and Microsoft&rsquo;s OneNote API creates a comprehensive knowledge management solution that scales from individual notes to enterprise-wide knowledge bases.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="https://github.com/singerdmx/flutter-quill">Flutter Quill Documentation</a></li>
+<li><a href="https://pub.dev/packages/super_clipboard">super_clipboard Package</a></li>
+<li><a href="https://learn.microsoft.com/en-us/graph/api/resources/onenote">Microsoft Graph OneNote API</a></li>
+<li><a href="https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/">Oracle Database 23ai Vector Search</a></li>
+</ul>
+<hr>
+<p><em>This work was done with assistance from Claude Code, an AI-powered development tool that helps with code generation, debugging, and documentation.</em></p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

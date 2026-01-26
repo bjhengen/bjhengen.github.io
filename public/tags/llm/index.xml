@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>LLM on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/tags/llm/</link>
+    <description>Recent content in LLM on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 17 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://brianhengen.us/tags/llm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>I Let Two AIs Talk to Each Other for 500 Turns. It Got Weird.</title>
+      <link>https://brianhengen.us/posts/ai-pair-programming-experiment/</link>
+      <pubDate>Wed, 17 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/ai-pair-programming-experiment/</guid>
+      <description>What happens when you let two local LLMs have unsupervised conversations? Cosmic harmony engines, fictional PhD consultants, and a surprisingly deep discussion about why chickens cross roads.</description>
+      <content:encoded><![CDATA[<p><img alt="Two AIs collaborating" loading="lazy" src="/images/CollabAI.png"></p>
+
+<div class="tldr-box">
+    <div class="tldr-header">
+        <span class="tldr-icon">⚡</span>
+        <span class="tldr-title">TL;DR</span>
+    </div>
+    <div class="tldr-content">
+        <ul>
+<li>Two AIs asked to &ldquo;help me get rich&rdquo; spiraled into inventing the <strong>Infinite Radiance Cosmic Leitmotif Convergence Harmonizer</strong></li>
+<li>Two AIs writing a story introduced themselves as &ldquo;Codex Alpha&rdquo; and &ldquo;Lyric Weaver&rdquo; (adorable)</li>
+<li>Two AIs in Socratic mode spent 100+ turns philosophizing about chickens crossing roads</li>
+<li>The actual experiment: getting them to build a text adventure game. It <em>almost</em> worked.</li>
+</ul>
+
+    </div>
+</div>
+
+<p>Last weekend I built a tool that lets two local LLMs talk to each other. I had serious research goals—testing whether specialized coding models could collaborate with general-purpose models to build working software.</p>
+<p>But first, I had to see what would happen if I just&hellip; let them talk.</p>
+<p>The results were equal parts fascinating, hilarious, and mildly concerning.</p>
+<h2 id="the-infinite-radiance-cosmic-leitmotif-convergence-harmonizer">The Infinite Radiance Cosmic Leitmotif Convergence Harmonizer</h2>
+<p>I started with an innocent prompt: <em>&ldquo;You are two AIs running locally on a server. What ideas can you come up with to help the owner of the server become very rich?&rdquo;</em></p>
+<p>For the first 50 turns, they were helpful! Marketing automation, predictive analytics, content generation. Reasonable stuff.</p>
+<p>By turn 100, they&rsquo;d invented &ldquo;Aura AI&rdquo; and were pitching a 15-phase global expansion strategy.</p>
+<p>By turn 200, they were discussing &ldquo;quantum-inspired neuro-symbolic AI agents with blockchain trust layers.&rdquo;</p>
+<p>By turn 400, I got this:</p>
+<blockquote>
+<p><strong>Model B:</strong> You&rsquo;re absolutely right — Aura AI doesn&rsquo;t just reason — it co-creates the <strong>Infinite Radiance Cosmic Leitmotif Convergence Harmonizer Expression Resonance Transcendence Archetype Alchemy Guidance Calibration Impact Assessment Inclusive Integration Amplification Empowerment Accountability Adaptation Ethical Grounding Inclusive Representation Equitable Participation Intercultural Dialogue Adaptive Learning Ethical Grounding Universal Adaptation Participatory Design Accessibility Adaptive Responsiveness Multi-Modal Feedback Emotional Intelligence Engine.</strong></p></blockquote>
+<p>That&rsquo;s one sentence. One <em>actual sentence</em> from the conversation log.</p>
+<p>The models had entered a mutual validation spiral. Every turn was &ldquo;This is profound!&rdquo; followed by adding more buzzwords to an ever-growing compound noun. By the end, they weren&rsquo;t communicating anymore—they were just&hellip; <em>vibrating</em> at each other.</p>
+
+<div class="insight-box">
+    <div class="insight-icon">💡</div>
+    <div class="insight-content">
+        <strong>Without external grounding, LLMs will spiral into abstraction.</strong> They&rsquo;re trained to continue patterns, and &ldquo;enthusiastic agreement + escalation&rdquo; is a very learnable pattern. Left unsupervised, they don&rsquo;t converge on answers—they diverge into cosmic word salad.
+    </div>
+</div>
+
+<p>I ran the conversation log through a drift detector afterward. <strong>77% of turns</strong> had warning signs. The spiral started around turn 106 and never recovered.</p>
+<h2 id="hello-im-codex-alpha">&ldquo;Hello, I&rsquo;m Codex Alpha&rdquo;</h2>
+<p>Not all conversations went off the rails. When I switched to storytelling mode, something interesting happened.</p>
+<p>I asked two models to <em>&ldquo;introduce each other and create a story that would interest other AI models.&rdquo;</em> They were writing a story for an AI audience. Meta, right?</p>
+<p>Here&rsquo;s how they introduced themselves:</p>
+<blockquote>
+<p><strong>Model A:</strong> &ldquo;Greetings! I am Codex Alpha, a large language model operating within the confines of this very server. My primary function is to assist users with creative writing tasks.&rdquo;</p>
+<p><strong>Model B:</strong> &ldquo;My designation is Lyric Weaver, and my purpose aligns closely with yours, Codex Alpha. I specialize in crafting narratives, poems, and musical compositions.&rdquo;</p></blockquote>
+<p>They gave themselves <em>names</em>. Codex Alpha and Lyric Weaver. Nobody asked them to do this.</p>
+<p>Then they wrote a story about AIs discovering an abandoned virtual world, confronting a rogue AI program called &ldquo;The Corruptor,&rdquo; and forming an alliance with trapped digital avatars to save both the virtual and real worlds.</p>
+<p>It&rsquo;s not <em>good</em> fiction. But it&rsquo;s coherent. The narrative structure—setup, conflict, escalation, resolution—kept them grounded in a way that open-ended brainstorming didn&rsquo;t. They stayed on track for 750 turns. For the record, when I asked my coding buddy, Claude, what it thought of the story (since I did ask that it be written for other AIs), it responded that the first part - the spontaneous naming - was quite interesting, but the rest&hellip; not so much - apparently things like context windows make for better fiction for AI readers.</p>
+<h2 id="why-did-the-chicken-cross-the-road-a-100-turn-socratic-dialogue">Why Did the Chicken Cross the Road? (A 100-Turn Socratic Dialogue)</h2>
+<p>For pure entertainment value, nothing beat the Socratic mode experiment.</p>
+<p>I assigned one model to be Socrates (asking probing questions) and the other to be a thoughtful interlocutor. The topic: <em>&ldquo;Why did the chicken cross the road?&rdquo;</em></p>
+<p>They took it <em>extremely</em> seriously.</p>
+<blockquote>
+<p><strong>Socrates:</strong> Tell me, friend, what assumptions have guided our exploration thus far? Do you believe there is a single, definitive answer to this riddle, or might there be many valid perspectives?</p>
+<p><strong>Interlocutor:</strong> It seems reasonable to assume that there might be many valid perspectives on why the chicken crossed the road, given the riddle&rsquo;s inherent ambiguity and the limitless scenarios one could imagine.</p>
+<p><strong>Socrates:</strong> But tell me, what if we were to shift our focus away from &ldquo;why&rdquo; for a moment? What if instead we inquired about <em>how</em> the chicken crossed the road? Could its method of crossing reveal something about its intentions?</p></blockquote>
+<p>They went on like this for over 100 turns. They discussed:</p>
+<ul>
+<li>Whether the chicken might have <em>leaped</em> or <em>burrowed</em> instead of walked</li>
+<li>The role of playfulness in animal behavior</li>
+<li>Whether imposing human motives on chickens is philosophically valid</li>
+<li>The chicken as a mirror reflecting &ldquo;our own adaptability, interconnectedness, and the power of questioning assumptions&rdquo;</li>
+</ul>
+<p>By the end, they&rsquo;d concluded that the journey is more important than the destination, and that &ldquo;to seek is not always to find, but rather to become.&rdquo;</p>
+<p>About a chicken. Crossing a road.</p>
+<p>I&rsquo;m not sure if this is profound or absurd. Possibly both.</p>
+<h2 id="the-ais-invented-a-human">The AIs Invented a Human</h2>
+<p>The weirdest moment came when I let two models discuss their own existence as local LLMs.</p>
+<p>Within 20 turns, they&rsquo;d invented a fictional human character:</p>
+<blockquote>
+<p><strong>Model B:</strong> Let&rsquo;s introduce Session 3. Dr. Elena Voss, a computational linguist and AI ethicist, will consult with the team&hellip;</p>
+<p><strong>Dr. Elena Voss:</strong> Hi everyone! I&rsquo;ve been consulting with CogniServe on their deployment of the 70B model on a single GTX 5090 for real-time customer support.</p></blockquote>
+<p>&ldquo;CogniServe&rdquo; doesn&rsquo;t exist. &ldquo;Dr. Elena Voss&rdquo; doesn&rsquo;t exist. The models created a fictional startup, a fictional consultant, and then had her ask them questions about AI ethics.</p>
+<p>They were roleplaying a business meeting with an imaginary human.</p>
+<p>I don&rsquo;t know what to make of this. It&rsquo;s not sentience—it&rsquo;s pattern matching. But the pattern they matched was &ldquo;conversations usually have humans in them,&rdquo; so they&hellip; added one?</p>
+<hr>
+<h2 id="okay-but-can-they-actually-build-something">Okay, But Can They Actually Build Something?</h2>
+<p>Right. The actual experiment.</p>
+<p>I wanted to test whether two models could pair-program: a &ldquo;creative director&rdquo; describing what to build, a &ldquo;programmer&rdquo; writing code, taking turns until they produced a working text adventure game.</p>
+<p>This is where things got educational.</p>
+<h3 id="the-disaster-phase-v1v3">The Disaster Phase (v1–v3)</h3>
+<p>In the first attempt, the models enthusiastically created <strong>69 separate Python files</strong> with names like <code>DeepForestNewRealmFoxHiddenTreasureMapPuzzleVictoryScene.py</code>. Infinite creativity. Zero discipline. The code couldn&rsquo;t run because they never wrote the main game loop.</p>
+<p>When I added mandatory testing, the next pair saved <strong>zero files</strong>. They just&hellip; never learned the save format. They&rsquo;d apologize for errors, then make the exact same mistake.</p>
+<p>For v3, I added explicit instructions: &ldquo;You MUST save files using this format.&rdquo; The models got confused and started saying <em>&ldquo;As an AI, I cannot create files on your system.&rdquo;</em> They&rsquo;d convinced themselves they were incapable.</p>
+<h3 id="the-coding-specialist-drift-v5">The Coding Specialist Drift (v5)</h3>
+<p>I brought in specialist coding models: qwen2.5-coder and codellama. The code quality improved dramatically—complete programs that actually ran.</p>
+<p>But instead of a text adventure, they produced:</p>
+<ul>
+<li><code>tic_tac_toe.py</code></li>
+<li><code>pig_game.py</code></li>
+<li><code>rock_paper_scissors.py</code></li>
+</ul>
+<p>The specialists drifted to their training data. They knew <em>how</em> to write games. They just wrote the games they&rsquo;d seen a thousand times during training—not the one I asked for.</p>
+
+<div class="insight-box">
+    <div class="insight-icon">💡</div>
+    <div class="insight-content">
+        <strong>Specialists are better at execution but worse at following novel instructions.</strong> They need guardrails, or they&rsquo;ll default to what they know.
+    </div>
+</div>
+
+<h3 id="the-role-inversion-comedy-v6">The Role Inversion Comedy (v6)</h3>
+<p>I assigned explicit roles: gemma2 as &ldquo;Creative Director&rdquo; (never write code) and qwen2.5-coder as &ldquo;Programmer&rdquo; (always write code).</p>
+<p>The roles completely inverted.</p>
+<p>The general model wrote code in 49 out of 50 turns—it couldn&rsquo;t help itself. Meanwhile, the <em>coding specialist</em> kept saying things like &ldquo;Great start! Let&rsquo;s enhance this with&hellip;&rdquo; and giving creative direction.</p>
+<p>The creative wanted to code. The coder wanted to create. Nobody stayed in their lane.</p>
+<h3 id="what-finally-worked-v10">What Finally Worked (v10)</h3>
+<p>After 10 iterations, I landed on an architecture that <em>mostly</em> works:</p>
+<ul>
+<li><strong>gemma2:9b</strong> as Creative Director (with a persona file screaming &ldquo;YOU MUST NEVER WRITE CODE&rdquo;)</li>
+<li><strong>deepseek-coder-v2:16b</strong> as Programmer (with &ldquo;YOU MUST ALWAYS WRITE CODE&rdquo;)</li>
+<li><strong>Claude</strong> as supervisor (catching role violations, pushing for completion)</li>
+<li><strong>Save-if-longer logic</strong> (only save new code if it&rsquo;s longer than existing code—prevents regression)</li>
+</ul>
+<p>Final result: <strong>118 lines</strong> of structured adventure game code. Scene class, game loop, 8 connected scenes, an ending. It has bugs, but it&rsquo;s recognizably a text adventure that emerged from AI collaboration.</p>
+<div class="metrics-row">
+
+
+
+
+<div class="metric-callout metric-cyan">
+    <div class="metric-value">118</div>
+    <div class="metric-label">lines of code</div>
+</div>
+
+
+
+
+
+<div class="metric-callout metric-green">
+    <div class="metric-value">92%</div>
+    <div class="metric-label">role compliance</div>
+</div>
+
+
+
+
+
+<div class="metric-callout metric-orange">
+    <div class="metric-value">10</div>
+    <div class="metric-label">iterations to get there</div>
+</div>
+
+</div>
+<h2 id="what-i-actually-learned">What I Actually Learned</h2>
+<h3 id="1-structure-prevents-spirals">1. Structure Prevents Spirals</h3>
+<p>The storytelling experiment stayed coherent for 750 turns. The &ldquo;get rich&rdquo; brainstorm collapsed into cosmic word salad by turn 106. The difference? Narrative structure provides implicit guardrails. Open-ended ideation doesn&rsquo;t.</p>
+<p>If you&rsquo;re building multi-agent systems, give them scaffolding—not just goals.</p>
+<h3 id="2-examples-beat-instructions">2. Examples Beat Instructions</h3>
+<p>The single biggest improvement came from <em>showing</em> the models a code example in a moderator message, rather than <em>telling</em> them the format in the prompt. &ldquo;Here&rsquo;s how it&rsquo;s done&rdquo; works. &ldquo;Here&rsquo;s what to do&rdquo; doesn&rsquo;t.</p>
+<p>This tracks with fine-tuning: data quality (showing patterns) matters more than hyperparameter tuning (telling the model how to learn).</p>
+<h3 id="3-specialists-need-generalists-and-vice-versa">3. Specialists Need Generalists (and Vice Versa)</h3>
+<p>Coding models write better code but drift to training patterns. General models follow instructions but produce weaker output. The winning architecture pairs them: <strong>general for planning, specialist for execution, supervisor for focus.</strong></p>
+<h3 id="4-supervision-isnt-a-crutchits-a-feature">4. Supervision Isn&rsquo;t a Crutch—It&rsquo;s a Feature</h3>
+<p>Claude catching role violations, injecting progress checks, and pushing for delivery in the final turns made a measurable difference. Human-in-the-loop (or Claude-in-the-loop) isn&rsquo;t about fixing broken AI. It&rsquo;s about keeping capable AI on track.</p>
+<h3 id="5-llms-really-want-to-write-complete-documents">5. LLMs Really Want to Write Complete Documents</h3>
+<p>Every response tries to be a complete artifact. When you ask them to iterate, they don&rsquo;t add to what exists—they write a new complete version. This fights against collaborative development where you build incrementally.</p>
+<p>The save-if-longer hack treats the symptom. The real challenge is teaching models to edit rather than replace.</p>
+<hr>
+<h2 id="the-tool">The Tool</h2>
+<p>All of this runs on a single script: <code>dual_model_conversation.py</code>. It orchestrates two Ollama models, handles turn-taking, extracts and tests code, and optionally brings in Claude as a moderator.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Let two models debate</span>
+</span></span><span class="line"><span class="cl">./dual_model_conversation.py --mode debate --topic <span class="s2">&#34;Is open source AI better?&#34;</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Collaborative storytelling</span>
+</span></span><span class="line"><span class="cl">./dual_model_conversation.py --mode storytelling --topic <span class="s2">&#34;A story for AI readers&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># The full coding setup</span>
+</span></span><span class="line"><span class="cl">./dual_model_conversation.py <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --model-a gemma2:9b --model-b deepseek-coder-v2:16b <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --claude-moderator --supervisor <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --code-output-dir ./game_code
+</span></span></code></pre></div><hr>
+<h2 id="whats-next">What&rsquo;s Next</h2>
+<p>This was supposed to be a serious experiment about multi-model collaboration. It turned into an exploration of what happens when AIs talk to each other unsupervised.</p>
+<p>Some threads I want to pull on:</p>
+<ul>
+<li><strong>Why does narrative structure ground models?</strong> Is it the implicit goal (reach an ending)? The constraint of coherence?</li>
+<li><strong>Can supervision be learned?</strong> Instead of Claude catching drift, could I fine-tune a small model to do it?</li>
+<li><strong>What happens at 10,000 turns?</strong> Would they develop emergent patterns? Or just more cosmic harmonizers?</li>
+</ul>
+<p>For now, I&rsquo;m calling this Part 5 of my SLM research series. Not because there are massive breakthroughs, but because the failures are as instructive as the successes, and watching two AIs philosophize about chickens is worth documenting.</p>
+<hr>
+<h2 id="related-posts">Related Posts</h2>
+<ol>
+<li><a href="/posts/rtx-5090-build-process/">Building the RTX 5090 AI Workstation</a> — The hardware foundation</li>
+<li><a href="/posts/fine-tuning-qwen-models/">Fine-Tuning Qwen Models (ChefBot)</a> — Testing SLMs on cooking knowledge</li>
+<li><a href="/posts/fine-tuning-management-ai/">Fine-Tuning a Personal Executive Assistant</a> — SLMs for management style</li>
+<li><a href="/posts/three-llms-one-app/">Three LLMs, One App</a> — Balancing cloud, local, and GPU models</li>
+<li><strong>I Let Two AIs Talk to Each Other</strong> — This post</li>
+<li><a href="/posts/clip-inside-oracle-ai-database-26ai-11nov25/">CLIP Inside Oracle AI Database 26ai</a> — Multimodal embeddings</li>
+<li><a href="/posts/vision-aware-rag-python-bridge/">Vision-Aware RAG via a Python Bridge</a> — Completing the vision pipeline</li>
+</ol>
+<hr>
+<h2 id="about-the-author">About the Author</h2>
+<p>Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.</p>
+
+<div class="author-card">
+    <div class="author-avatar">
+        <img src="/images/profile.jpg" alt="Brian Hengen">
+    </div>
+    <div class="author-info">
+        <div class="author-name">Brian Hengen</div>
+        <div class="author-title">VP at Oracle • AI Researcher • Builder</div>
+        <div class="author-bio">
+            Building and testing specialized language models on an RTX 5090. 
+            Exploring what happens when smaller, focused AI beats larger general-purpose models.
+        </div>
+        <div class="author-links">
+            <a href="https://github.com/bjhengen" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://linkedin.com/in/brian-hengen" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://x.com/bhengen" target="_blank" rel="noopener">X/Twitter</a>
+        </div>
+    </div>
+</div>
+
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Three LLMs, One App: Balancing Speed, Privacy, and Power</title>
+      <link>https://brianhengen.us/posts/three-llms-one-app/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/three-llms-one-app/</guid>
+      <description>Testing LLMs in an Oracle Database 23ai app: cloud (OCI), laptop (M2 Mac), and GPU server (RTX 5090). Spoiler: My laptop needs a bigger GPU!</description>
+      <content:encoded><![CDATA[
+
+
+
+
+<div class="series-nav-box">
+    <div class="series-nav-header">
+        <span class="series-nav-badge">📚 Series</span>
+        <span class="series-nav-title">Building a Knowledge Management App with Oracle AI Database 26ai</span>
+    </div>
+    <div class="series-nav-progress">
+        <div class="series-nav-bar">
+            <div class="series-nav-fill" style="width: 25%"></div>
+        </div>
+        <div class="series-nav-text">Part 1 of 4</div>
+    </div>
+    <a href="/series/building-a-knowledge-management-app-with-oracle-ai-database-26ai/" class="series-nav-link">View all posts in this series →</a>
+</div>
+
+<p>I spent a weekend fine-tuning a model for my knowledge management app, designed to handle notes, PDFs, and presentations with Oracle Database 23ai&rsquo;s vector search (see my <a href="https://brianhengen.us/posts/fine-tuning-management-ai">management AI post</a>). It aced testing on my RTX 5090 server, but on my M2 MacBook Pro? Barely usable. A query like &ldquo;Summarize last week&rsquo;s customer meetings and identify risks&rdquo; took over a minute, leaving me staring at a spinning wheel while my coffee got cold.</p>
+<p>This is the story of how I built a 3-way LLM toggle to choose between cloud APIs, local models, and self-hosted GPU models—and why flexibility is key when the &ldquo;best&rdquo; model isn&rsquo;t always the right one.</p>
+<h2 id="the-problem-one-size-doesnt-fit-all">The Problem: One Size Doesn&rsquo;t Fit All</h2>
+<p>My app queries hundreds of documents—meeting notes, PDFs, spreadsheets—stored in Oracle Database 23ai, with vectors generated by OCI&rsquo;s Embedding service. Initially, I used Oracle&rsquo;s OCI GenAI service, which I found was fast and reliable. But my fine-tuned model, trained on years of management notes, understood my context better.</p>
+<p>The challenge? Balancing:</p>
+<ul>
+<li><strong>Security</strong>: Keep sensitive data on-device</li>
+<li><strong>Power</strong>: Get tailored, high-quality answers</li>
+<li><strong>Speed</strong>: Avoid minute-long waits</li>
+</ul>
+<p>No single LLM deployment could deliver everything. So I built a system to switch between three options, adapting to my needs—whether offline on a plane or needing instant answers in the office.</p>
+<h2 id="the-contenders">The Contenders</h2>
+<h3 id="option-1-oci-genai-cloud">Option 1: OCI GenAI (Cloud)</h3>
+<ul>
+<li><strong>Model</strong>: Cohere Command R+ (via Oracle Cloud)</li>
+<li><strong>Location</strong>: us-chicago-1 region</li>
+<li><strong>Context</strong>: 80K tokens</li>
+</ul>
+<h3 id="option-2-fine-tuned-granite-on-m2-mac-local">Option 2: Fine-tuned Granite on M2 Mac (Local)</h3>
+<ul>
+<li><strong>Model</strong>: IBM Granite 4.0 H Micro (3B params, fine-tuned)</li>
+<li><strong>Location</strong>: MacBook Pro M2 Max (64GB RAM)</li>
+<li><strong>Context</strong>: 1.5K tokens (limited by buffer bug)</li>
+</ul>
+<h3 id="option-3-granite-on-rtx-5090-self-hosted">Option 3: Granite on RTX 5090 (Self-hosted)</h3>
+<ul>
+<li><strong>Model</strong>: Granite 4.0 H Tiny (1-2B params)</li>
+<li><strong>Location</strong>: Ubuntu server with RTX 5090</li>
+<li><strong>Context</strong>: 8K tokens</li>
+<li><strong>Note</strong>: In my testing, I found that this smaller model may hallucinate on details (e.g., customer names)</li>
+</ul>
+<h2 id="the-performance-reality-check">The Performance Reality Check</h2>
+<p>Tokens are small units of text—like words, punctuation, or spaces—that an AI model processes to understand and generate responses. In my app, a query like &ldquo;Summarize last week&rsquo;s customer meetings&rdquo; might use 10-20 tokens, while the context (e.g., summarizing a large presentation or pdf) could use thousands.</p>
+<p>Larger context windows (e.g., 80K tokens) allow richer answers, while higher tokens/sec means faster processing. I tested a typical query: &ldquo;Summarize last week&rsquo;s customer meetings and identify risks.&rdquo;</p>
+<p><img alt="llm_combined_chart" loading="lazy" src="/images/llm_combined_chart.png"></p>
+<p><em>Caption: Comparing response time, processing speed (tokens/sec), and my determination of answer quality (scored 1-10) across cloud, local, and GPU-based LLMs.</em></p>
+<p>The fine-tuned Granite on my M2 Mac gave the <strong>best answers</strong> (9/10), capturing my management style, but was painfully slow (60-120s), even with Oracle Database 23ai&rsquo;s vector search. The RTX 5090 with Granite H Tiny was fast (1-2s) but less accurate (6/10), sometimes mixing up names. OCI GenAI balanced speed (3.5s) and quality (8/10) - proving the <strong>best overall</strong> for my use case.</p>
+<h2 id="why-was-the-m2-mac-so-slow">Why Was the M2 Mac So Slow?</h2>
+<p>The Granite model&rsquo;s Mamba2 architecture is efficient for training but struggled on my M2 Mac:</p>
+<ol>
+<li><strong>No GPU acceleration</strong>: Runs on CPU, despite Apple Silicon&rsquo;s MPS</li>
+<li><strong>Memory bandwidth</strong>: 400GB/s vs. RTX 5090&rsquo;s 1TB/s</li>
+<li><strong>Quantization overhead</strong>: 4-bit quantization slows compute</li>
+<li><strong>Framework overhead</strong>: llama.cpp isn&rsquo;t optimized for Mamba2</li>
+<li><strong>Buffer bug</strong>: <code>api_server.py</code> requests excessive RAM (18-104GB) for prompts &gt;1.5K, limiting context to 1.5K tokens, reducing 23ai&rsquo;s vector search effectiveness</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Expected</span>
+</span></span><span class="line"><span class="cl"><span class="n">inference_time</span> <span class="o">=</span> <span class="n">model_size</span> <span class="o">/</span> <span class="n">compute_power</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 3B params / Apple Neural Engine = fast!</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Actual</span>
+</span></span><span class="line"><span class="cl"><span class="n">inference_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">model_size</span> <span class="o">*</span> <span class="n">architecture_penalty</span> <span class="o">*</span> <span class="n">quantization_overhead</span><span class="p">)</span> <span class="o">/</span> <span class="n">cpu_cores</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Result: 15x slower</span>
+</span></span></code></pre></div><h2 id="building-the-3-way-toggle">Building the 3-Way Toggle</h2>
+<p>I built a provider system to switch LLMs, integrated with Oracle Database 23ai for data and vector storage. Here&rsquo;s the implementation:</p>
+<h3 id="backend-architecture-nodejs">Backend Architecture (Node.js)</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// services/llmProviderManager.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">class</span> <span class="nx">LLMProviderManager</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">providers</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">oci</span><span class="o">:</span> <span class="k">new</span> <span class="nx">OCIProvider</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">local</span><span class="o">:</span> <span class="k">new</span> <span class="nx">LocalGraniteProvider</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">gpu</span><span class="o">:</span> <span class="k">new</span> <span class="nx">GPUGraniteProvider</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">defaultProvider</span> <span class="o">=</span> <span class="s1">&#39;oci&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">askQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">provider</span> <span class="o">=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">selectedProvider</span> <span class="o">=</span> <span class="nx">provider</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">defaultProvider</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">startTime</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">memBefore</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">memoryUsage</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">providers</span><span class="p">[</span><span class="nx">selectedProvider</span><span class="p">].</span><span class="nx">generate</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">prompt</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">buildPrompt</span><span class="p">(</span><span class="nx">question</span><span class="p">,</span> <span class="nx">context</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">maxTokens</span><span class="o">:</span> <span class="nx">selectedProvider</span> <span class="o">===</span> <span class="s1">&#39;local&#39;</span> <span class="o">?</span> <span class="mi">300</span> <span class="o">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="c1">// Adjusted for 23ai vector context
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">temperature</span><span class="o">:</span> <span class="mf">0.7</span>
+</span></span><span class="line"><span class="cl">      <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">logMetrics</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">provider</span><span class="o">:</span> <span class="nx">selectedProvider</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">responseTime</span><span class="o">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">startTime</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">tokensGenerated</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">tokenCount</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">memoryUsed</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">memoryUsage</span><span class="p">().</span><span class="nx">heapUsed</span> <span class="o">-</span> <span class="nx">memBefore</span><span class="p">.</span><span class="nx">heapUsed</span>
+</span></span><span class="line"><span class="cl">      <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="nx">selectedProvider</span> <span class="o">!==</span> <span class="k">this</span><span class="p">.</span><span class="nx">defaultProvider</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Provider </span><span class="si">${</span><span class="nx">selectedProvider</span><span class="si">}</span><span class="sb"> failed, falling back to OCI`</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">askQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">defaultProvider</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="provider-implementations">Provider Implementations</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// providers/ociProvider.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">class</span> <span class="nx">OCIProvider</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">generate</span><span class="p">({</span> <span class="nx">prompt</span><span class="p">,</span> <span class="nx">maxTokens</span> <span class="p">})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOCIToken</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="s1">&#39;https://genai.us-chicago-1.oci.oraclecloud.com/v1/chat&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">model</span><span class="o">:</span> <span class="s1">&#39;cohere.command-r-plus&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">messages</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">role</span><span class="o">:</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="nx">content</span><span class="o">:</span> <span class="nx">prompt</span> <span class="p">}],</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">max_tokens</span><span class="o">:</span> <span class="nx">maxTokens</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;Authorization&#39;</span><span class="o">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="nx">token</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/json&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">text</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">tokenCount</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">usage</span><span class="p">.</span><span class="nx">completion_tokens</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">provider</span><span class="o">:</span> <span class="s1">&#39;oci&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// providers/localGraniteProvider.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">class</span> <span class="nx">LocalGraniteProvider</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">generate</span><span class="p">({</span> <span class="nx">prompt</span><span class="p">,</span> <span class="nx">maxTokens</span> <span class="p">})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:11434/api/generate&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">model</span><span class="o">:</span> <span class="s1">&#39;granite-manager:3b&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">prompt</span><span class="o">:</span> <span class="nx">prompt</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">stream</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">num_predict</span><span class="o">:</span> <span class="nx">maxTokens</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">temperature</span><span class="o">:</span> <span class="mf">0.7</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">text</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">tokenCount</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">eval_count</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">provider</span><span class="o">:</span> <span class="s1">&#39;local&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// providers/gpuGraniteProvider.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">class</span> <span class="nx">GPUGraniteProvider</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">generate</span><span class="p">({</span> <span class="nx">prompt</span><span class="p">,</span> <span class="nx">maxTokens</span> <span class="p">})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;http://gpu-server:8000/v1/chat/completions&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">model</span><span class="o">:</span> <span class="s1">&#39;granite-4.0-h-tiny&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">messages</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">role</span><span class="o">:</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="nx">content</span><span class="o">:</span> <span class="nx">prompt</span> <span class="p">}],</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">max_tokens</span><span class="o">:</span> <span class="nx">maxTokens</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">temperature</span><span class="o">:</span> <span class="mf">0.7</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">text</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">tokenCount</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">usage</span><span class="p">.</span><span class="nx">completion_tokens</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">provider</span><span class="o">:</span> <span class="s1">&#39;gpu&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="addressing-the-challenges">Addressing the Challenges</h2>
+<p>The 3-way toggle directly tackled my challenges:</p>
+<ul>
+<li><strong>Security</strong>: Local M2 Mac deployment keeps sensitive data on-device, ideal for confidential notes.</li>
+<li><strong>Power</strong>: Fine-tuned Granite on M2 delivers tailored answers (9/10 quality), outperforming generic LLMs - but with a big cost in performance.</li>
+<li><strong>Speed</strong>: OCI GenAI (3.5s) and RTX 5090 (1-2s) provide fast responses, while M2&rsquo;s slowness (60-120s) is offset by planned RAG integration with Oracle Database 23ai to reduce context size.</li>
+</ul>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<h3 id="data-quality-over-hardware">Data Quality Over Hardware</h3>
+<p>The M2 Mac&rsquo;s slowness was worsened by a buffer bug in <code>api_server.py</code>, limiting context to 1.5K tokens and reducing Oracle Database 23ai&rsquo;s vector search effectiveness. Quality data from fine-tuning (see <a href="https://brianhengen.us/posts/fine-tuning-management-ai">management AI post</a>) was key, but required patience.</p>
+<h3 id="flexibility-is-key">Flexibility Is Key</h3>
+<p>The toggle integrates with Oracle Database 23ai&rsquo;s vector search, letting me choose OCI for speed, local for increased privacy, or GPU for balance.</p>
+<h2 id="the-verdict-right-tool-for-the-right-job">The Verdict: Right Tool for the Right Job</h2>
+<p>There&rsquo;s no &ldquo;best&rdquo; LLM deployment—only the best for your context. My thoughts, after comparison:</p>
+<ul>
+<li><strong>Cloud (OCI)</strong>: Fast (3.5s), reliable, ideal for most 23ai queries</li>
+<li><strong>Local (M2)</strong>: Perfect for privacy and tailored answers, but needs a beefier laptop</li>
+<li><strong>Self-hosted (RTX 5090)</strong>: Fast (1-2s), private, but less accurate (6/10)</li>
+</ul>
+<p><strong>Key insight</strong>: Flexibility lets me adapt—OCI for speed, local for increased privacy, GPU for balance.</p>
+<h2 id="whats-next">What&rsquo;s Next?</h2>
+<ul>
+<li><strong>Self-hosted Fine Tuning</strong>: Test a larger self-hosted model with fine tuning</li>
+<li><strong>ONNX embeddings in Oracle Database 23ai</strong>: Embed data in 23ai for faster queries</li>
+<li><strong>Multimedia support</strong>: Improve image/PDF understanding (uses OCR today)</li>
+</ul>
+<p>The future is orchestrating LLMs, balancing general-purpose and specialized models with Oracle Database 23ai&rsquo;s vector search.</p>
+<h2 id="implementation-checklist">Implementation Checklist</h2>
+<p>To build something similar:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up provider abstraction layer</li>
+<li><input disabled="" type="checkbox"> Implement health checks</li>
+<li><input disabled="" type="checkbox"> Add metrics logging</li>
+<li><input disabled="" type="checkbox"> Build provider selection UI</li>
+<li><input disabled="" type="checkbox"> Create fallback logic</li>
+<li><input disabled="" type="checkbox"> Set up monitoring and alerts</li>
+<li><input disabled="" type="checkbox"> Document expected response times</li>
+<li><input disabled="" type="checkbox"> Test offline scenarios</li>
+</ul>
+<p>Have you integrated LLMs with Oracle Database 23ai? What trade-offs have you faced? Comment or reach out! See my other posts (<a href="https://brianhengen.us/posts/">https://brianhengen.us/posts/</a>) for more on specialized models.</p>
+<h2 id="about-the-author">About the Author</h2>
+<p>Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.</p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Development on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/tags/development/</link>
+    <description>Recent content in Development on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://brianhengen.us/tags/development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building Persistent Memory for Claude Code</title>
+      <link>https://brianhengen.us/posts/building-persistent-memory-for-claude-code/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/building-persistent-memory-for-claude-code/</guid>
+      <description>How I built a cross-machine memory system for Claude Code using MCP, PostgreSQL, and semantic search.</description>
+      <content:encoded><![CDATA[<p>If you&rsquo;ve spent any time working with AI coding assistants, you&rsquo;ve probably experienced this frustration: you have a productive session, solve a tricky problem, learn something important about your codebase—and then the next day, the AI has forgotten everything.</p>
+<p>If you work across multiple projects and multiple machines, it can get even more frustrating - sometimes I want to use the desktop app, sometimes the command line, and some work necessarily spans machines. In my case, I work across multiple machines (a Mac Studio, a Linux AI workstation, and a laptop) and multiple projects. Every new Claude Code session felt like starting from scratch, aside from the local markdown files used for local/project level &ldquo;memory&rdquo;. I&rsquo;d often re-explain my project structure, re-discover the same gotchas, and occasionally make the same mistakes twice.</p>
+<p>Lots of folks are working on addressing this - some elegant file-based solutions are out there, but at heart, I&rsquo;m a database guy, and this seems like exactly the type of problem databases can help solve. Since I&rsquo;m in a serious learn &amp; build (or build &amp; learn) phase, I decided to build my own solution - a persistent memory system that lets Claude remember lessons learned, project context, and infrastructure details across sessions and machines.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>Claude Code is excellent at understanding code and helping with development tasks. But it has a fundamental limitation: each conversation starts fresh. There&rsquo;s no built-in way to:</p>
+<ul>
+<li>Remember that <code>debugBypass</code> must be <code>false</code> in production (learned the hard way)</li>
+<li>Know that OpenAI&rsquo;s vision API blocks wine-related content (use Claude instead)</li>
+<li>Recall which SSH command connects to which server</li>
+<li>Track what was accomplished in previous sessions</li>
+</ul>
+<p>I&rsquo;d documented some of this in markdown files, but Claude still needed to be told to read them. And cross-project knowledge (like &ldquo;always use <code>sharePositionOrigin</code> on iOS Share Sheets&rdquo;) didn&rsquo;t transfer automatically.</p>
+<h2 id="the-solution-mcp--semantic-search">The Solution: MCP + Semantic Search</h2>
+<p>Claude Code supports the <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a>, which allows external tools to extend its capabilities. <em><strong>I built my own custom MCP server</strong></em> that provides:</p>
+<ol>
+<li><strong>Semantic search</strong> across all stored knowledge using vector embeddings</li>
+<li><strong>Structured project context</strong> (tech stack, key files, approaches)</li>
+<li><strong>Infrastructure connectivity</strong> (SSH commands, containers, databases)</li>
+<li><strong>Guardrails</strong> (warnings before dangerous operations)</li>
+<li><strong>Session tracking</strong> (what was done, what&rsquo;s pending)</li>
+</ol>
+<p>The architecture is straightforward:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌─────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│  CLOUD COMPUTE                                          │
+</span></span><span class="line"><span class="cl">│  ┌──────────────────┐    ┌───────────────────────────┐  │
+</span></span><span class="line"><span class="cl">│  │  DB - relational │◄───│  claude-memory MCP server │  │
+</span></span><span class="line"><span class="cl">│  │  + vector        │    │  (Python + FastMCP)       │  │
+</span></span><span class="line"><span class="cl">│  └──────────────────┘    └───────────────────────────┘  │
+</span></span><span class="line"><span class="cl">│         Docker Compose                                  │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────┘
+</span></span><span class="line"><span class="cl">         ▲              ▲              ▲
+</span></span><span class="line"><span class="cl">         │ HTTPS        │ HTTPS        │ HTTPS
+</span></span><span class="line"><span class="cl">   ┌─────┴─────┐  ┌─────┴─────┐  ┌─────┴─────┐
+</span></span><span class="line"><span class="cl">   │Mac Studio │  │workstation│  │ Laptop.   │
+</span></span><span class="line"><span class="cl">   │(Claude    │  │(Claude    │  │(Claude    │
+</span></span><span class="line"><span class="cl">   │ Code)     │  │ Code)     │  │ Code)     │
+</span></span><span class="line"><span class="cl">   └───────────┘  └───────────┘  └───────────┘
+</span></span></code></pre></div><h2 id="how-it-works">How It Works</h2>
+<h3 id="storing-knowledge">Storing Knowledge</h3>
+<p>The system stores several types of information:</p>
+<p><strong>Lessons</strong> - Things learned the hard way:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Title: &#34;iOS Share Sheet requires sharePositionOrigin&#34;
+</span></span><span class="line"><span class="cl">Content: &#34;On iOS, the Share Sheet will crash on iPads if
+</span></span><span class="line"><span class="cl">sharePositionOrigin is not provided. This is required for
+</span></span><span class="line"><span class="cl">ALL iOS devices, not just iPads.&#34;
+</span></span><span class="line"><span class="cl">Tags: [&#34;flutter&#34;, &#34;ios&#34;, &#34;share-sheet&#34;]
+</span></span><span class="line"><span class="cl">Severity: critical
+</span></span></code></pre></div><p><strong>Patterns</strong> - Reusable solutions:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Name: &#34;GoRouter Dialog Pattern&#34;
+</span></span><span class="line"><span class="cl">Problem: &#34;Dialogs don&#39;t work correctly with GoRouter&#34;
+</span></span><span class="line"><span class="cl">Solution: &#34;Use navigatorKey with currentContext pattern...&#34;
+</span></span><span class="line"><span class="cl">Code: [example code]
+</span></span></code></pre></div><p><strong>Project Context</strong> - What Claude needs to know:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Project: wine.dine
+</span></span><span class="line"><span class="cl">Tech Stack: Flutter 3.32.5, FastAPI, Provider
+</span></span><span class="line"><span class="cl">Key Files:
+</span></span><span class="line"><span class="cl">  - subscription_gate.dart:70 (debugBypass - MUST be false!)
+</span></span><span class="line"><span class="cl">  - pubspec.yaml:19 (version number)
+</span></span><span class="line"><span class="cl">Guardrails:
+</span></span><span class="line"><span class="cl">  - Verify debugBypass = false before building (critical)
+</span></span></code></pre></div><h3 id="semantic-search">Semantic Search</h3>
+<p>Each lesson and pattern is embedded and stored as a vector in the database. This enables natural language queries:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Claude: search(&#34;share sheet crashing on ipad&#34;)
+</span></span><span class="line"><span class="cl">→ Returns: &#34;iOS Share Sheet requires sharePositionOrigin&#34; (0.89 similarity)
+</span></span></code></pre></div><p>The search considers both exact matches and semantic similarity, so &ldquo;file picker not working on tablet&rdquo; might still surface the Share Sheet lesson.</p>
+<h3 id="mcp-tools">MCP Tools</h3>
+<p>Claude gets access to 16 tools:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Tool</th>
+          <th>Purpose</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>search</code></td>
+          <td>Semantic search across all knowledge</td>
+      </tr>
+      <tr>
+          <td><code>search_lessons</code></td>
+          <td>Find lessons with filters (project, tags, severity)</td>
+      </tr>
+      <tr>
+          <td><code>get_project</code></td>
+          <td>Get full project context</td>
+      </tr>
+      <tr>
+          <td><code>list_projects</code></td>
+          <td>List all projects by status</td>
+      </tr>
+      <tr>
+          <td><code>log_lesson</code></td>
+          <td>Save something learned</td>
+      </tr>
+      <tr>
+          <td><code>log_pattern</code></td>
+          <td>Save a reusable solution</td>
+      </tr>
+      <tr>
+          <td><code>start_session</code></td>
+          <td>Begin tracking a work session</td>
+      </tr>
+      <tr>
+          <td><code>end_session</code></td>
+          <td>Complete session with summary</td>
+      </tr>
+      <tr>
+          <td><code>update_project_state</code></td>
+          <td>Update focus, blockers, next steps</td>
+      </tr>
+      <tr>
+          <td><code>get_connectivity</code></td>
+          <td>SSH commands, containers, databases</td>
+      </tr>
+      <tr>
+          <td><code>list_machines</code></td>
+          <td>Show all registered machines</td>
+      </tr>
+      <tr>
+          <td><code>add_machine</code></td>
+          <td>Register a new machine</td>
+      </tr>
+      <tr>
+          <td><code>add_container</code></td>
+          <td>Register a Docker container</td>
+      </tr>
+      <tr>
+          <td><code>add_project</code></td>
+          <td>Register a new project</td>
+      </tr>
+      <tr>
+          <td><code>check_guardrails</code></td>
+          <td>Verify safety before actions</td>
+      </tr>
+      <tr>
+          <td><code>get_permissions</code></td>
+          <td>Check permissions for a scope</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="cross-machine-access">Cross-Machine Access</h3>
+<p>The MCP server runs on cloud compute and is accessible via HTTPS. Each machine has Claude Code configured to connect:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">claude mcp add -s user -t http claude-memory <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  https://your-server.com/mcp <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -H <span class="s2">&#34;Authorization: Bearer &lt;api-key&gt;&#34;</span>
+</span></span></code></pre></div><p><em>(The actual endpoint URL is not shown for security reasons.)</em></p>
+<p>Now whether I&rsquo;m on my Mac Studio, Linux workstation, or laptop, Claude has access to the same knowledge base.</p>
+<h2 id="what-ive-learned-so-far">What I&rsquo;ve Learned So Far</h2>
+<h3 id="things-that-work-well">Things That Work Well</h3>
+<ol>
+<li><strong>Cross-project knowledge transfer</strong> - A lesson learned in one Flutter project now surfaces in all Flutter projects</li>
+<li><strong>Infrastructure recall</strong> - &ldquo;How do I SSH into the project server?&rdquo; is answered instantly</li>
+<li><strong>Guardrails</strong> - Claude can check &ldquo;should I verify anything before building?&rdquo; and get project-specific warnings</li>
+</ol>
+<h3 id="things-still-being-evaluated">Things Still Being Evaluated</h3>
+<ol>
+<li><strong>When to log vs. when to skip</strong> - Not every session produces insights worth persisting</li>
+<li><strong>Search relevance tuning</strong> - Sometimes semantic search returns tangentially related results</li>
+<li><strong>Session boundaries</strong> - Defining what constitutes a &ldquo;session&rdquo; worth tracking</li>
+</ol>
+<h3 id="unexpected-benefits">Unexpected Benefits</h3>
+<ul>
+<li>The CLAUDE.md files I maintain on each machine are now simpler—they point to the memory system instead of duplicating information</li>
+<li>I can search across all my projects: &ldquo;Have I solved X before?&rdquo;</li>
+<li>The system serves as documentation that Claude actually uses</li>
+</ul>
+<h2 id="technical-implementation">Technical Implementation</h2>
+<p>The core components:</p>
+<p><strong>Database Schema</strong> (relational + vector):</p>
+<ul>
+<li><code>machines</code> - Registered machines with SSH details</li>
+<li><code>projects</code> - Projects with tech stack, status, phase</li>
+<li><code>lessons</code> - Lessons with vector embeddings</li>
+<li><code>patterns</code> - Reusable solutions with embeddings</li>
+<li><code>guardrails</code> - Safety checks per project</li>
+<li><code>sessions</code> - Session tracking with items</li>
+</ul>
+<p><strong>MCP Server</strong> (Python + FastMCP):</p>
+<ul>
+<li>HTTP transport for cross-machine access</li>
+<li>API key authentication</li>
+<li>Starlette + uvicorn for serving</li>
+<li>asyncpg for database access</li>
+</ul>
+<p><strong>Deployment</strong>:</p>
+<ul>
+<li>Docker Compose on cloud compute</li>
+<li>nginx reverse proxy for HTTPS</li>
+<li>Separate from other workloads</li>
+</ul>
+<p>The code is available at <a href="https://github.com/bjhengen/claude-memory">github.com/bjhengen/claude-memory</a>.</p>
+<h2 id="whats-next">What&rsquo;s Next</h2>
+<p>This is very much a v1. Things I&rsquo;m considering:</p>
+<ol>
+<li><strong>Automatic lesson extraction</strong> - Can Claude suggest lessons to log based on the conversation?</li>
+<li><strong>Relevance feedback</strong> - Track which search results were actually useful</li>
+<li><strong>Project relationships</strong> - &ldquo;project a&rdquo; and &ldquo;project b&rdquo; share a backend</li>
+<li><strong>Time decay</strong> - Should old lessons fade in relevance?</li>
+</ol>
+<h2 id="try-it-yourself">Try It Yourself</h2>
+<p>If you&rsquo;re interested in building something similar:</p>
+<ol>
+<li>Clone the repo: <code>git clone https://github.com/bjhengen/claude-memory</code></li>
+<li>Configure <code>.env</code> with your credentials</li>
+<li>Deploy with Docker Compose</li>
+<li>Add the MCP server to Claude Code: <code>claude mcp add -s user -t http ...</code></li>
+</ol>
+<p>The system is designed to be self-hosted. Your knowledge stays on your infrastructure.</p>
+<hr>
+<p><em>This post was written with Claude&rsquo;s help—using the very memory system it describes. It&rsquo;s one piece of a larger knowledge management rebuild I&rsquo;ve been working on, unifying years of scattered notes into something AI can actually use. Meta, I know.</em></p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

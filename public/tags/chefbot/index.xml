@@ -1,1 +1,122 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ChefBot on Brian Hengen's AI Experiments</title><link>https://brianhengen.us/tags/chefbot/</link><description>Recent content in ChefBot on Brian Hengen's AI Experiments</description><generator>Hugo -- 0.150.0</generator><language>en-us</language><lastBuildDate>Mon, 29 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://brianhengen.us/tags/chefbot/index.xml" rel="self" type="application/rss+xml"/><item><title>Fine-Tuning Qwen Models: From Theory to Practice</title><link>https://brianhengen.us/posts/fine-tuning-qwen-models/</link><pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/fine-tuning-qwen-models/</guid><description>Fine-tuning Qwen 32B and 14B models to create ChefBot—a cooking AI that outperforms general-purpose LLMs in the kitchen.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>ChefBot on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/tags/chefbot/</link>
+    <description>Recent content in ChefBot on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 29 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://brianhengen.us/tags/chefbot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fine-Tuning Qwen Models: From Theory to Practice</title>
+      <link>https://brianhengen.us/posts/fine-tuning-qwen-models/</link>
+      <pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/fine-tuning-qwen-models/</guid>
+      <description>Fine-tuning Qwen 32B and 14B models to create ChefBot—a cooking AI that outperforms general-purpose LLMs in the kitchen.</description>
+      <content:encoded><![CDATA[<p>Imagine an AI that coordinates your entire cooking process—faster, smarter, and without ChatGPT’s API costs. With my RTX 5090 workstation humming, I’m answering: <strong>Can a specialized language model outcook ChatGPT in the kitchen?</strong></p>
+<p>Over the past few days, I’ve been fine-tuning Qwen’s <strong>32B</strong> and <strong>14B</strong> parameter models to create <strong>ChefBot</strong>, an experimental Specialized Language Model (SLM). Think ChatGPT for recipes, but tuned for cooking data and running without per-token API costs.</p>
+<h2 id="why-chefbot">Why ChefBot?</h2>
+<p>Cooking is collaborative, messy, and highly domain-specific. Picture cooking a three-course meal for friends, juggling prep times, oven space, and tasks for your novice sous-chef. General-purpose models like ChatGPT can suggest recipes, but they often miss the nuance of kitchen chaos. That’s why I’m building <strong>ChefBot</strong> to:</p>
+<ul>
+<li>Master ingredient prep timing (e.g., chop onions while the oven preheats)</li>
+<li>Sequence cooking methods (e.g., sear steak before roasting)</li>
+<li>Coordinate equipment (e.g., use one pan for multiple dishes)</li>
+<li>Allocate tasks by skill (e.g., simple chopping for beginners)</li>
+</ul>
+<p>A specialized model should handle this <strong>better, faster, and cheaper</strong> than a general-purpose LLM.</p>
+<h2 id="can-the-rtx-5090-really-handle-it">Can the RTX 5090 Really Handle It?</h2>
+<p>The RTX 5090’s <strong>32GB of VRAM</strong> is a game-changer for training specialized models. Here’s how it’s performing:</p>
+<h3 id="qwen-32b">Qwen-32B</h3>
+<ul>
+<li>✅ Completed 1000+ step training cycle</li>
+<li>📉 Training loss: 1.18 → 0.68 (42% reduction)</li>
+<li>🧠 Memory use: Fits comfortably in 32GB</li>
+<li>⏱️ Time: Several hours per cycle</li>
+</ul>
+<h3 id="qwen-14b">Qwen-14B</h3>
+<ul>
+<li>⏳ Currently at step 5,500 / 150,000</li>
+<li>📉 Eval loss: 1.0 → 0.018</li>
+<li>⚡ Speed: ~2–3 min per 50 steps (post-optimization)</li>
+<li>🧠 Memory use: ~21GB</li>
+</ul>
+<blockquote>
+<p><em>That 0.018 eval loss? That&rsquo;s like a Michelin star for a model.</em></p></blockquote>
+<table>
+  <thead>
+      <tr>
+          <th>Model</th>
+          <th>VRAM Use</th>
+          <th>Training Speed</th>
+          <th>Eval Loss</th>
+          <th>Practicality</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Qwen-32B</td>
+          <td>32GB</td>
+          <td>Hours / 1k steps</td>
+          <td>0.68</td>
+          <td>Powerful but resource-heavy</td>
+      </tr>
+      <tr>
+          <td>Qwen-14B</td>
+          <td>21GB</td>
+          <td>2–3 min / 50 steps</td>
+          <td>0.018</td>
+          <td>Ideal for speed and deployment</td>
+      </tr>
+  </tbody>
+</table>
+<p>The 32B model is impressive, but the 14B model is proving more practical: faster to train, easier to host, and surprisingly close in quality.</p>
+<h2 id="training-lessons">Training Lessons</h2>
+<h3 id="-configuration-matters">🔧 Configuration Matters</h3>
+<p>Early runs were bottlenecked by CPU preprocessing—painfully slow! The fix: crank up parallelism to leverage multi-core CPUs.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># Before (single-threaded)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">num_proc</span><span class="p">:</span><span class="w"> </span><span class="m">4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">dataloader_num_workers</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># After (multi-core optimization)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">num_proc</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">dataloader_num_workers</span><span class="p">:</span><span class="w"> </span><span class="m">8</span><span class="w">
+</span></span></span></code></pre></div><p>Result: CPU utilization matched the hardware, boosting throughput by ~30%. <strong>Pro tip:</strong> Check your CPU core count (e.g., <code>lscpu</code> on Linux) and set <code>num_proc</code> to match or slightly exceed it for max efficiency.</p>
+<h3 id="-checkpointing-is-survival">💾 Checkpointing is Survival</h3>
+<p>Weekend-long training needs resilience:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">save_steps</span><span class="p">:</span><span class="w"> </span><span class="m">50</span><span class="w">                </span><span class="c"># checkpoint every ~2–5 min</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">save_total_limit</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">           </span><span class="c"># keep only the last 3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">resume_from_checkpoint</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  </span><span class="c"># auto-resume after interruption</span><span class="w">
+</span></span></span></code></pre></div><p>This lets me pause/restart training without losing progress.</p>
+<h2 id="real-world-training-data">Real-World Training Data</h2>
+<p>I’m training on the <a href="https://arxiv.org/abs/2004.10409">RecipeNLG dataset</a> (~2.2M recipes from AllRecipes, Food.com, and more), packed with detailed cooking instructions, ingredient lists, and techniques. ChefBot is learning:</p>
+<ul>
+<li>Ingredient preparation timing</li>
+<li>Cooking method sequences</li>
+<li>Equipment coordination</li>
+<li>Skill-based task allocation</li>
+</ul>
+<p>The eval loss drop shows it’s absorbing real cooking knowledge.</p>
+<h2 id="whats-next">What’s Next</h2>
+<p>The 14B model is grinding through a 3-epoch (150k step) cycle. Once complete, I’ll:</p>
+<ol>
+<li><strong>Benchmark against GPT-4</strong> in a head-to-head recipe showdown</li>
+<li><strong>Test it in my kitchen</strong> with my wife, cooking a full meal under pressure</li>
+<li><strong>Optimize for deployment</strong> using quantization for lighter, faster hosting</li>
+</ol>
+<p>Got a favorite recipe for ChefBot to tackle? Drop it in the comments or tweet me at @bhengen!</p>
+<h2 id="the-business-case">The Business Case</h2>
+<p>Specialized models like ChefBot deliver serious ROI over giant LLMs:</p>
+<ul>
+<li>💰 <strong>No API costs</strong>—just ~$50/month hosting vs. $100s in API fees</li>
+<li>🍳 <strong>Superior cooking knowledge</strong>—tuned on 2.2M recipes</li>
+<li>🔒 <strong>Enhanced privacy</strong>—recipes stay local, no cloud leaks</li>
+<li>🛠️ <strong>Full customization</strong>—I control updates, no waiting for OpenAI</li>
+</ul>
+<p>This project proves smaller, specialized models can beat giants when context matters.</p>
+<h2 id="stay-tuned">Stay Tuned</h2>
+<p>Training continues (step 17,500+ with strong convergence). By mid-October, my wife and I will put ChefBot to the test in a real dinner rush. Follow along to see if it outcooks GPT-4!</p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

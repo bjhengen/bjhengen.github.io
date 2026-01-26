@@ -1,1 +1,313 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Tags on Brian Hengen's AI Experiments</title><link>https://brianhengen.us/tags/</link><description>Recent content in Tags on Brian Hengen's AI Experiments</description><generator>Hugo -- 0.150.0</generator><language>en-us</language><lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://brianhengen.us/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>AI</title><link>https://brianhengen.us/tags/ai/</link><pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/ai/</guid><description/></item><item><title>Executive Assistant</title><link>https://brianhengen.us/tags/executive-assistant/</link><pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/executive-assistant/</guid><description/></item><item><title>Fine-Tuning</title><link>https://brianhengen.us/tags/fine-tuning/</link><pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/fine-tuning/</guid><description/></item><item><title>Granite</title><link>https://brianhengen.us/tags/granite/</link><pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/granite/</guid><description/></item><item><title>Management AI</title><link>https://brianhengen.us/tags/management-ai/</link><pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/management-ai/</guid><description/></item><item><title>SLM</title><link>https://brianhengen.us/tags/slm/</link><pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/slm/</guid><description/></item><item><title>ChefBot</title><link>https://brianhengen.us/tags/chefbot/</link><pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/chefbot/</guid><description/></item><item><title>Machine Learning</title><link>https://brianhengen.us/tags/machine-learning/</link><pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/machine-learning/</guid><description/></item><item><title>Qwen</title><link>https://brianhengen.us/tags/qwen/</link><pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/qwen/</guid><description/></item><item><title>RecipeNLG</title><link>https://brianhengen.us/tags/recipenlg/</link><pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/recipenlg/</guid><description/></item><item><title>Build Process</title><link>https://brianhengen.us/tags/build-process/</link><pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/build-process/</guid><description/></item><item><title>Hardware</title><link>https://brianhengen.us/tags/hardware/</link><pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/hardware/</guid><description/></item><item><title>RTX 5090</title><link>https://brianhengen.us/tags/rtx-5090/</link><pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/rtx-5090/</guid><description/></item><item><title>Build</title><link>https://brianhengen.us/tags/build/</link><pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/build/</guid><description/></item><item><title>ML</title><link>https://brianhengen.us/tags/ml/</link><pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/tags/ml/</guid><description/></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tags on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/tags/</link>
+    <description>Recent content in Tags on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://brianhengen.us/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI</title>
+      <link>https://brianhengen.us/tags/ai/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Claude</title>
+      <link>https://brianhengen.us/tags/claude/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/claude/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Development</title>
+      <link>https://brianhengen.us/tags/development/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mcp</title>
+      <link>https://brianhengen.us/tags/mcp/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/mcp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Postgres</title>
+      <link>https://brianhengen.us/tags/postgres/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/postgres/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vector Search</title>
+      <link>https://brianhengen.us/tags/vector-search/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/vector-search/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Deepseek-Coder</title>
+      <link>https://brianhengen.us/tags/deepseek-coder/</link>
+      <pubDate>Wed, 17 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/deepseek-coder/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gemma2</title>
+      <link>https://brianhengen.us/tags/gemma2/</link>
+      <pubDate>Wed, 17 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/gemma2/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LLM</title>
+      <link>https://brianhengen.us/tags/llm/</link>
+      <pubDate>Wed, 17 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Multi-Model Architecture</title>
+      <link>https://brianhengen.us/tags/multi-model-architecture/</link>
+      <pubDate>Wed, 17 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/multi-model-architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ollama</title>
+      <link>https://brianhengen.us/tags/ollama/</link>
+      <pubDate>Wed, 17 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/ollama/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SLM</title>
+      <link>https://brianhengen.us/tags/slm/</link>
+      <pubDate>Wed, 17 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/slm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Grok-4</title>
+      <link>https://brianhengen.us/tags/grok-4/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/grok-4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Microservices</title>
+      <link>https://brianhengen.us/tags/microservices/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/microservices/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ONNX</title>
+      <link>https://brianhengen.us/tags/onnx/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/onnx/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Oracle Database 26ai</title>
+      <link>https://brianhengen.us/tags/oracle-database-26ai/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/oracle-database-26ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OracleAIDatabase</title>
+      <link>https://brianhengen.us/tags/oracleaidatabase/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/oracleaidatabase/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Python</title>
+      <link>https://brianhengen.us/tags/python/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/python/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RAG</title>
+      <link>https://brianhengen.us/tags/rag/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/rag/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vision AI</title>
+      <link>https://brianhengen.us/tags/vision-ai/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/vision-ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Architecture</title>
+      <link>https://brianhengen.us/tags/architecture/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Deployment</title>
+      <link>https://brianhengen.us/tags/deployment/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/deployment/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Fine-Tuning</title>
+      <link>https://brianhengen.us/tags/fine-tuning/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/fine-tuning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Flutter</title>
+      <link>https://brianhengen.us/tags/flutter/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/flutter/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Node.js</title>
+      <link>https://brianhengen.us/tags/node.js/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/node.js/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Oracle Database 23ai</title>
+      <link>https://brianhengen.us/tags/oracle-database-23ai/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/oracle-database-23ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Performance</title>
+      <link>https://brianhengen.us/tags/performance/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/performance/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Executive Assistant</title>
+      <link>https://brianhengen.us/tags/executive-assistant/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/executive-assistant/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Granite</title>
+      <link>https://brianhengen.us/tags/granite/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/granite/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Management AI</title>
+      <link>https://brianhengen.us/tags/management-ai/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/management-ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ChefBot</title>
+      <link>https://brianhengen.us/tags/chefbot/</link>
+      <pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/chefbot/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Machine Learning</title>
+      <link>https://brianhengen.us/tags/machine-learning/</link>
+      <pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Qwen</title>
+      <link>https://brianhengen.us/tags/qwen/</link>
+      <pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/qwen/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RecipeNLG</title>
+      <link>https://brianhengen.us/tags/recipenlg/</link>
+      <pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/recipenlg/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Build Process</title>
+      <link>https://brianhengen.us/tags/build-process/</link>
+      <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/build-process/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hardware</title>
+      <link>https://brianhengen.us/tags/hardware/</link>
+      <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/hardware/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RTX 5090</title>
+      <link>https://brianhengen.us/tags/rtx-5090/</link>
+      <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/rtx-5090/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>https://brianhengen.us/tags/build/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/build/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ML</title>
+      <link>https://brianhengen.us/tags/ml/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/ml/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CLIP</title>
+      <link>https://brianhengen.us/tags/clip/</link>
+      <pubDate>Mon, 11 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/clip/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cost Optimization</title>
+      <link>https://brianhengen.us/tags/cost-optimization/</link>
+      <pubDate>Mon, 11 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/cost-optimization/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Embeddings</title>
+      <link>https://brianhengen.us/tags/embeddings/</link>
+      <pubDate>Mon, 11 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/embeddings/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Multimodal AI</title>
+      <link>https://brianhengen.us/tags/multimodal-ai/</link>
+      <pubDate>Mon, 11 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/tags/multimodal-ai/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

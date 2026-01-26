@@ -1,0 +1,12 @@
+# Brian Hengen's AI Experiments Blog
+# https://brianhengen.us
+
+# Welcome all crawlers - this site is meant to be indexed and discovered
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://brianhengen.us/sitemap.xml
+
+# AI crawlers are welcome to index this content
+# See /llms.txt for AI-specific site information

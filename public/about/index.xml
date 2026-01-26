@@ -1,10 +1,77 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Abouts on Brian Hengen's AI Experiments</title><link>https://brianhengen.us/about/</link><description>Recent content in Abouts on Brian Hengen's AI Experiments</description><generator>Hugo -- 0.150.0</generator><language>en-us</language><atom:link href="https://brianhengen.us/about/index.xml" rel="self" type="application/rss+xml"/><item><title>About</title><link>https://brianhengen.us/about/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://brianhengen.us/about/about/</guid><description>&lt;h2 id="about-this-blog"&gt;About This Blog&lt;/h2&gt;
-&lt;p&gt;This blog documents my journey building and running a &lt;strong&gt;personal AI workstation&lt;/strong&gt; from the ground up.&lt;/p&gt;
-&lt;p&gt;The focus is on &lt;strong&gt;Specialized Language Models (SLMs)&lt;/strong&gt; — training, fine-tuning, and experimenting with how domain-specific AI can solve real-world problems.&lt;/p&gt;
-&lt;p&gt;Along the way, I&amp;rsquo;ll share:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Daily build updates (with photos),&lt;/li&gt;
-&lt;li&gt;Lessons learned on hardware, software, and workflows,&lt;/li&gt;
-&lt;li&gt;Reflections on how AI can be applied in business and everyday productivity.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If you&amp;rsquo;re curious about what it takes to get hands-on with cutting-edge AI — from raw components to working models — you&amp;rsquo;re in the right place.&lt;/p&gt;</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Abouts on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/about/</link>
+    <description>Recent content in Abouts on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <atom:link href="https://brianhengen.us/about/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://brianhengen.us/about/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/about/about/</guid>
+      <description>Brian Hengen - VP at Oracle, AI researcher, and builder of specialized language models</description>
+      <content:encoded><![CDATA[<h2 id="the-mission">The Mission</h2>
+<p>This blog documents my hands-on exploration of <strong>Specialized Language Models (SLMs)</strong>—the hypothesis that smaller, domain-focused AI models can outperform general-purpose giants on specific tasks.</p>
+<p>Since September 2025, I&rsquo;ve been building, fine-tuning, and testing this thesis with real applications:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Project</th>
+          <th>What I Learned</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>ChefBot</strong></td>
+          <td>A cooking AI that coordinates multi-dish meal prep—specialists excel at domain knowledge</td>
+      </tr>
+      <tr>
+          <td><strong>Executive Assistant</strong></td>
+          <td>An AI trained on 5+ years of my management notes—data quality trumps model size</td>
+      </tr>
+      <tr>
+          <td><strong>3-LLM Toggle</strong></td>
+          <td>Balancing cloud, local, and GPU inference—flexibility beats optimization</td>
+      </tr>
+      <tr>
+          <td><strong>Multi-Model Collaboration</strong></td>
+          <td>Two AIs pair programming—specialists need generalists, and vice versa</td>
+      </tr>
+  </tbody>
+</table>
+<p>Every experiment runs on my RTX 5090 workstation, with findings documented here for others walking a similar path.</p>
+<hr>
+<h2 id="about-me">About Me</h2>
+<p>I&rsquo;m <strong>Brian Hengen</strong>, Vice President at <strong>Oracle</strong>, where I lead technical sales engineering teams focused on AI and database technologies.</p>
+<p>By day, I help enterprises adopt AI-powered data solutions. By night (and early mornings), I build things—fine-tuning models, writing code, and testing ideas that might not work.</p>
+<p><strong>What drives me:</strong></p>
+<ul>
+<li>The belief that AI should be practical, not theoretical</li>
+<li>A conviction that smaller, specialized models have an outsized role to play</li>
+<li>The joy of building something that actually runs</li>
+</ul>
+<p><strong>Background:</strong></p>
+<ul>
+<li>20+ years in technology leadership</li>
+<li>Self-taught programmer since age 7</li>
+<li>Former Oracle DBA who learned by being thrown into the deep end</li>
+<li>No college degree—just relentless curiosity</li>
+</ul>
+<hr>
+<h2 id="connect">Connect</h2>
+<ul>
+<li><strong>GitHub:</strong> <a href="https://github.com/bjhengen">github.com/bjhengen</a></li>
+<li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/brian-hengen/">linkedin.com/in/brian-hengen</a></li>
+<li><strong>X/Twitter:</strong> <a href="https://x.com/bhengen">@bhengen</a></li>
+</ul>
+<p>Questions about the experiments? Found a bug in my code? Want to collaborate? Reach out.</p>
+<hr>
+<h2 id="disclaimer">Disclaimer</h2>
+<p>The views expressed here are <strong>my own</strong> and do not represent my employer. I don&rsquo;t disclose confidential information or use corporate branding. This is a personal space for learning and sharing.</p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

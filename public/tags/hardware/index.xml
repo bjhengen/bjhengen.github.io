@@ -1,3 +1,192 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Hardware on Brian Hengen's AI Experiments</title><link>https://brianhengen.us/tags/hardware/</link><description>Recent content in Hardware on Brian Hengen's AI Experiments</description><generator>Hugo -- 0.150.0</generator><language>en-us</language><lastBuildDate>Wed, 24 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://brianhengen.us/tags/hardware/index.xml" rel="self" type="application/rss+xml"/><item><title>Building the RTX 5090 AI Workstation - Step by Step</title><link>https://brianhengen.us/posts/rtx-5090-build-process/</link><pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/rtx-5090-build-process/</guid><description>A detailed walkthrough of assembling my RTX 5090-powered AI workstation with photos from the entire build process</description></item><item><title>Building the Ultimate AI Workstation</title><link>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</link><pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate><guid>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</guid><description>&lt;h1 id="building-my-ai-workstation-kicking-off-the-project"&gt;Building My AI Workstation: Kicking Off the Project&lt;/h1&gt;
-&lt;p&gt;Over the past few years, I&amp;rsquo;ve watched the evolution of AI move from research labs into the everyday workflows of business, productivity, and creativity. Models that once required massive clusters are now accessible to individuals, and the frontier is shifting toward &lt;strong&gt;Specialized Language Models (SLMs)&lt;/strong&gt; — models tuned for specific domains, tasks, and contexts.&lt;/p&gt;
-&lt;p&gt;To push my own understanding forward, I&amp;rsquo;ve decided to build a &lt;strong&gt;personal AI workstation&lt;/strong&gt;: a high-performance rig that will let me fine-tune, benchmark, and experiment with large models in a hands-on way. This is not just about performance numbers — it&amp;rsquo;s about exploring how to &lt;strong&gt;apply AI practically&lt;/strong&gt; and learning what it really takes to train and deploy models tailored for business value.&lt;/p&gt;</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Hardware on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/tags/hardware/</link>
+    <description>Recent content in Hardware on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 24 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://brianhengen.us/tags/hardware/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building the RTX 5090 AI Workstation - Step by Step | Part 2</title>
+      <link>https://brianhengen.us/posts/rtx-5090-build-process/</link>
+      <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/rtx-5090-build-process/</guid>
+      <description>A detailed walkthrough of assembling my RTX 5090-powered AI workstation with photos from the entire build process</description>
+      <content:encoded><![CDATA[
+
+
+
+
+<div class="series-nav-box">
+    <div class="series-nav-header">
+        <span class="series-nav-badge">📚 Series</span>
+        <span class="series-nav-title">Building an SLM Powerhouse</span>
+    </div>
+    <div class="series-nav-progress">
+        <div class="series-nav-bar">
+            <div class="series-nav-fill" style="width: 100%"></div>
+        </div>
+        <div class="series-nav-text">Part 2 of 2</div>
+    </div>
+    <a href="/series/building-an-slm-powerhouse/" class="series-nav-link">View all posts in this series →</a>
+</div>
+
+<p>🚀 <strong>The Build Day Has Arrived!</strong> After months of anticipation and planning, the RTX 5090 finally launched and it was time to bring my AI/ML powerhouse to life.</p>
+<p>This is more than just a computer build - it&rsquo;s the foundation for exploring the cutting edge of artificial intelligence and machine learning. Every component was carefully selected to maximize performance for training neural networks, running inference, and pushing the boundaries of what&rsquo;s possible with consumer AI hardware.</p>
+<p>📸 <strong>Complete Visual Documentation</strong> - Follow along with 25 high-resolution photos and exclusive first-boot video footage as I transform a pile of premium components into a purpose-built AI training beast.</p>
+<h2 id="step-1-initial-setup-20-minutes">Step 1: Initial Setup (~20 minutes)</h2>
+<p>Starting with all components laid out and ready to go.</p>
+<p><img alt="Initial component layout" loading="lazy" src="/images/20250920_090910_optimized.jpg">
+<em>All components unboxed and ready for assembly</em></p>
+<p><img alt="Component close-up" loading="lazy" src="/images/20250920_090921_optimized.jpg">
+<em>Getting a closer look at the key components</em></p>
+<h2 id="step-2-case-preparation-15-minutes">Step 2: Case Preparation (~15 minutes)</h2>
+<p><img alt="Case prep 1" loading="lazy" src="/images/20250920_090957_optimized.jpg">
+<em>Preparing the case and initial component placement</em></p>
+<p><img alt="Case prep 2" loading="lazy" src="/images/20250920_090958_optimized.jpg">
+<em>Case setup from another angle</em></p>
+<h2 id="step-3-initial-assembly-30-minutes">Step 3: Initial Assembly (~30 minutes)</h2>
+<p><img alt="Early assembly" loading="lazy" src="/images/20250920_091046_optimized.jpg">
+<em>First components going into the case</em></p>
+<p><img alt="Assembly progress" loading="lazy" src="/images/20250920_091133_optimized.jpg">
+<em>Making progress with the build</em></p>
+<p><img alt="Component installation" loading="lazy" src="/images/20250920_091425_optimized.jpg">
+<em>Installing key components</em></p>
+<h2 id="step-4-component-installation-45-minutes">Step 4: Component Installation (~45 minutes)</h2>
+<p><img alt="Build progress 1" loading="lazy" src="/images/20250920_092052_optimized.jpg">
+<em>Significant progress made</em></p>
+<p><img alt="Build progress 2" loading="lazy" src="/images/20250920_092057_optimized.jpg">
+<em>Another view of the assembly</em></p>
+<p><img alt="Components in place" loading="lazy" src="/images/20250920_093122_optimized.jpg">
+<em>Major components now installed</em></p>
+<p><img alt="Nearly complete chassis" loading="lazy" src="/images/20250920_093929_optimized.jpg">
+<em>Chassis assembly nearing completion</em></p>
+<h2 id="step-5-major-assembly-1-hour">Step 5: Major Assembly (~1 hour)</h2>
+<p><img alt="Final assembly steps" loading="lazy" src="/images/20250920_094258_optimized.jpg">
+<em>Working on final assembly details</em></p>
+<p><img alt="Component fitting" loading="lazy" src="/images/20250920_094503_optimized.jpg">
+<em>Ensuring everything fits properly</em></p>
+<p><img alt="Major milestone" loading="lazy" src="/images/20250920_105147_optimized.jpg">
+<em>Major assembly milestone reached</em></p>
+<h2 id="step-6-cable-management-30-minutes">Step 6: Cable Management (~30 minutes)</h2>
+<p><img alt="Cable management 1" loading="lazy" src="/images/20250920_114354_optimized.jpg">
+<em>Starting the cable management process</em></p>
+<p><img alt="Cable management 2" loading="lazy" src="/images/20250920_114403_optimized.jpg">
+<em>Routing cables for optimal airflow</em></p>
+<p><img alt="Clean cable routing" loading="lazy" src="/images/20250920_114410_optimized.jpg">
+<em>Achieving clean cable routing</em></p>
+<h2 id="step-7-system-testing-45-minutes">Step 7: System Testing (~45 minutes)</h2>
+<p><img alt="System testing 1" loading="lazy" src="/images/20250920_120357_optimized.jpg">
+<em>Initial system testing phase</em></p>
+<p><img alt="System testing 2" loading="lazy" src="/images/20250920_120401_optimized.jpg">
+<em>Verifying all connections</em></p>
+<p><img alt="Final checks" loading="lazy" src="/images/20250920_124515_optimized.jpg">
+<em>Running final system checks</em></p>
+<p><img alt="Power testing" loading="lazy" src="/images/20250920_124750_optimized.jpg">
+<em>Testing power delivery and stability</em></p>
+<h3 id="rtx-5090-first-boot-test">RTX 5090 First Boot Test</h3>
+<p>Before committing to the final case assembly, I wanted to test the RTX 5090 to ensure it was working properly. Here&rsquo;s the moment of truth - the first time powering up the card:</p>
+<video width="100%" controls preload="metadata" poster="/images/20250920_124750_optimized.jpg">
+  <source src="/images/20250920_124755.mp4" type="video/mp4">
+  <p>Your browser does not support HTML5 video. <a href="/images/20250920_124755.mp4">Download the video</a> to view the RTX 5090 first boot test.</p>
+</video>
+*RTX 5090 first boot test - verifying the card works before final assembly*
+<p>This was a crucial step in the build process. Testing the GPU outside the case allowed me to verify functionality and ensure all power connections were solid before doing the final assembly and cable management.</p>
+<h2 id="step-8-final-assembly--completion-15-hours">Step 8: Final Assembly &amp; Completion (~1.5 hours)</h2>
+<p><img alt="Near completion" loading="lazy" src="/images/20250920_130524_optimized.jpg">
+<em>System nearing final completion</em></p>
+<p><img alt="Final assembly" loading="lazy" src="/images/20250920_151227_optimized.jpg">
+<em>Final assembly steps</em></p>
+<p><img alt="Completed build 1" loading="lazy" src="/images/20250920_152019_optimized.jpg">
+<em>The completed AI workstation</em></p>
+<p><img alt="Completed build 2" loading="lazy" src="/images/20250920_152030_optimized.jpg">
+<em>Another view of the finished build</em></p>
+<h2 id="build-summary">Build Summary</h2>
+<p>The entire build took approximately 6 hours from start to finish, with the bulk of the time spent on:</p>
+<ul>
+<li>Careful component installation to avoid any damage</li>
+<li>Meticulous cable management for optimal airflow</li>
+<li>Multiple test boots to ensure stability</li>
+<li>Fine-tuning component placement</li>
+</ul>
+<h2 id="key-learnings">Key Learnings</h2>
+<ul>
+<li><strong>Cable management is crucial</strong> - Took extra time but resulted in much better airflow</li>
+<li><strong>Test early and often</strong> - Multiple test boots caught potential issues early</li>
+<li><strong>RTX 5090 installation</strong> - Required careful handling due to size and weight</li>
+<li><strong>Power delivery</strong> - Ensuring adequate power connectors for the high-end GPU</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<p>With the hardware build complete, the next phase involves:</p>
+<ul>
+<li>OS installation and driver setup</li>
+<li>AI/ML framework installation (CUDA, PyTorch, etc.)</li>
+<li>Performance benchmarking</li>
+<li>First training runs</li>
+</ul>
+<p>Stay tuned for the software setup and initial performance results!</p>
+<hr>
+<p><em>Build completed on September 20th, 2025 | Total build time: ~6 hours</em></p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Building the Ultimate AI Workstation | Part 1</title>
+      <link>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/building-the-ultimate-ai-workstation/</guid>
+      <description>Planning an RTX 5090 AI workstation for fine-tuning specialized language models. Part 1 covers goals, component selection, and the SLM thesis.</description>
+      <content:encoded><![CDATA[
+
+
+
+
+<div class="series-nav-box">
+    <div class="series-nav-header">
+        <span class="series-nav-badge">📚 Series</span>
+        <span class="series-nav-title">Building an SLM Powerhouse</span>
+    </div>
+    <div class="series-nav-progress">
+        <div class="series-nav-bar">
+            <div class="series-nav-fill" style="width: 50%"></div>
+        </div>
+        <div class="series-nav-text">Part 1 of 2</div>
+    </div>
+    <a href="/series/building-an-slm-powerhouse/" class="series-nav-link">View all posts in this series →</a>
+</div>
+
+<h1 id="building-my-ai-workstation-kicking-off-the-project">Building My AI Workstation: Kicking Off the Project</h1>
+<p>Over the past few years, I&rsquo;ve watched the evolution of AI move from research labs into the everyday workflows of business, productivity, and creativity. Models that once required massive clusters are now accessible to individuals, and the frontier is shifting toward <strong>Specialized Language Models (SLMs)</strong> — models tuned for specific domains, tasks, and contexts.</p>
+<p>To push my own understanding forward, I&rsquo;ve decided to build a <strong>personal AI workstation</strong>: a high-performance rig that will let me fine-tune, benchmark, and experiment with large models in a hands-on way. This is not just about performance numbers — it&rsquo;s about exploring how to <strong>apply AI practically</strong> and learning what it really takes to train and deploy models tailored for business value.</p>
+<h2 id="why-this-project">Why This Project?</h2>
+<p>There are three main goals for this build:</p>
+<ol>
+<li><strong>Hands-on learning with SLMs.</strong> I want to go deeper into how models can be specialized — what works, what doesn&rsquo;t, and what resources are required.</li>
+<li><strong>Practical experimentation.</strong> Fine-tuning models locally provides an environment where I can test ideas quickly, without waiting on shared infrastructure or cloud quotas.</li>
+<li><strong>Personal brand and knowledge sharing.</strong> By documenting the process here, I aim to demonstrate that I&rsquo;m not just <em>talking</em> about AI adoption in business — I&rsquo;m actively experimenting with it, sharing the ups and downs of building and using a system like this.</li>
+</ol>
+<h2 id="the-build">The Build</h2>
+<p>After a lot of research and part comparisons, here&rsquo;s the final component list for the workstation:</p>
+<ul>
+<li><strong>Motherboard:</strong> Gigabyte B650 Aorus Elite AX</li>
+<li><strong>CPU:</strong> AMD Ryzen 9 7900X</li>
+<li><strong>RAM:</strong> G.Skill Flare X5 64GB DDR5-6000 CL30</li>
+<li><strong>Primary SSD:</strong> Samsung 990 Pro 2TB NVMe</li>
+<li><strong>Secondary SSD:</strong> TeamGroup MP44Q 4TB NVMe</li>
+<li><strong>PSU:</strong> Corsair RM1000e (2025)</li>
+<li><strong>Case:</strong> Fractal Pop XL Silent</li>
+<li><strong>Case Fans:</strong> 2 × Arctic P14</li>
+<li><strong>CPU Cooler:</strong> be quiet! Dark Rock Pro 5</li>
+<li><strong>GPU:</strong> NVIDIA RTX 5090 Gaming OC</li>
+</ul>
+<p>This combination balances raw compute power (with the 5090 GPU at the core), ample high-speed storage for model weights and datasets, and quiet cooling for a system that will often be under heavy sustained loads.</p>
+<h2 id="whats-next">What&rsquo;s Next</h2>
+<p>Over the coming days, I&rsquo;ll be posting updates with photos and notes as I build out the system. Expect plenty of real-world detail: cable management victories (and mistakes), BIOS tweaks, thermals, and the first time I load a model that truly pushes the GPU.</p>
+<p>From there, I&rsquo;ll dive into the software side: Ubuntu 24.04 as the primary OS (with a Windows partition for occasional extra use of the GPU&hellip;), driver setup, and my initial workflow for fine-tuning language models.</p>
+<hr>
+<p>This blog is as much about the <strong>journey</strong> as the <strong>destination</strong>. My hope is that by the time this project is complete, I&rsquo;ll have a workstation that not only supports my research and tinkering but also serves as a showcase of how AI exploration can be practical, applied, and — most importantly — shared.</p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

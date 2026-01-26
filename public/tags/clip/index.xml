@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CLIP on Brian Hengen&#39;s AI Experiments</title>
+    <link>https://brianhengen.us/tags/clip/</link>
+    <description>Recent content in CLIP on Brian Hengen&#39;s AI Experiments</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://brianhengen.us/tags/clip/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CLIP Inside Oracle AI Database 26ai: Fast, Multimodal RAG</title>
+      <link>https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-11nov25/</link>
+      <pubDate>Mon, 11 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-11nov25/</guid>
+      <description>How we got 10x faster by loading CLIP models directly into Oracle AI Database 26ai. Spoiler: In-database AI is production-ready.</description>
+      <content:encoded><![CDATA[
+
+
+
+
+<div class="series-nav-box">
+    <div class="series-nav-header">
+        <span class="series-nav-badge">📚 Series</span>
+        <span class="series-nav-title">Building a Knowledge Management App with Oracle AI Database 26ai</span>
+    </div>
+    <div class="series-nav-progress">
+        <div class="series-nav-bar">
+            <div class="series-nav-fill" style="width: 50%"></div>
+        </div>
+        <div class="series-nav-text">Part 2 of 4</div>
+    </div>
+    <a href="/series/building-a-knowledge-management-app-with-oracle-ai-database-26ai/" class="series-nav-link">View all posts in this series →</a>
+</div>
+
+<p>After the <a href="https://brianhengen.us/posts/three-llms-one-app/">3-way LLM toggle</a> went live, I turned my attention to <strong>embeddings</strong> - the invisible glue that powers search and RAG.</p>
+<p>Oracle OCI GenAI’s Cohere endpoint had been rock-solid in my testing: fast, reliable, and gave me 80 K token context. But every chunk still meant a network round-trip, and <strong>images were stuck behind OCR</strong>, so text-only embeddings meant photos, diagrams, and whiteboards were blind spots in my knowledge base.</p>
+<p>Then Oracle AI Database 26ai dropped. One of the announcements was improved multimodal support - <code>DBMS_VECTOR.LOAD_ONNX_MODEL</code> let me <strong>load CLIP (text + image encoders) directly into the database</strong> and generate embeddings <strong>in SQL</strong>.</p>
+<p>No more API calls. No more OCR. Just <strong>one transaction</strong> that turns a PDF, PowerPoint, or snapshot into searchable, multimodal vectors.</p>
+<p>This is the story of how <strong>bringing AI into the database</strong> unlocked true cross-modal search and made my app feel instant.</p>
+<h2 id="the-problem-death-by-a-thousand-api-calls">The Problem: Death by a Thousand API Calls</h2>
+<p>My app stores everything in Oracle AI Database 26ai - from notes, PDFs, Word docs, to PowerPoint presentations. Every piece of content gets chunked and embedded for vector search. Originally, I used OCI&rsquo;s Cohere embedding API:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// The old way: External API for every chunk
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">async</span> <span class="kd">function</span> <span class="nx">embedChunk</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;https://api.cohere.ai/embed&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;Authorization&#39;</span><span class="o">:</span> <span class="sb">`Bearer </span><span class="si">${</span><span class="nx">COHERE_API_KEY</span><span class="si">}</span><span class="sb">`</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">body</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">texts</span><span class="o">:</span> <span class="p">[</span><span class="nx">text</span><span class="p">],</span> <span class="nx">model</span><span class="o">:</span> <span class="s1">&#39;embed-english-v3.0&#39;</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">embeddings</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">embeddings</span><span class="p">.</span><span class="nx">embeddings</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// 1024-dimensional vector
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Upload a 20-page PDF?
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 40-60 chunks × 200-500ms per API call = 8-30 seconds
+</span></span></span></code></pre></div><p>It worked, but I knew I could make some improvements, based on my use case</p>
+<h2 id="the-breakthrough-clip-inside-oracle-ai-database-26ai">The Breakthrough: CLIP Inside Oracle AI Database 26ai</h2>
+<p>While digging deeper into Oracle AI Database 26ai for my <a href="https://brianhengen.us/posts/three-llms-one-app/">LLM toggle post</a>, I hit a <strong>game-changer</strong>: <code>DBMS_VECTOR.LOAD_ONNX_MODEL</code>.</p>
+<p>Yes — <strong>load a multimodal ONNX model directly into the database</strong> and run inference <strong>with pure SQL</strong>.</p>
+<p>My first thought: <em>Could I run CLIP — the multimodal brain — entirely in-database?</em></p>
+<p>I found pre-converted ONNX versions of <strong>CLIP’s dual encoders</strong>:</p>
+<ul>
+<li><strong>Text encoder</strong> → 768-dim vector (120 MB)</li>
+<li><strong>Image encoder</strong> → 768-dim vector (293 MB)</li>
+</ul>
+<p>Both land in the <strong>same semantic space</strong>, meaning:</p>
+<blockquote>
+<p>A text query like <em>&ldquo;Q3 strategy session&rdquo;</em> can now <strong>find actual photos</strong> from that meeting.<br>
+An uploaded whiteboard snapshot can <strong>surface related notes</strong> — no OCR, no captions.</p></blockquote>
+<p>This wasn’t just faster.<br>
+It was <strong>true multimodal intelligence</strong>, unlocked by running the model <strong>where the data lives</strong>.</p>
+<p>A few hours later, I had both encoders loaded — and embeddings flowing <strong>in SQL</strong>.</p>
+<p>The experiment was on.</p>
+<h2 id="the-migration-from-api-to-in-database">The Migration: From API to In-Database</h2>
+<h3 id="step-1-load-the-clip-model-20-minutes">Step 1: Load the CLIP Model (20 Minutes)</h3>
+<p>I downloaded the ONNX model files and loaded them into Oracle using <code>DBMS_VECTOR.LOAD_ONNX_MODEL</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- Load CLIP text encoder (120 MB)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_VECTOR</span><span class="p">.</span><span class="n">LOAD_ONNX_MODEL</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="s1">&#39;CLIP_TEXT&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="s1">&#39;clip_txt.onnx&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">JSON</span><span class="p">(</span><span class="s1">&#39;{&#34;function&#34;: &#34;embedding&#34;, &#34;embeddingOutput&#34;: &#34;embedding&#34;}&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Load CLIP image encoder (293 MB)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">EXEC</span><span class="w"> </span><span class="n">DBMS_VECTOR</span><span class="p">.</span><span class="n">LOAD_ONNX_MODEL</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="s1">&#39;CLIP_IMAGE&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="s1">&#39;clip_img.onnx&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">JSON</span><span class="p">(</span><span class="s1">&#39;{&#34;function&#34;: &#34;embedding&#34;, &#34;embeddingOutput&#34;: &#34;embedding&#34;}&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></div><p>That&rsquo;s it. 20 minutes for me to download and load. The models are now stored in the database, ready to use.</p>
+<h3 id="step-2-update-the-schema">Step 2: Update the Schema</h3>
+<p>Added a new column for CLIP embeddings (keeping the old Cohere embeddings during migration):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- Add CLIP embedding column
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">document_chunks</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ADD</span><span class="w"> </span><span class="p">(</span><span class="n">chunk_vector_clip</span><span class="w"> </span><span class="n">VECTOR</span><span class="p">(</span><span class="mi">768</span><span class="p">,</span><span class="w"> </span><span class="n">FLOAT32</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Both columns coexist during migration:
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- chunk_vector       : 1024-dim Cohere (old)
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- chunk_vector_clip  : 768-dim CLIP (new)
+</span></span></span></code></pre></div><h3 id="step-3-generate-embeddings-in-sql">Step 3: Generate Embeddings in SQL</h3>
+<p>Here&rsquo;s where it gets exciting. Instead of calling an external API, embeddings are generated directly in SQL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- Old way: Generate embeddings via API, then insert
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- (requires external call, network latency, API costs)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- New way: Generate embeddings in SQL
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">document_chunks</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">document_id</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">chunk_text</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">chunk_vector_clip</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">:</span><span class="n">documentId</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">:</span><span class="n">chunkText</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">:</span><span class="n">chunkText</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- For images:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">document_chunks</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">document_id</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">chunk_vector_clip</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SELECT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">:</span><span class="n">documentId</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_IMAGE</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">file_content</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">DATA</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w"> </span><span class="n">documents</span><span class="w"> </span><span class="n">d</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">documentId</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><p><strong>That&rsquo;s it.</strong> No external API calls. No network latency. No API keys. Just SQL.</p>
+<h3 id="step-4-migrate-existing-data">Step 4: Migrate Existing Data</h3>
+<p>I had 1,723 existing chunks with my original embeddings. Re-embedding them took me about 2 minutes:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- Batch 1: Chunks ≤4000 chars (direct embedding)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">UPDATE</span><span class="w"> </span><span class="n">document_chunks</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SET</span><span class="w"> </span><span class="n">chunk_vector_clip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">chunk_text</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w"> </span><span class="n">chunk_vector_clip</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">DBMS_LOB</span><span class="p">.</span><span class="n">GETLENGTH</span><span class="p">(</span><span class="n">chunk_text</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4000</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Result: 1,716 rows updated in 90 seconds
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Batch 2: Large chunks &gt;4000 chars (truncate to 3,800)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">UPDATE</span><span class="w"> </span><span class="n">document_chunks</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SET</span><span class="w"> </span><span class="n">chunk_vector_clip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">DBMS_LOB</span><span class="p">.</span><span class="n">SUBSTR</span><span class="p">(</span><span class="n">chunk_text</span><span class="p">,</span><span class="w"> </span><span class="mi">3800</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w"> </span><span class="n">chunk_vector_clip</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Result: 7 rows updated in 8 seconds
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Total: 1,723 embeddings in ~2 minutes
+</span></span></span></code></pre></div><p>Compare that to what it would have taken me to re-embed via API: 1,723 chunks × 300ms average = <strong>8.6 minutes</strong> minimum, already a big improvement.</p>
+<h3 id="step-5-update-search-queries">Step 5: Update Search Queries</h3>
+<p>Search queries barely changed—just swap the column name:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- Old Cohere search
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">SELECT</span><span class="w"> </span><span class="n">chunk_text</span><span class="p">,</span><span class="w"> </span><span class="n">document_name</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="n">VECTOR_DISTANCE</span><span class="p">(</span><span class="n">chunk_vector</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="n">queryVector</span><span class="p">,</span><span class="w"> </span><span class="n">COSINE</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w"> </span><span class="n">document_chunks</span><span class="w"> </span><span class="n">dc</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">JOIN</span><span class="w"> </span><span class="n">documents</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dc</span><span class="p">.</span><span class="n">document_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_id</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w"> </span><span class="n">VECTOR_DISTANCE</span><span class="p">(</span><span class="n">chunk_vector</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="n">queryVector</span><span class="p">,</span><span class="w"> </span><span class="n">COSINE</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FETCH</span><span class="w"> </span><span class="k">FIRST</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="k">ROWS</span><span class="w"> </span><span class="k">ONLY</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- New CLIP search (in-database embedding generation)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">SELECT</span><span class="w"> </span><span class="n">chunk_text</span><span class="p">,</span><span class="w"> </span><span class="n">document_name</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="n">VECTOR_DISTANCE</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">chunk_vector_clip</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">:</span><span class="n">query</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">COSINE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w"> </span><span class="n">document_chunks</span><span class="w"> </span><span class="n">dc</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">JOIN</span><span class="w"> </span><span class="n">documents</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dc</span><span class="p">.</span><span class="n">document_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_id</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w"> </span><span class="n">VECTOR_DISTANCE</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">chunk_vector_clip</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">:</span><span class="n">query</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">COSINE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FETCH</span><span class="w"> </span><span class="k">FIRST</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="k">ROWS</span><span class="w"> </span><span class="k">ONLY</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><p>Notice the difference? The query embedding is generated <strong>in the WHERE clause</strong>. No preprocessing, no API calls - The Oracle AI Database generates the embedding on the fly.</p>
+<h2 id="the-results-10x-faster-work-done-in-the-oracle-ai-database">The Results: 10x Faster, Work Done in the Oracle AI Database</h2>
+<h3 id="performance-comparison">Performance Comparison</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Cohere API</th>
+          <th>In-Database CLIP</th>
+          <th>Improvement</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Embedding Time</strong></td>
+          <td>200-500ms</td>
+          <td>10-50ms</td>
+          <td>⚡ <strong>10x faster</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Network Latency</strong></td>
+          <td>50-150ms</td>
+          <td>0ms</td>
+          <td>✅ Eliminated</td>
+      </tr>
+      <tr>
+          <td><strong>Vector Dimensions</strong></td>
+          <td>1024</td>
+          <td>768</td>
+          <td>📊 25% smaller</td>
+      </tr>
+      <tr>
+          <td><strong>Storage per Chunk</strong></td>
+          <td>4 KB</td>
+          <td>3 KB</td>
+          <td>💾 25% reduction</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="search-query-comparison">Search Query Comparison</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Example: &#34;Find meeting notes about customer engagements&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Old Architecture:
+</span></span><span class="line"><span class="cl">├─ Generate query embedding: 280ms (API call)
+</span></span><span class="line"><span class="cl">├─ Vector search: 45ms (database)
+</span></span><span class="line"><span class="cl">└─ Total: 325ms
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">New Architecture:
+</span></span><span class="line"><span class="cl">├─ Generate query embedding: 25ms (in SQL)
+</span></span><span class="line"><span class="cl">├─ Vector search: 45ms (database)
+</span></span><span class="line"><span class="cl">└─ Total: 70ms
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Result: 4.6x faster, instantaneous user experience
+</span></span></code></pre></div><p>The speed improvement comes from three factors:</p>
+<ol>
+<li><strong>No network calls</strong>: Eliminates 50-150ms latency per request</li>
+<li><strong>Parallel processing</strong>: Oracle&rsquo;s ONNX runtime is optimized for batch operations</li>
+<li><strong>Locality</strong>: Data and model live in the same database - no serialization overhead</li>
+</ol>
+<h2 id="the-bonus-multimodal-search">The Bonus: Multimodal Search</h2>
+<p>Here&rsquo;s where it gets really interesting. CLIP&rsquo;s text and image encoders output vectors in the same semantic space. That means I could now do cross-modal search:</p>
+<h3 id="text-query--find-images">Text Query → Find Images</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- User asks: &#34;Show me photos from customer meetings&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_name</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">file_content</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="n">VECTOR_DISTANCE</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">dc</span><span class="p">.</span><span class="n">chunk_vector_clip</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">VECTOR_EMBEDDING</span><span class="p">(</span><span class="n">CLIP_TEXT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="s1">&#39;customer meeting photos&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">INPUT</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">COSINE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w"> </span><span class="n">document_chunks</span><span class="w"> </span><span class="n">dc</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">JOIN</span><span class="w"> </span><span class="n">documents</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dc</span><span class="p">.</span><span class="n">document_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_id</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">document_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;IMAGE&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">similarity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FETCH</span><span class="w"> </span><span class="k">FIRST</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">ROWS</span><span class="w"> </span><span class="k">ONLY</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><p>Without any OCR or image captioning, the Oracle AI Database finds relevant images based on semantic meaning. A query like &ldquo;person at beach&rdquo; returns vacation photos; &ldquo;datacenter equipment&rdquo; returns server rack photos.</p>
+<h3 id="automatic-image-extraction-from-documents">Automatic Image Extraction from Documents</h3>
+<p>I extended the document processing pipeline to extract images from PDFs, Word docs, and PowerPoint presentations, then automatically generate CLIP embeddings:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// Extract images from PowerPoint
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">async</span> <span class="kd">function</span> <span class="nx">processPowerPoint</span><span class="p">(</span><span class="nx">fileBuffer</span><span class="p">,</span> <span class="nx">documentId</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">zip</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">JSZip</span><span class="p">.</span><span class="nx">loadAsync</span><span class="p">(</span><span class="nx">fileBuffer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">images</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// Extract all images from pptx
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kr">const</span> <span class="nx">imageFiles</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">zip</span><span class="p">.</span><span class="nx">files</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">name</span> <span class="p">=&gt;</span> <span class="nx">name</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;ppt/media/&#39;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">filename</span> <span class="k">of</span> <span class="nx">imageFiles</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">imageData</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">zip</span><span class="p">.</span><span class="nx">files</span><span class="p">[</span><span class="nx">filename</span><span class="p">].</span><span class="kr">async</span><span class="p">(</span><span class="s1">&#39;nodebuffer&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// Store image and generate CLIP embedding in SQL
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kr">await</span> <span class="nx">executeQuery</span><span class="p">(</span><span class="sb">`
+</span></span></span><span class="line"><span class="cl"><span class="sb">      INSERT INTO documents (document_type, file_content, parent_document_id)
+</span></span></span><span class="line"><span class="cl"><span class="sb">      VALUES (&#39;IMAGE&#39;, :imageData, :documentId)
+</span></span></span><span class="line"><span class="cl"><span class="sb">      RETURNING document_id INTO :newDocId
+</span></span></span><span class="line"><span class="cl"><span class="sb">    `</span><span class="p">,</span> <span class="p">{</span> <span class="nx">imageData</span><span class="p">,</span> <span class="nx">documentId</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kr">await</span> <span class="nx">executeQuery</span><span class="p">(</span><span class="sb">`
+</span></span></span><span class="line"><span class="cl"><span class="sb">      INSERT INTO document_chunks (document_id, chunk_vector_clip)
+</span></span></span><span class="line"><span class="cl"><span class="sb">      SELECT :newDocId, VECTOR_EMBEDDING(CLIP_IMAGE USING d.file_content as DATA)
+</span></span></span><span class="line"><span class="cl"><span class="sb">      FROM documents d WHERE d.document_id = :newDocId
+</span></span></span><span class="line"><span class="cl"><span class="sb">    `</span><span class="p">,</span> <span class="p">{</span> <span class="nx">newDocId</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Now when I upload a PowerPoint with 26 photos, each image gets:</p>
+<ol>
+<li>Extracted and stored as a child document</li>
+<li>Automatically embedded with CLIP (in SQL)</li>
+<li>Searchable via text queries</li>
+<li>Linked to parent document</li>
+</ol>
+<p><strong>Processing time</strong>: 4.8 MB PowerPoint with 26 images = 3 minutes total (6-7 seconds per image). All embeddings generated in-database.</p>
+<h2 id="the-architecture-before-and-after">The Architecture: Before and After</h2>
+<h3 id="before-api-dependent">Before (API-Dependent)</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">User</span> <span class="n">uploads</span> <span class="n">document</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">Backend</span> <span class="n">extracts</span> <span class="n">text</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">Backend</span> <span class="n">chunks</span> <span class="n">text</span> <span class="err">→</span> <span class="mi">60</span> <span class="n">chunks</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">For</span> <span class="n">each</span> <span class="n">chunk</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Backend</span> <span class="err">→</span> <span class="n">Cohere</span> <span class="n">API</span> <span class="p">(</span><span class="mi">200</span><span class="o">-</span><span class="mi">500</span><span class="n">ms</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">API</span> <span class="err">→</span> <span class="n">Returns</span> <span class="mi">1024</span><span class="o">-</span><span class="n">dim</span> <span class="n">vector</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Backend</span> <span class="err">→</span> <span class="n">Stores</span> <span class="ow">in</span> <span class="n">Oracle</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">Total</span><span class="p">:</span> <span class="mi">12</span><span class="o">-</span><span class="mi">30</span> <span class="n">seconds</span>
+</span></span></code></pre></div><h3 id="after-in-database">After (In-Database)</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">User</span> <span class="n">uploads</span> <span class="n">document</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">Backend</span> <span class="n">extracts</span> <span class="n">text</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">Backend</span> <span class="n">sends</span> <span class="n">chunks</span> <span class="n">to</span> <span class="n">Oracle</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">Oracle</span> <span class="p">(</span><span class="n">single</span> <span class="n">SQL</span> <span class="n">statement</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">Chunks</span> <span class="n">text</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">Generates</span> <span class="n">CLIP</span> <span class="n">embeddings</span> <span class="p">(</span><span class="n">ONNX</span> <span class="n">model</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">Stores</span> <span class="n">vectors</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">Extracts</span> <span class="n">images</span> <span class="p">(</span><span class="k">if</span> <span class="n">any</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">Generates</span> <span class="n">image</span> <span class="n">embeddings</span>
+</span></span><span class="line"><span class="cl">    <span class="err">↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">Total</span><span class="p">:</span> <span class="mi">2</span><span class="o">-</span><span class="mi">4</span> <span class="n">seconds</span>
+</span></span></code></pre></div><p>All the intelligence moved into the database. My backend became dramatically simpler.</p>
+<h2 id="code-changes-surprisingly-minimal">Code Changes: Surprisingly Minimal</h2>
+<p>The entire migration touched just a few files:</p>
+<h3 id="backend-changes">Backend Changes</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// OLD: routes/documents.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">embeddings</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">cohereService</span><span class="p">.</span><span class="nx">generateEmbeddings</span><span class="p">(</span><span class="nx">chunks</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">chunks</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="sb">`
+</span></span></span><span class="line"><span class="cl"><span class="sb">    INSERT INTO document_chunks (chunk_text, chunk_vector)
+</span></span></span><span class="line"><span class="cl"><span class="sb">    VALUES (:text, TO_VECTOR(:vector))
+</span></span></span><span class="line"><span class="cl"><span class="sb">  `</span><span class="p">,</span> <span class="p">{</span> <span class="nx">text</span><span class="o">:</span> <span class="nx">chunks</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">vector</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">embeddings</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// NEW: routes/documents.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="sb">`
+</span></span></span><span class="line"><span class="cl"><span class="sb">  INSERT INTO document_chunks (chunk_text, chunk_vector_clip)
+</span></span></span><span class="line"><span class="cl"><span class="sb">  SELECT :text, VECTOR_EMBEDDING(CLIP_TEXT USING :text as INPUT)
+</span></span></span><span class="line"><span class="cl"><span class="sb">  FROM DUAL
+</span></span></span><span class="line"><span class="cl"><span class="sb">`</span><span class="p">,</span> <span class="p">{</span> <span class="nx">text</span><span class="o">:</span> <span class="nx">chunks</span> <span class="p">});</span>
+</span></span></code></pre></div><p>That&rsquo;s it. Delete the external API call, use SQL instead. Applied this pattern across 6 route files:</p>
+<ul>
+<li><code>routes/documents.js</code> - PDF uploads</li>
+<li><code>routes/notes.js</code> - Note creation</li>
+<li><code>routes/emails.js</code> - Email imports</li>
+<li><code>routes/onenote.js</code> - OneNote processing</li>
+<li><code>routes/notes_enhanced.js</code> - Rich text notes</li>
+<li><code>routes/images.js</code> - Image uploads (new)</li>
+</ul>
+<p><strong>Total lines changed</strong>: ~150 lines removed (API calls), ~80 lines added (SQL embeddings). Net: <strong>-70 lines of code</strong>.</p>
+<h2 id="production-considerations">Production Considerations</h2>
+<h3 id="memory-and-storage">Memory and Storage</h3>
+<ul>
+<li><strong>CLIP models</strong>: 413 MB total (120 MB text + 293 MB image)</li>
+<li><strong>Storage impact</strong>: 25% reduction per chunk (768-dim vs 1024-dim)</li>
+<li><strong>Memory overhead</strong>: Minimal—Oracle loads models once, reuses across queries</li>
+</ul>
+<h3 id="error-handling">Error Handling</h3>
+<p>With external APIs, every call can fail:</p>
+<ul>
+<li>Network timeouts</li>
+<li>Rate limits</li>
+<li>API downtime</li>
+<li>Invalid API keys</li>
+<li>Service deprecation</li>
+</ul>
+<p>With in-database inference:</p>
+<ul>
+<li>Model is always available</li>
+<li>No network dependencies</li>
+<li>Deterministic performance</li>
+<li>No credential management</li>
+<li>Oracle&rsquo;s transaction guarantees</li>
+</ul>
+<p>My error handling code dropped from 80 lines (retry logic, exponential backoff, circuit breakers) to 10 lines (standard SQL error handling).</p>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Insight</th>
+          <th>Takeaway</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>APIs Aren’t the Only Path</strong></td>
+          <td>Running inference <strong>inside Oracle AI Database 26ai</strong> removed network latency, credential churn, and external dependencies—no more waiting on API uptime.</td>
+      </tr>
+      <tr>
+          <td><strong>In-Database AI Is Ready for Prime Time</strong></td>
+          <td>Oracle’s ONNX runtime was <strong>fast and stable in my testing, and SQL-native</strong>. Load a model once (20 minutes), then every embedding is just a function call.</td>
+      </tr>
+      <tr>
+          <td><strong>Smaller, Specialized Models Win for My Use Case</strong></td>
+          <td>CLIP (3B params) worked great for embeddings of my data: <strong>10–50 ms inference</strong>, <strong>120 MB footprint</strong>, <strong>same or better relevance</strong>, and <strong>native multimodal support</strong>. Task-specific &gt; general-purpose.</td>
+      </tr>
+      <tr>
+          <td><strong>Schema Evolution = Safety Net</strong></td>
+          <td>I kept both vector columns during migration (just to be safe):</td>
+      </tr>
+  </tbody>
+</table>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">chunk_vector</span><span class="w">       </span><span class="n">VECTOR</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span><span class="w"> </span><span class="n">FLOAT32</span><span class="p">)</span><span class="w">  </span><span class="c1">-- Old Cohere
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">chunk_vector_clip</span><span class="w">  </span><span class="n">VECTOR</span><span class="p">(</span><span class="mi">768</span><span class="p">,</span><span class="w"> </span><span class="n">FLOAT32</span><span class="p">)</span><span class="w">   </span><span class="c1">-- New CLIP
+</span></span></span></code></pre></div><p>This enabled:</p>
+<ul>
+<li>A/B quality testing</li>
+<li>Side-by-side result comparison</li>
+<li>Instant rollback</li>
+<li>Gradual cutover (no downtime)</li>
+</ul>
+<p>After two weeks of validation, I&rsquo;m ready to drop the old column. Zero regrets.</p>
+<h2 id="whats-next-teaser-for-part-3">What’s Next (Teaser for Part 3)</h2>
+<p>The CLIP migration unlocked <strong>three immediate wins</strong>—already live in my app:</p>
+<ol>
+<li>
+<p><strong>Image-Enriched Q&amp;A</strong><br>
+Ask <em>&ldquo;What risks did we discuss in the Q3 offsite?&rdquo;</em> → the system pulls <strong>meeting notes + actual photos</strong> of the whiteboard, then feeds both to the LLM (with OCI Vision AI for extra visual analysis).</p>
+</li>
+<li>
+<p><strong>Visual Document Search</strong><br>
+PowerPoints, Word diagrams, and PDFs are now searchable <strong>by visual content</strong>—no more “find the slide with the architecture drawing” manual hunt.</p>
+</li>
+<li>
+<p><strong>True Cross-Modal Retrieval</strong><br>
+Text finds images. Images find text. No OCR. No captions. Just CLIP doing its magic.</p>
+</li>
+</ol>
+<p>I’ve delivered #1–3.</p>
+<p><strong>Part 3 of this blog series</strong> will dive into the next frontier: <strong>vision-aware inference at query time</strong>—blending in-database CLIP with LLMs and local SLMs to <em>reason over images</em> during RAG, not just retrieve them.</p>
+<p>Stay tuned.</p>
+<h2 id="the-bottom-line">The Bottom Line</h2>
+<p><strong>Time invested</strong>: One weekend (research → implementation → migration)</p>
+<p><strong>Results</strong>:</p>
+<ul>
+<li>⚡ <strong>10× faster embeddings</strong> (350 ms → 35 ms average)</li>
+<li>🎯 <strong>True multimodal search</strong> (text ↔ images, no OCR)</li>
+<li>📦 <strong>Simpler backend</strong> (–70 lines of code, no API orchestration)</li>
+<li>🔒 <strong>Rock-solid reliability</strong> (no network, no keys, no downtime)</li>
+</ul>
+<p>For a weekend’s work?<br>
+<strong>Absolute no-brainer.</strong></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Sometimes the best place for AI is <strong>with your data</strong>.</p>
+<p>Oracle AI Database 26ai made that possible with <strong>native ONNX support</strong>, <strong>SQL-level inference</strong>, and <strong>zero-compromise performance</strong>.</p>
+<p>APIs are powerful.<br>
+<strong>But</strong> when your data lives in the database, <strong>running the model there too</strong> is often the smarter, faster, more secure path.</p>
+<p><strong>Next up in Part 3</strong>:<br>
+How I built <strong>vision-aware RAG</strong> — combining in-database CLIP with LLMs and local SLMs to <em>reason over images</em> during inference.  We&rsquo;ll also cover how I overcame a snag in the inference process and why as useful as AI is, nothing beats a helpful colleague!</p>
+<hr>
+<p><strong>Have you moved ML into your database?</strong><br>
+What trade-offs have you faced? Drop a comment or <a href="https://brianhengen.us/">reach out</a></p>
+<h2 id="about-the-author">About the Author</h2>
+<p>Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.</p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
