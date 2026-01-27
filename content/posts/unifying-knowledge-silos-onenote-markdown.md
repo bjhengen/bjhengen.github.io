@@ -14,6 +14,8 @@ description: "How I migrated 5,178 OneNote documents spanning 12 years and built
 Unified 12 years of scattered notes - 5,178 OneNote pages plus daily markdown journals - into a single AI-searchable knowledge base powered by Oracle AI Database 26ai. The result: a unified knowledge base where I can ask "What did I write about AI in 2021?" and get instant, accurate answers—regardless of where the note originated.
 {{< /tldr >}}
 
+---
+
 After building [multimodal search with CLIP](https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-11nov25/) and [vision-aware RAG](https://brianhengen.us/posts/vision-aware-rag-python-bridge/), I had a powerful system. But most of my knowledge was trapped in two silos:
 
 1. **Microsoft OneNote**: 12 years of meeting notes, project docs, and random ideas (5,000+ pages)
