@@ -8,11 +8,11 @@ series: ["Building a Knowledge Management App with Oracle AI Database 26ai"]
 description: "After CLIP made multimodal search instant, I hit a wall: the LLM could find images but couldn't see them. Here's how an Oracle engineer's tip and 300 lines of Python broke through."
 ---
 
-{{< series-nav series="Building a Knowledge Management App with Oracle AI Database 26ai" part="3" total="3" >}}
+{{< series-nav series="Building a Knowledge Management App with Oracle AI Database 26ai" part="3" total="4" >}}
 
-*This is Part 3* — the final chapter in turning a text-only knowledge base into a fully vision-aware RAG system
+*This is Part 3* — turning a text-only knowledge base into a fully vision-aware RAG system
 
-After [moving CLIP embeddings into Oracle AI Database 26ai](https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-fast-multimodal-rag/), I had something great: **true multimodal search**. Text queries found images. Images found related text. No OCR, no captions—just CLIP doing its magic in the database. 
+After [moving CLIP embeddings into Oracle AI Database 26ai](https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-11nov25/), I had something great: **true multimodal search**. Text queries found images. Images found related text. No OCR, no captions—just CLIP doing its magic in the database. 
 
 But I quickly hit a wall.
 
@@ -680,16 +680,25 @@ The vision-aware RAG is now **production-ready** in my knowledge management app:
 3. **Video Support:** Extract frames and analyze video content
 4. **SDK Update:** When TypeScript SDK adds vision, remove the Python bridge (or keep it—it works great)
 
-### Blog Series Wrap-Up
+### What's Next: Unifying Knowledge Silos
 
-This three-part series covered:
+With multimodal search and vision-aware RAG working, the next challenge was obvious: **data**.
+
+Most of my knowledge was still trapped in silos:
+- **12 years of OneNote** (5,000+ pages)
+- **Daily markdown journals** (growing constantly)
+
+**Part 4** covers how I migrated 5,178 OneNote documents via Microsoft Graph API and built real-time markdown sync—turning scattered notes into a unified, AI-searchable knowledge base.
+
+### Blog Series So Far
 
 **Part 1:** [Three LLMs, One App](https://brianhengen.us/posts/three-llms-one-app/) - Multi-provider LLM architecture
-**Part 2:** [CLIP Inside Oracle AI Database 26ai](https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-fast-multimodal-rag/) - In-database embeddings for 10x faster search
+**Part 2:** [CLIP Inside Oracle AI Database 26ai](https://brianhengen.us/posts/clip-inside-oracle-ai-database-26ai-11nov25/) - In-database embeddings for 10x faster search
 **Part 3:** This post - Vision-aware RAG with a Python bridge
+**Part 4:** [Unifying Knowledge Silos](https://brianhengen.us/posts/unifying-knowledge-silos-onenote-markdown/) - OneNote migration + Markdown sync
 
 Together, they show a complete RAG evolution:
-- **Text search** → **Multimodal search** → **Vision-aware reasoning**
+- **Text search** → **Multimodal search** → **Vision-aware reasoning** → **Unified knowledge**
 
 Each step unlocked new capabilities. Each required different solutions. Each taught valuable lessons.
 
@@ -717,7 +726,7 @@ Thank you, David.
 **Have you built polyglot microservices for AI workloads?**
 What challenges did you face? [Drop a comment or reach out](https://brianhengen.us/)
 
-**What's next** (outside this series): an AI-powered robot car that navigates my house…
+**Next up in Part 4:** How I unified 12 years of scattered notes—migrating 5,178 OneNote documents and building real-time markdown sync into Oracle AI Database 26ai.
 
 ## About the Author
 Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.

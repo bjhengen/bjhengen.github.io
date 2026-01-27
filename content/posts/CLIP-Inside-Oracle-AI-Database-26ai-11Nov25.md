@@ -8,7 +8,7 @@ series: ["Building a Knowledge Management App with Oracle AI Database 26ai"]
 description: "How we got 10x faster by loading CLIP models directly into Oracle AI Database 26ai. Spoiler: In-database AI is production-ready."
 ---
 
-{{< series-nav series="Building a Knowledge Management App with Oracle AI Database 26ai" part="2" total="3" >}}
+{{< series-nav series="Building a Knowledge Management App with Oracle AI Database 26ai" part="2" total="4" >}}
 
 After the [3-way LLM toggle](https://brianhengen.us/posts/three-llms-one-app/) went live, I turned my attention to **embeddings** - the invisible glue that powers search and RAG.
 
