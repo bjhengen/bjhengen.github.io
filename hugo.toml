@@ -58,6 +58,10 @@ theme = 'PaperMod'
       url = "/posts/"
 
     [[params.profileMode.buttons]]
+      name = "🤖 AIOS:ThinkTank"
+      url = "/series/aios-thinktank/"
+
+    [[params.profileMode.buttons]]
       name = "🔬 SLM Research"
       url = "/series/slm-research/"
 
