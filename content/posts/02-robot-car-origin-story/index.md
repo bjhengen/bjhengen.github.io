@@ -86,7 +86,7 @@ Session one ended with a GitHub repo, a Pi booted and talking to WiFi, a camera 
 
 ---
 
-## The Expensive Lesson
+## The Painful Lesson
 
 Session two was supposed to be the easy one. Motors arrive, battery holder arrives, wire everything up, spin the wheels.
 
