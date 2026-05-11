@@ -44,10 +44,11 @@ hr{border:none;border-top:1px solid var(--rule-2);margin:32px 0}
    ============================================================ */
 .nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--rule-2)}
 .nav-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px;padding:18px 40px}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink);letter-spacing:-0.01em}
-.nav-mark{position:relative;width:28px;height:28px;background:var(--ink);display:grid;place-items:center}
-.nav-mark::before{content:"";position:absolute;width:8px;height:8px;background:var(--ember);top:4px;right:4px}
-.nav-mark span{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--paper)}
+.brand{display:flex;align-items:baseline;gap:10px;font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink);letter-spacing:-0.01em}
+.nav-mark{display:inline-flex;align-items:baseline;font-family:var(--sans);font-size:26px;line-height:1;font-weight:700;color:var(--ink);letter-spacing:-0.06em}
+.nav-mark .dot{width:6px;height:6px;background:var(--ember);align-self:flex-end;margin-left:5px;margin-bottom:4px;flex:none}
+.brand-word{display:inline-flex;align-items:baseline}
+.brand-word em{font-style:normal;color:var(--ember);margin-left:1px}
 .nav-links{display:flex;gap:28px;justify-content:center;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.14em}
 .nav-links a{color:var(--ink-2);transition:color .15s}
 .nav-links a:hover,.nav-links a.active{color:var(--ember)}

@@ -1,8 +1,8 @@
 <nav class="nav">
   <div class="nav-inner">
     <a class="brand" href="{{ "/" | relURL }}">
-      <span class="nav-mark"><span>{{ site.Params.brandInitials | default "BH" }}</span></span>
-      <span>{{ site.Params.brandName | default site.Title }}</span>
+      <span class="nav-mark">{{ site.Params.brandInitials | default "BH" | lower }}<span class="dot"></span></span>
+      <span class="brand-word">{{ site.Params.brandName | default site.Title }}<em>.</em></span>
     </a>
     <div class="nav-links">
       {{- range site.Menus.main }}
