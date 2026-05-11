@@ -1,0 +1,19 @@
+{{- /* post-card.html — used in home + posts list */ -}}
+{{- $tags := .Params.tags | default slice -}}
+<a class="card" href="{{ .RelPermalink }}">
+  <div class="card-num">{{ printf "%02d" (add 1 (.Scratch.Get "idx" | default 0)) }}</div>
+  <div class="card-body">
+    <h3>{{ .Title }}</h3>
+    {{- with .Description | default .Summary }}<p>{{ . }}</p>{{- end }}
+    {{- if $tags }}
+    <div class="card-tags">
+      {{- range first 4 $tags }}<span>{{ . }}</span>{{- end }}
+    </div>
+    {{- end }}
+  </div>
+  <div class="card-meta">
+    <b>{{ .Date.Format "02 Jan 2006" | upper }}</b>
+    {{ .ReadingTime }} MIN
+    {{- with .Params.series }} · {{ index . 0 | upper }}{{- end }}
+  </div>
+</a>

@@ -1,0 +1,64 @@
+{{- define "main" -}}
+<main class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="section-id"><span class="dot"></span><span>BRIANHENGEN.US <span class="num">/ HOME</span></span></div>
+        <h1>{{ .Params.heroLine1 | default "A workshop for" }}<br/><em>{{ .Params.heroLine2 | default "shipped ideas." }}</em></h1>
+      </div>
+      <div>
+        <p class="hero-lede">{{ .Content | default .Params.lede | safeHTML }}</p>
+        {{- $allPosts := where site.RegularPages "Section" "posts" -}}
+        {{- $latestPost := index ($allPosts.ByDate.Reverse) 0 -}}
+        {{- $seriesIndex := site.GetPage "/series" -}}
+        {{- $seriesCount := len $seriesIndex.Sections -}}
+        <div class="hero-meta" style="margin-top:24px">
+          <div><span>RECENT</span><b>{{ len $allPosts }} POSTS</b></div>
+          <div><span>SERIES</span><b>{{ $seriesCount }} ACTIVE</b></div>
+          <div><span>UPDATED</span><b>{{ $latestPost.Date.Format "02 Jan 2006" | upper }}</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECENT POSTS -->
+  <section style="padding:64px 0">
+    <div class="section-id"><span class="dot"></span><span>RECENT POSTS <span class="num">/ NEWEST FIRST</span></span></div>
+    <div class="cards">
+      {{- range first 5 (where site.RegularPages "Section" "posts").ByDate.Reverse }}
+        {{ partial "post-card.html" . }}
+      {{- end }}
+    </div>
+    <div style="text-align:right;padding-top:24px">
+      <a href="{{ "/posts/" | relURL }}" style="font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--ember);font-weight:500">All posts →</a>
+    </div>
+  </section>
+
+  <!-- FEATURED SERIES -->
+  {{- $seriesIndex := site.GetPage "/series" -}}
+  {{- $seriesSections := $seriesIndex.Sections -}}
+  {{- if $seriesSections }}
+  <section style="padding:32px 0 64px">
+    <div class="section-id"><span class="dot"></span><span>FEATURED SERIES <span class="num">/ LONG-RUNNING WORK</span></span></div>
+    <div class="series-grid">
+      {{- range $i, $s := first 4 $seriesSections }}
+        {{- if ne $s.Kind "section" }}{{ continue }}{{ end }}
+        {{- $sPosts := where site.RegularPages "Params.series" "intersect" (slice $s.Title) -}}
+        <a class="series-card" href="{{ $s.RelPermalink }}">
+          <div class="id">{{ printf "S-%02d" (add 1 $i) }} · {{ $s.Params.status | default "ACTIVE" | upper }}</div>
+          <h3>{{ $s.Title }}</h3>
+          <p>{{ $s.Description | default $s.Summary }}</p>
+          <div class="meta">
+            <span>{{ len $sPosts }} POSTS</span>
+            <span><b>READ →</b></span>
+          </div>
+        </a>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+</main>
+{{- end -}}

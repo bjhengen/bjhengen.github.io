@@ -1,0 +1,17 @@
+{{- define "main" -}}
+<main class="page">
+
+  <header class="about-hero">
+    <div>
+      <div class="section-id"><span class="dot"></span><span>ABOUT <span class="num">/ THE PERSON</span></span></div>
+      <h1>{{ .Title }}<br/><em>{{ .Params.subtitle | default "the workshop." }}</em></h1>
+    </div>
+    <p class="lede">{{ .Description | default "Customer-facing engineer by trade, builder by night." | safeHTML }}</p>
+  </header>
+
+  <section class="prose" style="max-width:var(--max-prose);padding:48px 0">
+    {{ .Content }}
+  </section>
+
+</main>
+{{- end -}}

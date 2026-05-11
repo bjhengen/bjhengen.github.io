@@ -1,0 +1,36 @@
+{{- $page := .page -}}
+{{- $series := .series -}}
+{{- $posts := $series.RegularPages.ByDate -}}
+{{- $idx := -1 -}}
+{{- range $i, $p := $posts -}}
+  {{- if eq $p.RelPermalink $page.RelPermalink -}}{{- $idx = $i -}}{{- end -}}
+{{- end -}}
+{{- if ge $idx 0 -}}
+  {{- $prev := "" -}}{{- $next := "" -}}
+  {{- if gt $idx 0 -}}{{- $prev = index $posts (sub $idx 1) -}}{{- end -}}
+  {{- if lt $idx (sub (len $posts) 1) -}}{{- $next = index $posts (add $idx 1) -}}{{- end -}}
+  <nav class="sc-series-nav">
+    {{- if $prev }}
+    <a class="prev" href="{{ $prev.RelPermalink }}">
+      <span class="dir">← PREV · PART {{ $idx }}</span>
+      <span class="title">{{ $prev.Title }}</span>
+    </a>
+    {{- else }}
+    <a class="prev" href="{{ $series.RelPermalink }}">
+      <span class="dir">↑ SERIES INDEX</span>
+      <span class="title">{{ $series.Title }}</span>
+    </a>
+    {{- end }}
+    {{- if $next }}
+    <a class="next" href="{{ $next.RelPermalink }}">
+      <span class="dir">NEXT · PART {{ add $idx 2 }} →</span>
+      <span class="title">{{ $next.Title }}</span>
+    </a>
+    {{- else }}
+    <a class="next" href="{{ $series.RelPermalink }}">
+      <span class="dir">END OF SERIES ↑</span>
+      <span class="title">Back to {{ $series.Title }}</span>
+    </a>
+    {{- end }}
+  </nav>
+{{- end -}}

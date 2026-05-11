@@ -1,0 +1,17 @@
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="{{ "/" | relURL }}">
+      <span class="nav-mark"><span>{{ site.Params.brandInitials | default "BH" }}</span></span>
+      <span>{{ site.Params.brandName | default site.Title }}</span>
+    </a>
+    <div class="nav-links">
+      {{- range site.Menus.main }}
+      <a href="{{ .URL | relURL }}"{{ if $.IsMenuCurrent "main" . }} class="active"{{ end }}>{{ .Name }}</a>
+      {{- end }}
+    </div>
+    <div class="nav-actions">
+      <a class="nav-search" href="{{ "/search/" | relURL }}">Search ⌘K</a>
+      <a href="{{ "/index.xml" | relURL }}" class="nav-rss">RSS</a>
+    </div>
+  </div>
+</nav>

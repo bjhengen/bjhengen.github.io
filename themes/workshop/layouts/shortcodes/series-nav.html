@@ -1,0 +1,5 @@
+{{- $seriesName := .Get "name" | default (.Get 0) -}}
+{{- $seriesPage := site.GetPage (printf "/series/%s" ($seriesName | urlize)) -}}
+{{- if $seriesPage }}
+  {{ partial "series-nav.html" (dict "page" .Page "series" $seriesPage) }}
+{{- end }}

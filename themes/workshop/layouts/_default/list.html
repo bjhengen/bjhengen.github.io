@@ -1,0 +1,32 @@
+{{- define "main" -}}
+<main class="page">
+
+  <header class="list-head">
+    <div>
+      <div class="section-id"><span class="dot"></span><span>{{ .Section | upper }} <span class="num">/ ARCHIVE</span></span></div>
+      <h1>{{ .Title }}<br/><em>{{ .Params.subtitle | default "in order." }}</em></h1>
+    </div>
+    <p class="lede">{{ .Description | default .Content | safeHTML }}</p>
+  </header>
+
+  {{- $pages := .RegularPages.ByDate.Reverse -}}
+  {{- $byYear := $pages.GroupByDate "2006" -}}
+  {{- range $byYear }}
+  <section class="year-group">
+    <div class="year-label">
+      <span><b>{{ .Key }}</b></span>
+      <span>{{ len .Pages }} POSTS</span>
+    </div>
+    <div class="cards">
+      {{- range $i, $p := .Pages -}}
+        {{- $p.Scratch.Set "idx" $i -}}
+        {{ partial "post-card.html" $p }}
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+  {{- template "_internal/pagination.html" . -}}
+
+</main>
+{{- end -}}

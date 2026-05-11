@@ -1,0 +1,21 @@
+{{- $title := .Title -}}
+{{- if .IsHome -}}{{- $title = site.Title -}}{{- else -}}{{- $title = printf "%s — %s" .Title site.Title -}}{{- end -}}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{ $title }}</title>
+{{- with .Description | default site.Params.description }}
+<meta name="description" content="{{ . }}" />
+{{- end }}
+{{- with site.Params.googleSiteVerification }}
+<meta name="google-site-verification" content="{{ . }}" />
+{{- end }}
+<link rel="preload" as="font" type="font/woff2" href="{{ "/fonts/inter-var.woff2" | relURL }}" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="{{ "/fonts/jetbrains-mono-var.woff2" | relURL }}" crossorigin />
+<link rel="stylesheet" href="{{ "/fonts/fonts.css" | relURL }}" />
+{{- $css := resources.Get "css/workshop.css" | minify | fingerprint -}}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" />
+{{- range .AlternativeOutputFormats }}
+<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}" title="{{ site.Title }}" />
+{{- end }}
+{{- with site.Params.favicon }}<link rel="icon" href="{{ . | relURL }}" />{{- end }}
+{{- block "head-extra" . }}{{- end }}

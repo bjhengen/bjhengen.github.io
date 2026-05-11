@@ -1,0 +1,80 @@
+{{- define "main" -}}
+{{- if .Sections -}}
+  {{- /* Top-level /series/ — render the index of all series */ -}}
+<main class="page">
+
+  <header class="list-head">
+    <div>
+      <div class="section-id"><span class="dot"></span><span>SERIES <span class="num">/ LONG-RUNNING WORK</span></span></div>
+      <h1>Projects in<br/><em>{{ .Params.subtitle | default "the open." }}</em></h1>
+    </div>
+    <p class="lede">{{ .Description | default "Multi-post explorations. Each series follows a single thread of work from \"this is interesting\" to \"here's what shipped.\"" | safeHTML }}</p>
+  </header>
+
+  <section class="series-index">
+    {{- range $i, $s := .Sections.ByWeight -}}
+      {{- if ne $s.Kind "section" }}{{ continue }}{{ end -}}
+      {{- $sPosts := where site.RegularPages "Params.series" "intersect" (slice $s.Title) -}}
+      <a class="series-index-card" href="{{ $s.RelPermalink }}">
+        <div class="id">
+          <span>{{ printf "S-%02d · %s" (add 1 $i) ($s.Params.status | default "ACTIVE" | upper) }}</span>
+          <span class="status">{{ if eq ($s.Params.status | default "active" | lower) "active" }}LIVE{{ else }}ARCHIVED{{ end }}</span>
+        </div>
+        <h2>{{ $s.Title }}</h2>
+        <p>{{ $s.Description | default $s.Summary }}</p>
+        <div class="stats">
+          <div><b>{{ len $sPosts }}</b>POSTS</div>
+          {{- with $s.Params.startDate }}<div><b>{{ . }}</b>STARTED</div>{{- end }}
+          {{- with $s.Params.stack }}<div><b>{{ . }}</b>STACK</div>{{- end }}
+        </div>
+      </a>
+    {{- end }}
+  </section>
+
+</main>
+{{- else -}}
+  {{- /* Individual series — render the timeline */ -}}
+  {{- $title := .Title -}}
+  {{- $pages := (where site.RegularPages "Params.series" "intersect" (slice $title)).ByDate -}}
+  {{- $count := len $pages -}}
+<main class="page">
+
+  <header class="series-hero">
+    <div>
+      <div class="section-id"><span class="dot"></span><span>SERIES <span class="num">/ {{ .Params.code | default (printf "S-%02d" 1) }}</span></span></div>
+      <h1>{{ .Title }}<br/><em>{{ .Params.subtitle }}</em></h1>
+      <p class="deck">{{ .Description | default .Summary }}</p>
+    </div>
+    <div class="series-stats">
+      <div class="series-stat"><div class="num">{{ $count }}</div><div class="label">POSTS IN SERIES</div></div>
+      {{- with .Params.startDate }}<div class="series-stat"><div class="num">{{ . }}</div><div class="label">STARTED</div></div>{{- end }}
+      {{- with .Params.totalReadTime }}<div class="series-stat"><div class="num">{{ . }}</div><div class="label">TOTAL READ</div></div>{{- end }}
+      {{- with .Params.status }}<div class="series-stat"><div class="num"><em>●</em></div><div class="label">{{ . | upper }}</div></div>{{- end }}
+    </div>
+  </header>
+
+  {{- with .Content }}
+  <section class="prose" style="max-width:62ch;padding:48px 0;border-bottom:1px solid var(--rule-2)">
+    {{ . }}
+  </section>
+  {{- end }}
+
+  <section class="timeline">
+    {{- range $i, $p := $pages -}}
+      <a class="timeline-entry{{ if eq $i (sub $count 1) }} current{{ end }}" href="{{ $p.RelPermalink }}">
+        <div>
+          <div class="num">PART {{ printf "%02d" (add $i 1) }}</div>
+          <h3>{{ $p.Title }}</h3>
+          {{- with $p.Description | default $p.Summary }}<p>{{ . }}</p>{{- end }}
+        </div>
+        <div class="meta">
+          <b>{{ $p.Date.Format "02 Jan 2006" | upper }}</b>
+          {{ $p.ReadingTime }} MIN
+        </div>
+      </a>
+    {{- end }}
+  </section>
+
+</main>
+{{- end -}}
+{{- end -}}

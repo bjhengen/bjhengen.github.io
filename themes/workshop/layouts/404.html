@@ -1,0 +1,26 @@
+{{- define "main" -}}
+<main>
+  <div class="split">
+    <section class="pane left">
+      <div class="section-id"><span class="dot"></span><span>404 · NOT FOUND</span></div>
+      <div class="err-num">4<em>0</em>4</div>
+      <h1>This page<br/><em>missed prod.</em></h1>
+      <p class="lede">The URL you followed doesn't match anything I've shipped. <b>Not your fault.</b> Try one of these.</p>
+      <div class="err-actions">
+        <a class="err-btn primary" href="{{ "/" | relURL }}"><span class="err-btn-id">→ 01</span><span class="err-btn-text">Take me home<span class="sub">The full table of contents</span></span><span class="err-btn-arrow">⤴</span></a>
+        <a class="err-btn" href="{{ "/posts/" | relURL }}"><span class="err-btn-id">→ 02</span><span class="err-btn-text">Browse all posts<span class="sub">Newest first</span></span><span class="err-btn-arrow">⤴</span></a>
+        <a class="err-btn" href="{{ "/series/" | relURL }}"><span class="err-btn-id">→ 03</span><span class="err-btn-text">Read by series<span class="sub">Long-running projects</span></span><span class="err-btn-arrow">⤴</span></a>
+      </div>
+    </section>
+    <section class="pane right">
+      <div class="section-id"><span class="dot"></span><span>OR <span class="num">/ SEARCH</span></span></div>
+      <h1>Look for<br/><em>something else?</em></h1>
+      <p class="lede">Full-text search across every post, series, and tag. Try a model name, a technique, a tool.</p>
+      <a class="err-btn" href="{{ "/search/" | relURL }}"><span class="err-btn-id">⌕</span><span class="err-btn-text">Open search<span class="sub">⌘K from anywhere</span></span><span class="err-btn-arrow">⤴</span></a>
+      <div class="err-quote" style="margin-top:auto;padding-top:24px;border-top:1px solid var(--rule);font-family:var(--sans);font-weight:300;font-size:15px;line-height:1.55;color:var(--ink-2);font-style:italic;max-width:42ch">
+        "If a result doesn't survive a written-down version six months later, it wasn't a result — it was a <em style="font-style:normal;color:var(--ember);font-weight:500">demo</em>."
+      </div>
+    </section>
+  </div>
+</main>
+{{- end -}}

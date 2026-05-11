@@ -1,0 +1,27 @@
+{{- define "main" -}}
+<main class="page">
+
+  <header class="tags-head">
+    <div class="section-id"><span class="dot"></span><span>TAXONOMY <span class="num">/ ALL TAGS</span></span></div>
+    <h1>Browse by <em>tag.</em></h1>
+    <p class="lede">{{ .Description | default "Every topic touched, sized by how often it shows up. Bigger tag = more posts." }}</p>
+  </header>
+
+  <section class="tagcloud">
+    {{- $terms := .Data.Terms.ByCount -}}
+    {{- $max := 1 -}}
+    {{- range $terms }}{{- if gt .Count $max }}{{- $max = .Count }}{{- end -}}{{- end -}}
+    {{- range $terms }}
+      {{- $ratio := div (mul .Count 1.0) $max -}}
+      {{- $size := "size-s" -}}
+      {{- if ge $ratio 0.75 -}}{{- $size = "size-xl" -}}
+      {{- else if ge $ratio 0.5 -}}{{- $size = "size-l" -}}
+      {{- else if ge $ratio 0.25 -}}{{- $size = "size-m" -}}{{- end -}}
+      <a class="tag {{ $size }}" href="{{ .Page.RelPermalink }}">
+        {{ .Page.Title }}<span class="count">{{ .Count }}</span>
+      </a>
+    {{- end }}
+  </section>
+
+</main>
+{{- end -}}

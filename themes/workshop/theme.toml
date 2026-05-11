@@ -1,0 +1,12 @@
+name = "Workshop"
+license = "MIT"
+licenselink = "https://github.com/brianhengen/workshop/blob/main/LICENSE"
+description = "Editorial Hugo theme for a builder's notebook. Paper-and-ink palette with an ember accent, Inter + JetBrains Mono."
+homepage = "https://brianhengen.us"
+tags = ["editorial", "blog", "minimal", "personal", "writing"]
+features = ["blog", "series", "tags", "search", "shortcodes", "responsive"]
+min_version = "0.128.0"
+
+[author]
+  name = "Brian Hengen"
+  homepage = "https://brianhengen.us"

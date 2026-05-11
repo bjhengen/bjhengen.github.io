@@ -1,0 +1,11 @@
+{{- $name := .Get "name" | default (site.Params.author | default "Brian Hengen") -}}
+{{- $role := .Get "role" | default "VP, Oracle · brianhengen.us" -}}
+{{- $initials := .Get "initials" | default "BH" -}}
+<div class="sc-author">
+  <div class="avatar">{{ $initials }}</div>
+  <div class="who"><b>{{ $name }}</b><span>{{ $role }}</span></div>
+  <div class="links">
+    {{- with site.Params.email }}<a href="mailto:{{ . }}">EMAIL</a>{{- end }}
+    {{- with site.Params.linkedin }}<a href="{{ . }}">LINKEDIN</a>{{- end }}
+  </div>
+</div>

@@ -1,0 +1,6 @@
+{{- $num := .Get "num" | default (.Get 0) -}}
+{{- $label := .Get "label" | default (.Get 1) -}}
+<div class="sc-metric">
+  <div class="num">{{ $num | safeHTML }}</div>
+  <div class="label">{{ $label }}</div>
+</div>

@@ -1,0 +1,82 @@
+{{- define "main" -}}
+<main>
+  <div class="split">
+    <section class="pane left">
+      <div class="section-id"><span class="dot"></span><span>SEARCH <span class="num">/ FULL-TEXT</span></span></div>
+      <h1>Find <em>something</em><br/>specific.</h1>
+      <p class="lede">Full-text across every post, series, and tag. <b>Try a model name, a technique, or a tool.</b></p>
+
+      <form class="search-form" id="search-form" onsubmit="event.preventDefault()">
+        <div class="search-field">
+          <span class="search-icon">⌕</span>
+          <input class="search-input" id="search-input" type="text" placeholder="Search posts and series…" autofocus />
+          <span class="search-shortcut">ESC</span>
+        </div>
+        <div class="search-meta">
+          <span><b id="search-count">0</b> RESULTS</span>
+          <span>SORT · NEWEST FIRST</span>
+        </div>
+      </form>
+
+      <div class="results" id="search-results"></div>
+    </section>
+
+    <section class="pane right">
+      <div class="section-id"><span class="dot"></span><span>HOW <span class="num">/ INSTRUCTIONS</span></span></div>
+      <h1>Tips for<br/><em>searching.</em></h1>
+      <p class="lede">Search runs entirely in your browser — no server, no analytics. Index loads on first keystroke.</p>
+      <div class="err-stamp">
+        <div><b>SCOPE</b>POSTS · SERIES · TAGS</div>
+        <div><b>METHOD</b>SUBSTRING + TITLE BOOST</div>
+        <div><b>SHORTCUT</b>⌘K FROM ANYWHERE</div>
+        <div><b>ESC</b>BACK TO PREVIOUS</div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+(async () => {
+  const input = document.getElementById('search-input');
+  const out = document.getElementById('search-results');
+  const count = document.getElementById('search-count');
+  let idx = null;
+  async function load() {
+    if (idx) return idx;
+    const r = await fetch('{{ "/index.json" | relURL }}');
+    idx = await r.json();
+    return idx;
+  }
+  function render(results, q) {
+    count.textContent = results.length;
+    if (!results.length) { out.innerHTML = ''; return; }
+    out.innerHTML = results.slice(0, 20).map(r => `
+      <a class="result" href="${r.permalink}">
+        <div>
+          <div class="result-title">${highlight(r.title, q)}</div>
+          <span class="result-snip">${highlight((r.summary || '').slice(0, 220), q)}…</span>
+        </div>
+        <div class="result-meta"><b>${r.date}</b>${r.section.toUpperCase()}</div>
+      </a>`).join('');
+  }
+  function highlight(s, q) {
+    if (!q) return s;
+    const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+    return s.replace(re, '<mark>$1</mark>');
+  }
+  input.addEventListener('input', async e => {
+    const q = e.target.value.trim();
+    if (!q) { out.innerHTML = ''; count.textContent = '0'; return; }
+    const data = await load();
+    const ql = q.toLowerCase();
+    const results = data.filter(p =>
+      (p.title || '').toLowerCase().includes(ql) ||
+      (p.summary || '').toLowerCase().includes(ql) ||
+      (p.content || '').toLowerCase().includes(ql) ||
+      (p.tags || []).join(' ').toLowerCase().includes(ql)
+    );
+    render(results, q);
+  });
+})();
+</script>
+{{- end -}}

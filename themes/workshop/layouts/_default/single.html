@@ -1,0 +1,52 @@
+{{- define "main" -}}
+<main>
+
+  <article>
+    <header class="article">
+      <div class="article-head">
+        <div class="crumbs">
+          <a href="{{ "/" | relURL }}">Home</a>
+          <span>/</span>
+          <a href="{{ "/posts/" | relURL }}">Posts</a>
+          {{- with .Params.series }}
+          <span>/</span>
+          <a href="{{ printf "/series/%s/" (index . 0 | urlize) | relURL }}">{{ index . 0 }}</a>
+          {{- end }}
+        </div>
+        <h1>{{ .Title }}</h1>
+        {{- with .Description }}<p class="deck">{{ . }}</p>{{- end }}
+        <div class="article-meta">
+          <span><b>{{ .Date.Format "02 Jan 2006" | upper }}</b></span>
+          <span><b>{{ .ReadingTime }} MIN</b> READ</span>
+          <span><b>{{ .WordCount }}</b> WORDS</span>
+          {{- with .Params.series }}<span>SERIES <b>{{ index . 0 | upper }}</b></span>{{- end }}
+          {{- with .Params.tags }}
+          <span>
+            {{- range $i, $t := first 3 . -}}
+              {{- if $i }} · {{ end -}}<a href="{{ printf "/tags/%s/" ($t | urlize) | relURL }}">#{{ $t }}</a>
+            {{- end -}}
+          </span>
+          {{- end }}
+        </div>
+      </div>
+    </header>
+
+    <div class="article">
+      <div class="prose">
+        {{ .Content }}
+      </div>
+    </div>
+  </article>
+
+  {{- with .Params.series }}
+    {{- $seriesName := index . 0 -}}
+    {{- $seriesPage := site.GetPage (printf "/series/%s" ($seriesName | urlize)) -}}
+    {{- if $seriesPage }}
+    <div class="article">
+      {{ partial "series-nav.html" (dict "page" $ "series" $seriesPage) }}
+    </div>
+    {{- end }}
+  {{- end }}
+
+</main>
+{{- end -}}
