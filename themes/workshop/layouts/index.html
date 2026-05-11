@@ -5,7 +5,7 @@
   <section class="hero">
     <div class="hero-inner">
       <div>
-        <div class="section-id"><span class="dot"></span><span>BRIANHENGEN.US <span class="num">/ HOME</span></span></div>
+        <div class="section-id"><span class="dot"></span><span>{{ .Params.heroEyebrow | default "BRIANHENGEN.US" }} <span class="num">{{ .Params.heroEyebrowSub | default "/ HOME" }}</span></span></div>
         <h1>{{ .Params.heroLine1 | default "A workshop for" }}<br/><em>{{ .Params.heroLine2 | default "shipped ideas." }}</em></h1>
       </div>
       <div>
