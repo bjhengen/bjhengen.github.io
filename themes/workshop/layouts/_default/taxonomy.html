@@ -1,4 +1,25 @@
 {{- define "main" -}}
+{{- if eq .Kind "term" -}}
+  {{- /* Single tag page — list posts */ -}}
+<main class="page">
+
+  <header class="list-head">
+    <div>
+      <div class="section-id"><span class="dot"></span><span>TAG <span class="num">/ #{{ .Title | urlize }}</span></span></div>
+      <h1>Tagged<br/><em>{{ .Title }}.</em></h1>
+    </div>
+    <p class="lede">{{ len .Pages }} {{ if eq (len .Pages) 1 }}post{{ else }}posts{{ end }} on this topic, newest first.</p>
+  </header>
+
+  <div class="cards" style="margin-top:48px;border-top:2px solid var(--ink)">
+    {{- range .Pages.ByDate.Reverse -}}
+      {{ partial "post-card.html" . }}
+    {{- end }}
+  </div>
+
+</main>
+{{- else -}}
+  {{- /* Taxonomy plural — tag cloud */ -}}
 <main class="page">
 
   <header class="tags-head">
@@ -24,4 +45,5 @@
   </section>
 
 </main>
+{{- end -}}
 {{- end -}}
