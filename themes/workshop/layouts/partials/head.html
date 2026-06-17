@@ -18,4 +18,31 @@
 <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}" title="{{ site.Title }}" />
 {{- end }}
 {{- with site.Params.favicon }}<link rel="icon" href="{{ . | relURL }}" />{{- end }}
+{{/* --- OpenGraph / Twitter cards --- */}}
+{{- $ogType := cond .IsHome "website" "article" -}}
+{{- $ogDesc := .Description | default site.Params.description -}}
+{{- $ogImg := "" -}}
+{{- with .Params.cover }}{{- with .image }}{{ $ogImg = . }}{{- end }}{{- end -}}
+{{- if not $ogImg }}{{ $ogImg = site.Params.defaultSocialImage }}{{- end -}}
+<meta property="og:site_name" content="{{ site.Title }}" />
+<meta property="og:type" content="{{ $ogType }}" />
+<meta property="og:title" content="{{ $title }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+{{- with $ogDesc }}
+<meta property="og:description" content="{{ . }}" />{{- end }}
+{{- with $ogImg }}
+  {{- $u := . -}}
+  {{- if not (or (hasPrefix $u "http://") (hasPrefix $u "https://")) -}}
+    {{- $res := $.Resources.GetMatch (strings.TrimPrefix "/" $u) -}}
+    {{- if $res }}{{ $u = $res.Permalink }}{{- else }}{{ $u = ($u | absURL) }}{{- end -}}
+  {{- end }}
+<meta property="og:image" content="{{ $u }}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="{{ $u }}" />
+{{- else }}
+<meta name="twitter:card" content="summary" />
+{{- end }}
+<meta name="twitter:title" content="{{ $title }}" />
+{{- with $ogDesc }}
+<meta name="twitter:description" content="{{ . }}" />{{- end }}
 {{- block "head-extra" . }}{{- end }}

@@ -23,6 +23,7 @@ buildDrafts = false
   linkedin = "https://www.linkedin.com/in/brianhengen/"
   googleSiteVerification = "grXLP2Gd9iDmkCopwjjMzZkg9TIdRXUIVgPjlDX0gvs"
   ShowFullTextinRSS = true
+  defaultSocialImage = "/images/profile.jpg"
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
