@@ -63,3 +63,11 @@ When you go to the website (https://glassbox.brianhengen.us/) you are really loo
 
 ## Thank you
 I hope you find this as interesting and informative as I did - it was a fun project. The technology is amazing - and when you really think about what the larger models do, how much they process, and how quickly they are able to respond, it's beyond impressive. As Arthur C. Clarke said, "Any sufficiently advanced technology is indistinguishable from magic." My goal here was to demystify this a bit, so not magic, but it's a long way from the old Atari 400 I learned to program on...
+
+---
+
+## About the Author
+
+Brian Hengen is a Vice President at Oracle, leading technical sales engineering teams. The views and opinions expressed in this blog are his own and do not necessarily reflect those of Oracle.
+
+{{< author >}}
